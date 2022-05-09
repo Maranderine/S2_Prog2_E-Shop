@@ -1,6 +1,5 @@
-package DataObjects;
+package DatenObjekte;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 public class Warenkorb {

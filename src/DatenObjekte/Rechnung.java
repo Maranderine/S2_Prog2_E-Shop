@@ -1,4 +1,4 @@
-package DataObjects;
+package DatenObjekte;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ public class Rechnung {
     // private inhalt;
 
     //Konstruktor für Rechnung
-    // public Rechnung(Kunde kunde, Date kaufDatum, inhalt) {
+    // public Rechnung(BenutzerObjekte.Kunde kunde, Date kaufDatum, inhalt) {
     //        this.rechnungsId = "0-" + kunde.getKundenNr() + "-" + (100 + kunde.getKundenRechnungen().size());   //info ????
     //        this.kaufDatum = kaufDatum;
     //        this.inhalt = inhalt;

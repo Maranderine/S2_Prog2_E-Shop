@@ -1,3 +1,5 @@
+package BenutzerObjekte;
+
 public class Kunde {
     private String name;
     private String email;

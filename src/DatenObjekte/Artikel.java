@@ -1,4 +1,4 @@
-package DataObjects;
+package DatenObjekte;
 
 public class Artikel {
 

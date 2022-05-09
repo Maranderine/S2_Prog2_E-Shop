@@ -1,3 +1,5 @@
+package BenutzerObjekte;
+
 public class Mitarbeiter {
     private String name;
     private String email;

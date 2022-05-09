@@ -1,3 +1,5 @@
+package BenutzerObjekte;
+
 import java.util.Date;
 
 public class Benutzer {
