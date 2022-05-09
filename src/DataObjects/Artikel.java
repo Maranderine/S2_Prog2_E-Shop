@@ -1,3 +1,5 @@
+package DataObjects;
+
 public class Artikel {
 
     private int artikelNr;

@@ -26,7 +26,7 @@ public class Rechnung {
         return rechnungsId;
     }
 
-    //Wenn abgefragt wird der Wert auf 0 und addiert den Preis des Artikels dazu(z.B. Artikel & Anzahl)
+    //Wenn abgefragt wird der Wert auf 0 und addiert den Preis des Artikels dazu(z.B. DataObjects.Artikel & Anzahl)
     public void getGesamtPreis() {
         double betrag = 0;
     }

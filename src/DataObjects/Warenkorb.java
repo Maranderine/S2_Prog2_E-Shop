@@ -1,0 +1,21 @@
+package DataObjects;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Warenkorb {
+    private HashMap<Artikel, Integer> inhalt;
+
+    public Warenkorb() {
+        this.inhalt = new HashMap<Artikel, Integer>();
+    }
+
+//Gibt Inhalt zurück
+    public HashMap<Artikel, Integer> getInhalt() {
+        return inhalt;
+    }
+
+    public void setInhalt(HashMap<Artikel, Integer> inhalt) {
+        this.inhalt = inhalt;
+    }
+}
