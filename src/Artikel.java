@@ -1,58 +1,46 @@
 public class Artikel {
-    // Attribute zur Beschreibung eines Artikels:
+
+    private int artikelNr;
     private String name;
-    private int nummer;
-    private boolean verfuegbar;
+    private int bestand;
+    private double preis;
 
-
-    public Artikel(String name, int nr) {
-        this(name, nr, true);
-    }
-
-    public Artikel(String name, int nr, boolean verfuegbar) {
-        nummer = nr;
+    public Artikel(int artikelNr, String bezeichnung,int bestand, double einzelpreis) {
+        this.artikelNr = artikelNr;
         this.name = name;
-        this.verfuegbar = verfuegbar;
+        this.bestand = bestand;
+        this.preis = preis;
     }
 
-    /**
-     * Methode wird immer automatisch aufgerufen, wenn ein Artikel als String
-     * benutzt wird
-     *
-     * @see java.lang.Object#toString()
-     */
-
-    public String toString() {
-        String verfuegbarkeit = verfuegbar ? "verfuegbar" : "ausverkauft";
-        return ("Nr: " + nummer + " / name: " + name + " / " + verfuegbarkeit);
-    }
-
-    /**
-     * Standard-Methode von Object überschrieben.
-     * Methode dient Vergleich von zwei Artikel-Objekten anhand ihrer Werte,
-     * d.h. name und Nummer.
-     *
-     * @see java.lang.Object#toString()
-     */
-
-    public boolean equals(Object andererArtikel) {
-        if (andererArtikel instanceof Artikel)
-            return ((this.nummer == ((Artikel) andererArtikel).nummer)
-                    && (this.name.equals(((Artikel) andererArtikel).name)));
-        else
-            return false;
-    }
-
-
-    public int getNummer() {
-        return nummer;
+    public int getArtikelNr() {
+        return this.artikelNr;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    public boolean isVerfuegbar() {
-        return verfuegbar;
+    public int getBestand() {
+        return this.bestand;
+    }
+
+    public double getPreis() {
+        return this.preis;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBestand(int bestand) {
+        this.bestand = bestand;
+    }
+
+    public void setPreis(double Preis) {
+        this.preis = preis;
+    }
+
+    public String toString() {
+        return this.name;
     }
 }
