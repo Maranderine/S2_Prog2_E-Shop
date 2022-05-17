@@ -2,47 +2,50 @@ package DatenObjekte;
 
 public class Artikel {
 
-    private int artikelNr;
-    private String name;
-    private int bestand;
-    private double preis;
+  private int artikelNr;
+  private String name;
+  private int bestand;
+  private double preis;
 
-    public Artikel(int artikelNr, String bezeichnung,int bestand, double einzelpreis) {
-        this.artikelNr = artikelNr;
-        this.name = name;
-        this.bestand = bestand;
-        this.preis = preis;
-    }
+  public Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
+    this.artikelNr = artikelNr;
+    this.name = name;
+    this.bestand = bestand;
+    this.preis = einzelpreis;
+  }
 
-    public int getArtikelNr() {
-        return this.artikelNr;
-    }
+  // getter
+  public int getArtikelNr() {
+    return this.artikelNr;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public int getBestand() {
-        return this.bestand;
-    }
+  public int getBestand() {
+    return this.bestand;
+  }
 
-    public double getPreis() {
-        return this.preis;
-    }
+  public double getPreis() {
+    return this.preis;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  // setter
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setBestand(int bestand) {
-        this.bestand = bestand;
-    }
+  public void setBestand(int bestand) {
+    this.bestand = bestand;
+  }
 
-    public void setPreis(double Preis) {
-        this.preis = preis;
-    }
+  public void setPreis(double Preis) {
+    this.preis = preis;
+  }
 
-    public String toString() {
-        return this.name;
-    }
+  // tostring
+  public String toString() {
+    return this.name;
+  }
 }
