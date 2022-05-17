@@ -40,7 +40,7 @@ public class Artikel {
     this.bestand = bestand;
   }
 
-  public void setPreis(double Preis) {
+  public void setPreis(double preis) {
     this.preis = preis;
   }
 

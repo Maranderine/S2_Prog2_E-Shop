@@ -13,7 +13,7 @@ public class Kunde {
         this.name = name;
     }
 
-    // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
+    //#region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
     // z.B. getStrasse() und setStrasse()
 
     public String getName() {
@@ -59,6 +59,6 @@ public class Kunde {
     public int getKundenNr() {
         return kundenNr;
     }
-
+    //#endregion
     // Weitere Dienste der Kunden-Objekte
 }
