@@ -52,4 +52,4 @@ Anforderungen Blatt 1:
       Anzahl
       User (Kunde/Mitarbeiter)
 
-CLI
+CUI

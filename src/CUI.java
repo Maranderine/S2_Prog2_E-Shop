@@ -3,161 +3,139 @@ import DatenObjekte.*;
 import BenutzerObjekte.Kunde;
 import BenutzerObjekte.Mitarbeiter;
 import Exceptions.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class CUI {
+  // #region SETUP
+  // menu level enum and value
+  enum MenuLevel {
+    MAIN, // start menu
+    LOGIN,
+    KUNDEN_ANSICHSRT,
+    MITARBEITER_ANSICHT,
+    WARENKORB
+  }
 
-    private Bibliothek c;
-    private BufferedReader in;
+  private static MenuLevel menuLevel;
+  // Create input Scanner
+  static Scanner inputScanner = new Scanner(System.in);
+  // loop main bool
+  private static Boolean LOOP = true;
 
-    public CUI(String datei) throws IOException {
-        // die Verwaltung erledigt die Aufgaben,
-        // die nichts mit Ein-/Ausgabe zu tun haben
-        bib = new Bibliothek(datei);
+  /**
+   * Default constructor
+   * Menu Starts in default state: Main Menu
+   */
+  private CUI() {
+    menuLevel = MenuLevel.MAIN;
+  }
 
-        // Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen
-        in = new BufferedReader(new InputStreamReader(System.in));
-    }
+  /**
+   * Custom constructor
+   * Menu Starts in set state
+   * 
+   * @param level
+   */
+  private CUI(MenuLevel level) {
+    menuLevel = level;
+  }
 
-    /* (non-Javadoc)
-     *
-     * Interne (private) Methode zur Ausgabe des Menüs.
-     */
-    private void gibMenueAus() {
-        System.out.println("_____________________________");
-        System.out.println("___________ E-Shop __________");
-        System.out.println("________ 1 = Anmelden _______");
-        System.out.println("______ 2 - Registrieren _____");
-        System.out.println("__________ 0 = Exit _________");
-        System.out.println("_____________________________");
-    }
+  // #endregion SETUP
+  /**
+   * main methode
+   * 
+   * @param args()
+   */
+  public static void main(String args[]) {
+    // main program loop
+    //keeps looping until endCUI() is called
+    do{
+      DisplayMenu();
+      String input = getInput();
+      processInput(input);
+    }while(LOOP)
 
-    /* (non-Javadoc)
-     *
-     * Interne (private) Methode zum Einlesen von Benutzereingaben.
-     */
-    private String liesEingabe() throws IOException {
-        // einlesen von Konsole
-        return in.readLine();
-    }
+    inputScanner.close();// closing the scanner
+  }
 
-    /* (non-Javadoc)
-     *
-     * Interne (private) Methode zur Verarbeitung von Eingaben
-     * und Ausgabe von Ergebnissen.
-     */
-    private void verarbeiteEingabe(String line) throws IOException {
-        String nummer;
-        int nr;
-        String titel;
-        List<Buch> buecherListe;
+  private static String getInput() {
+    return inputScanner.nextLine();
+  }
 
-        // Eingabe bearbeiten:
-        switch (line) {
-            case "a":
-                buecherListe = bib.gibAlleBuecher();
-                gibBuecherlisteAus(buecherListe);
-                break;
-            case "d":
-                // lies die notwendigen Parameter, einzeln pro Zeile
-                System.out.print("Buchnummer > ");
-                nummer = liesEingabe();
-                nr = Integer.parseInt(nummer);
-                System.out.print("Buchtitel  > ");
-                titel = liesEingabe();
+  /**
+   * processes input for the CUI
+   * @param input
+   */
+  private static void processInput(String input) {
+    //first switch determines the menu level, the menu that should be displayed
+    switch (menuLevel) {
+      case MAIN://main menu
+        switch (input) {
+          case "1":// Anmelden
 
-                bib.loescheBuch(titel, nr);
+            break;
+          case "2":// Registrieren
 
-                break;
-            case "e":
-                // lies die notwendigen Parameter, einzeln pro Zeile
-                System.out.print("Buchnummer > ");
-                nummer = liesEingabe();
-                nr = Integer.parseInt(nummer);
-                System.out.print("Buchtitel  > ");
-                titel = liesEingabe();
-
-                try {
-                    bib.fuegeBuchEin(titel, nr);
-                    System.out.println("Einfügen ok");
-                } catch (BuchExistiertBereitsException e) {
-                    // Hier Fehlerbehandlung...
-                    System.out.println("Fehler beim Einfügen");
-                    e.printStackTrace();
-                }
-                break;
-            case "f":
-                System.out.print("Buchtitel  > ");
-                titel = liesEingabe();
-                buecherListe = bib.sucheNachTitel(titel);
-                gibBuecherlisteAus(buecherListe);
-                break;
-            case "s":
-                bib.schreibeBuecher();
+            break;
+          case "0":// Exit
+            endCUI();
+            break;
         }
-    }
-
-    /* (non-Javadoc)
-     *
-     * Interne (private) Methode zum Ausgeben von Bücherlisten.
-     *
-     */
-    private void gibBuecherlisteAus(List<Buch> buecherListe) {
-        if (buecherListe.isEmpty()) {
-            System.out.println("Liste ist leer.");
-        } else {
-            // Durchlaufen des Vectors mittels for each-Schleife
-            // (alternativ: Iterator)
-            for (Buch buch: buecherListe) {
-                System.out.println(buch);
-            }
+        break;
+      case LOGIN://Login menu
+        switch (input) {
+          case "":
+            
+            break;
         }
-    }
+        break;
+      case WARENKORB://Warenkorb menu
+        switch (input) {
+          case "1":// ändern
+            warenkorb.setArtikel(artikel, integar);
+            break;
+          case "2":// löschen
+            warenkorb.
+            break;
+          case "3":// Alle löschen
 
-    /**
-     * Methode zur Ausführung der Hauptschleife:
-     * - Menü ausgeben
-     * - Eingabe des Benutzers einlesen
-     * - Eingabe verarbeiten und Ergebnis ausgeben
-     * (EVA-Prinzip: Eingabe-Verarbeitung-Ausgabe)
-     */
-    public void run() {
-        // Variable für Eingaben von der Konsole
-        String input = "";
+            break;
+          case "0":// Exit
 
-        // Hauptschleife der Benutzungsschnittstelle
-        do {
-            gibMenueAus();
-            try {
-                input = liesEingabe();
-                verarbeiteEingabe(input);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        } while (!input.equals("q"));
-    }
-
-
-    /**
-     * Die main-Methode...
-     */
-    public static void main(String[] args) {
-        BibClientCUI cui;
-        try {
-            cui = new BibClientCUI("BIB");
-            cui.run();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            break;
         }
+        break;
     }
 
-    public static void main(String args[]) {
-
+  private static void DisplayMenu() {
+    switch (menuLevel) {
+      case MAIN:
+        System.out.println("____________E-Shop___________");
+        System.out.println("1 = Anmelden");
+        System.out.println("2 - Registrieren");
+        System.out.println("0 = Exit");
+        break;
+      case LOGIN:
+        System.out.println("LOGIN");
+        break;
+      case WARENKORB:
+        System.out.println("____________Warenkorb____________");
+        // System.out.println(warenkorb.getInhalt());//display warenkorb
+        System.out.println("--------------------------------");
+        System.out.println("1 = Artikel anzahl ändern");
+        System.out.println("2 = Einzelnden Artikel löschen");
+        System.out.println("3 = Alle Artikel löschen");
+        System.out.println("0 = Exit");
+        break;
     }
+  }
+
+  /**
+   * Ends the CUI
+   */
+  private static void endCUI() {
+    System.out.println("Ending CUI");
+    LOOP = false;
+  }
 }
