@@ -1,9 +1,9 @@
+import BenutzerObjekte.Benutzer;
 import DatenObjekte.*;
 import BenutzerObjekte.Kunde;
 import BenutzerObjekte.Mitarbeiter;
 import Exceptions.*;
 
-import java.lang.System.Logger.Level;
 import java.util.Scanner;
 
 public class CUI {
@@ -138,5 +138,4 @@ public class CUI {
     System.out.println("Ending CUI");
     LOOP = false;
   }
-
 }
