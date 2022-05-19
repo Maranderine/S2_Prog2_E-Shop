@@ -1,5 +1,3 @@
-package BenutzerObjekte;
-
 public class Mitarbeiter extends Benutzer{
     private int mitarbeiterNr;
 

@@ -1,5 +1,3 @@
-package BenutzerObjekte;
-
 public class Kunde extends Benutzer{
 
     private String email;
@@ -38,4 +36,5 @@ public class Kunde extends Benutzer{
         return kundenNr;
     }
 
+    // Weitere Dienste der Kunden-Objekte
 }

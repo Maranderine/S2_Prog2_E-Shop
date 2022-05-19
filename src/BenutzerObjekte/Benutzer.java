@@ -1,4 +1,3 @@
-package BenutzerObjekte;
 
 abstract class Benutzer {
 
