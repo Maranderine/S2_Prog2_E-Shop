@@ -1,27 +1,27 @@
-package BenutzerObjekte;
+public class Kunde extends Benutzer{
 
-public class Kunde {
-    private String name;
     private String email;
-    private String strasse = "";
+    private String adress = "";
     private int kundenNr;
-    private String plz = "";
-    private String wohnort = "";
+    //private String plz = "";
+    //private String wohnort = "";
 
-    public Kunde(int nr, String name) {
+    public Kunde(String name, String username, String password, int nr, String email, String adress) {
+        super(name, username, password);
         kundenNr = nr;
-        this.name = name;
+        this.email = email;
+        this.adress = adress;
     }
 
     //#region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
     // z.B. getStrasse() und setStrasse()
 
-    public String getName() {
-        return name;
+    public String getAdress() {
+        return adress;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
     public String getEmail() {
@@ -30,30 +30,6 @@ public class Kunde {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPlz() {
-        return plz;
-    }
-
-    public void setPlz(String plz) {
-        this.plz = plz;
-    }
-
-    public String getStrasse() {
-        return strasse;
-    }
-
-    public void setStrasse(String strasse) {
-        this.strasse = strasse;
-    }
-
-    public String getWohnort() {
-        return wohnort;
-    }
-
-    public void setWohnort(String wohnort) {
-        this.wohnort = wohnort;
     }
 
     public int getKundenNr() {
