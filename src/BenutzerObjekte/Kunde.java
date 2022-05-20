@@ -13,7 +13,7 @@ public class Kunde extends Benutzer{
         this.adress = adress;
     }
 
-    // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
+    //#region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
     // z.B. getStrasse() und setStrasse()
 
     public String getAdress() {
@@ -35,6 +35,6 @@ public class Kunde extends Benutzer{
     public int getKundenNr() {
         return kundenNr;
     }
-
+    //#endregion
     // Weitere Dienste der Kunden-Objekte
 }
