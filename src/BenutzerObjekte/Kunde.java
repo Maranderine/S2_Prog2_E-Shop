@@ -1,3 +1,5 @@
+package BenutzerObjekte;
+
 public class Kunde extends Benutzer{
 
     private String email;
@@ -6,9 +8,18 @@ public class Kunde extends Benutzer{
     //private String plz = "";
     //private String wohnort = "";
 
-    public Kunde(String name, String username, String password, int nr, String email, String adress) {
+    /**
+     * 
+     * @param name  name des kunden
+     * @param username benutzername für login
+     * @param password passwort zum einlloggen
+     * @param kundenNr 
+     * @param email
+     * @param adress
+     */
+    public Kunde(String name, String username, String password, int kundenNr, String email, String adress) {
         super(name, username, password);
-        kundenNr = nr;
+        this.kundenNr = kundenNr;
         this.email = email;
         this.adress = adress;
     }
