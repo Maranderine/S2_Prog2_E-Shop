@@ -3,6 +3,7 @@ package DatenObjekte;
 import java.util.Date;
 
 public class Rechnung {
+  double betrag;
 
   // Klassenvariablen
   private String rechnungsId;
@@ -30,6 +31,6 @@ public class Rechnung {
   // Wenn abgefragt wird der Wert auf 0 und addiert den Preis des Artikels
   // dazu(z.B. DataObjects.Artikel & Anzahl)
   public void getGesamtPreis() {
-    double betrag = 0;
+    this.betrag = 0;
   }
 }

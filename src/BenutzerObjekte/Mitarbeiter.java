@@ -1,9 +1,12 @@
+package BenutzerObjekte;
+
+
 public class Mitarbeiter extends Benutzer{
     private int mitarbeiterNr;
 
-    public Mitarbeiter(String name, String username, String password, int nr) {
+    public Mitarbeiter(String name, String username, String password, int mitarbeiterNr) {
         super(name, username, password);
-        mitarbeiterNr = nr;
+        this.mitarbeiterNr = mitarbeiterNr;
     }
 
     // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,

@@ -13,8 +13,6 @@ public class Artikel {
     this.bestand = bestand;
     this.preis = einzelpreis;
 
-    i = i;
-    i=i;
   }
 
   // getter

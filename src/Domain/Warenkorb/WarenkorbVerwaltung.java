@@ -1,49 +1,54 @@
-package DatenObjekte;
+package Domain.Warenkorb;
 
 import java.util.HashMap;
 
+import DatenObjekte.Artikel;
+
 /**
- * Die Warenkorb Klasse.
- * HashMap<Artikel, Integer> inhalt
+ * Verwaltet den warenkorb
  */
-public class Warenkorb {
-  private HashMap<Artikel, Integer> inhalt;
-  /**
-   * Warenkorb Constructor
-   */
-  public Warenkorb() {
-    this.inhalt = new HashMap<Artikel, Integer>();
+public class WarenkorbVerwaltung {
+
+  Warenkorb warenkorb;
+
+  public WarenkorbVerwaltung() {
+    warenkorb = new Warenkorb();
   }
 
-  /**
+  /*
    * Gibt Wahrenkorb Inhalt zurück
    */
   public HashMap<Artikel, Integer> getInhalt() {
-    return this.inhalt;
+    return this.warenkorb.inhalt;
   }
 
+  /**
+   * Setzt den gesamten inhalt des warenkorbs
+   * 
+   * @param inhalt
+   */
   public void setInhalt(HashMap<Artikel, Integer> inhalt) {
-    this.inhalt = inhalt;
+    this.warenkorb.inhalt = inhalt;
   }
 
   /**
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    */
   public void setArtikel(Artikel artikel, Integer integar) {
-    this.inhalt.put(artikel, integar);
+    this.warenkorb.inhalt.put(artikel, integar);
   }
 
   /**
    * entfernt einen artikel aus der map
    */
   public void removeArtikel(Artikel artikel) {
-    this.inhalt.remove(artikel);
+    this.warenkorb.inhalt.remove(artikel);
   }
 
   /**
    * cleared den Warenkorb Inhalt
    */
   public void clearAll() {
-    this.inhalt.clear();
+    this.warenkorb.inhalt.clear();
   }
 }
