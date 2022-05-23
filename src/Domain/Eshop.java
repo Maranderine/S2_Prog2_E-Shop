@@ -33,12 +33,12 @@ public class Eshop {
 
   }
 
-  public void Login() {
-    // return BenutzerVw.Login();
+  public Benutzer login(String username, String password) {
+    return Benutzerverwaltung.login(username, password);
   }
 
-  public void Logout() {
-    BenutzerVw.Logout();
+  public void logout() {
+    Benutzerverwaltung.logout();
   }
 
   // #endregion

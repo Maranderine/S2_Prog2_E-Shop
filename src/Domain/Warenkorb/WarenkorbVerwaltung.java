@@ -9,8 +9,6 @@ import DatenObjekte.Artikel;
  */
 public class WarenkorbVerwaltung {
 
-  Warenkorb warenkorb;
-
   public WarenkorbVerwaltung() {
     warenkorb = new Warenkorb();
   }

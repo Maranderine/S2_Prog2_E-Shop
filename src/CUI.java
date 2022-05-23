@@ -65,11 +65,21 @@ public class CUI {
         }
         break;
       case LOGIN:// Login menu
-        switch (input) {
-          case "":
+        System.out.print("username > ");
+				username = liesEingabe();
+				nr = Integer.parseInt(nummer);
+				System.out.print("password  > ");
+				password = liesEingabe();
+
+        if(eshop.login(username, password) instanceOf Kunde){
+          startLevel = MenuLevel.KUNDEN_ANSICHT;
+        } else if(eshop.login(username, password) instanceOf Mitarbeiter){
+          startLevel = MenuLevel.KUNDEN_ANSICHT;
+        }
 
             break;
         }
+
         break;
       case WARENKORB:// Warenkorb menu
         switch (input) {
@@ -88,6 +98,25 @@ public class CUI {
         }
         break;
       case KUNDEN_ANSICHT:
+        switch (input) {
+          case "1":// Artikel ausgeben
+            eshop.
+            // eshop.WK_setArtikel(artikel, integar);
+            break;
+          case "2":// artikel suchen
+            System.out.print("Artikel Name  > ");
+				    titel = liesEingabe();
+            artikelListe = eshop.searchArtikel(titel);
+            // eshop.WK_removeArtikel(artikel);
+            break;
+          case "3":// artikel in den Warenkorb 
+            break;
+          case "4":// Warenkorb
+            break;
+          case "0":// Exit
+
+            break;
+        }
         break;
       case MITARBEITER_ANSICHT:
         break;
@@ -119,6 +148,12 @@ public class CUI {
         System.out.println("0 = Exit");
         break;
       case KUNDEN_ANSICHT:
+        System.out.println("____________KUNDE____________");
+        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println("2 = Artikel suchen");
+        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
+        System.out.println("4 = Warenkorb anzeigen");
+        System.out.println("0 = Exit");
         break;
       case MITARBEITER_ANSICHT:
         break;
