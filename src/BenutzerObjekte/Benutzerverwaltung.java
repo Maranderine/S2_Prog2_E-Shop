@@ -45,11 +45,12 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public void Login() {
-
+  public void Login(String username, String passw) {
+    Benutzer b = this.sucheNutzer(username);
+    if(b.password.equals(passw)){
+      return b;
+    }
+    return null;
   }
-
-  public void Logout() {
-
-  }
+  
 }
