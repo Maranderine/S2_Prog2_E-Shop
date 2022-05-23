@@ -21,11 +21,11 @@ public class Eshop {
 
   // #region NutzerVerwaltung
 
-  public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
+  public void kundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
     Benutzerverwaltung.registrieren(name, username, password, nr, email, adress);
   }
 
-  public void MitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
+  public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
     Benutzerverwaltung.registrieren(name, username, password, mitarbeiterNr);
   }
 
@@ -87,5 +87,9 @@ public class Eshop {
 
   public Vector<Artikel> alleArtikel(){
    return ArtikelVerwaltung.alleArtikel();
+  }
+
+  public Vector<Artikel> searchArtikel(String titel){
+    return ArtikelVerwaltung.searchArtikel(titel);
   }
 }

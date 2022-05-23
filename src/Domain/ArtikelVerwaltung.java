@@ -18,9 +18,11 @@ public class ArtikelVerwaltung {
   } 
   
   public Artikel searchArtikel(String titel){
+    Vextor<artikel> ergebnis = new Vector<>();
     for (Artikel artikel : artikelListe) {
       if (artikel.getName().equals(titel)) {
-        return artikel;
+        ergebnis.add(artikel);
+        return ergebnis;
       }
     }
     return null;
