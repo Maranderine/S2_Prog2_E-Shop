@@ -23,22 +23,15 @@ public class Benutzerverwaltung {
   }
 
   public void registrieren(String name, String username, String password, int nr, String email, String adress) {
-
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
-
-    if (benutzerRegister.contains(einNutzer)) {
-      // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
-    }
+    // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     benutzerRegister.add(einNutzer);
   }
 
   public void registrieren(String name, String username, String password, int mitarbeiterNr){
     Benutzer einNutzer = new Mitarbeiter(name, username, password, nr, email, adress);
-
-    if (benutzerRegister.contains(einNutzer)) {
-      // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
-    }
+    // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     benutzerRegister.add(einNutzer);
   }

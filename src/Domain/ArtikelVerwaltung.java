@@ -13,7 +13,10 @@ public class ArtikelVerwaltung {
     artikelListe = new Vector<Artikel>();
   }
 
-
+  public Vector<Artikel> alleArtikel(){
+    return artikelListe;
+  } 
+  
   public Artikel searchArtikel(String titel){
     for (Artikel artikel : artikelListe) {
       if (artikel.getName().equals(titel)) {

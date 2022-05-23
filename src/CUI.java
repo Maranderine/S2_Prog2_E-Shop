@@ -64,6 +64,7 @@ public class CUI {
             break;
         }
         break;
+
       case LOGIN:// Login menu
         System.out.print("username > ");
 				username = liesEingabe();
@@ -71,16 +72,21 @@ public class CUI {
 				System.out.print("password  > ");
 				password = liesEingabe();
 
-        if(eshop.login(username, password) instanceOf Kunde){
-          startLevel = MenuLevel.KUNDEN_ANSICHT;
-        } else if(eshop.login(username, password) instanceOf Mitarbeiter){
-          startLevel = MenuLevel.KUNDEN_ANSICHT;
-        }
-
+        switch(eshop.login(username, password)){
+          case NONE:
+            System.out.println(" Benutzername oder Passwort falsch");
             break;
-        }
 
+          case MITARBEITER:
+            this.LevelMove(MITARBEITER_ANSICHT);
+            break;
+
+          case KUNDE:
+           this.LevelMove(MITARBEITER_ANSICHT);
+           break;
+        }
         break;
+
       case WARENKORB:// Warenkorb menu
         switch (input) {
           case "1":// ändern
@@ -97,23 +103,37 @@ public class CUI {
             break;
         }
         break;
+        
       case KUNDEN_ANSICHT:
         switch (input) {
+
           case "1":// Artikel ausgeben
-            eshop.
-            // eshop.WK_setArtikel(artikel, integar);
+            new Vector<Artikel> artikelListe = eshop.alleArtikel();
+            listeAusgeben(artikelListe);
             break;
+
           case "2":// artikel suchen
             System.out.print("Artikel Name  > ");
 				    titel = liesEingabe();
-            artikelListe = eshop.searchArtikel(titel);
-            // eshop.WK_removeArtikel(artikel);
+            new Vector<Artikel> artikelListe = eshop.searchArtikel(titel);
+            listeAusgeben(artikelListe);
             break;
+
           case "3":// artikel in den Warenkorb 
+            System.out.print("Artikel Name  > ");
+				    String titel = liesEingabe();
+            System.out.print("Anzahl  > ");
+				    String anzahl = liesEingabe();
+            int anz = Integer.parseInt(anzahl);#
+            WarenkorbVw.setArtikel(titel, anz);
             break;
+            
           case "4":// Warenkorb
+            this.LevelMove(WARENKORB);
             break;
+
           case "0":// Exit
+            this.LevelReturn();
 
             break;
         }

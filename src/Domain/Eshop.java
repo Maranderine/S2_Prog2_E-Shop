@@ -22,18 +22,14 @@ public class Eshop {
   // #region NutzerVerwaltung
 
   public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
-    BenutzerVw.registrieren(name, username, password, nr, email, adress);
+    Benutzerverwaltung.registrieren(name, username, password, nr, email, adress);
   }
 
-  public void MitarbeiterHinzufügen(String username) {
-
+  public void MitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
+    Benutzerverwaltung.registrieren(name, username, password, mitarbeiterNr);
   }
 
-  public void NutzerEntfernen(String username) {
-
-  }
-
-  public Benutzer login(String username, String password) {
+  public AktiverNutzer login(String username, String password) {
     return Benutzerverwaltung.login(username, password);
   }
 
@@ -49,7 +45,7 @@ public class Eshop {
    * @return HashMap<Artikel, Integer>
    */
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    return WarenkorbVw.getInhalt();
+    return WarenkorbVerwaltung.getInhalt();s
   }
 
   /**
@@ -87,5 +83,9 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
   // #endregion
+  // Region Artikelvw
 
+  public Vector<Artikel> alleArtikel(){
+   return ArtikelVerwaltung.alleArtikel();
+  }
 }
