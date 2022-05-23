@@ -11,7 +11,12 @@ public class Benutzerverwaltung {
 
   // Verwaltung der Nutzer in einer verketteten Liste
   private List<Benutzer> benutzerRegister;
-  private Benutzer aktiverNutzer = null;
+
+  enum AktiverNutzer{
+    MITARBEITER,
+    KUNDE,
+    NONE;
+  }
 
   public Benutzerverwaltung() {
     benutzerRegister = new Vector<Benutzer>();
@@ -53,12 +58,11 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public Benutzer login(String username, String passw) {
+  public AktiverNutzer login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
-    if(b.password.equals(passw)){
-      this.aktiverNutzer = b;
-      return b;
-    }
+    if(b == null || !(b.password.equals(passw))){return AktiverNutzer.NONE;}
+    if(b instanceof Mitarbeiter){return AktiverNutzer.MITARBEITER;}
+    if(b instanceof Mitarbeiter){return AktiverNutzer.KUNDE;}
     return null;
   }
 
