@@ -13,10 +13,31 @@ public class ArtikelVerwaltung {
     artikelListe = new Vector<Artikel>();
   }
 
-  public void addArtikel() /*throws ArtikelExistiertBereitsException*/ {
 
+  public Artikel searchArtikel(String titel){
+    for (Artikel artikel : artikelListe) {
+      if (artikel.getName().equals(titel)) {
+        return artikel;
+      }
+    }
+    return null;
   }
 
+  public void addArtikel(int artikelNr, String name, int bestand, double einzelpreis) /*throws ArtikelExistiertBereitsException*/ {
+    if(searchArtikel(name) == null){
+      Artikel artikel = new Artikel(int artikelNr, String name, int bestand, double einzelpreis);
+      artikelListe.add(artikel);
+    }
+  }
+
+  public void setBestand(String titel, Int aufLager){
+    Artikel artikel = searchArtikel(titel);
+    artikelListe.set(artikelListe.IndexOf(artikel), artikel.setBestand(aufLager));
+  }
+
+  public void removeArtikel(String titel){
+    artikelListe.remove(this.searchArtikel(titel));
+  }
   // persistenz ///////////////////////////////
   /**
    * Läd eine artikel liste aus dem speicher

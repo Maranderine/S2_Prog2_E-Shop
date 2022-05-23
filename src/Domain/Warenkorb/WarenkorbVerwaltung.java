@@ -51,4 +51,8 @@ public class WarenkorbVerwaltung {
   public void clearAll() {
     this.warenkorb.inhalt.clear();
   }
+
+  public Rechnung ArtikelKaufen(){
+    
+  }
 }

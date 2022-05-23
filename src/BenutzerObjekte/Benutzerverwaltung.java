@@ -16,12 +16,19 @@ public class Benutzerverwaltung {
     benutzerRegister = new Vector<Benutzer>();
   }
 
-  public void registrieren(String name, String username, String password, int nr, String email, String adress) /*
-                                                                                                                * throws
-                                                                                                                * NutzerExistiertBereitsException
-                                                                                                                */ {
+  public void registrieren(String name, String username, String password, int nr, String email, String adress) {
 
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
+
+    if (benutzerRegister.contains(einNutzer)) {
+      // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
+    }
+    // übernimmt Vector:
+    benutzerRegister.add(einNutzer);
+  }
+
+  public void registrieren(String name, String username, String password, int mitarbeiterNr){
+    Benutzer einNutzer = new Mitarbeiter(name, username, password, nr, email, adress);
 
     if (benutzerRegister.contains(einNutzer)) {
       // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
@@ -45,7 +52,7 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public void Login(String username, String passw) {
+  public Benutzer Login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
     if(b.password.equals(passw)){
       return b;
