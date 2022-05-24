@@ -1,14 +1,17 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Stack;
 
+import DatenObjekte.Artikel;
 import Domain.Eshop;
 
 public class CUI {
 
   // create eshop
   private static Eshop eshop = new Eshop();
-  // Create input Scanner
-  static Scanner inputScanner = new Scanner(System.in);
+  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
+  private static BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
   // loop main bool
   private static Boolean LOOP = true;
 
@@ -19,53 +22,81 @@ public class CUI {
    */
   public static void main(String args[]) {
 
+    // #region setup
+
+    // move level to start menu
     LevelMove(startLevel);
 
-    String input;
+    // #endregion setup
+
+    // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
+    LevelMove(MenuLevel.WARENKORB);
+    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
+    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
+    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
+    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
+
+    // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
 
     do {
-      DisplayMenu();
-      input = GetInput();
-      ProcessInput(input);
+      CUImenu();
     } while (LOOP);
-
-    inputScanner.close();// closing the scanner
   }
 
+  // #region input
   /**
    * gets an input as a string
    * 
-   * @return
+   * @return input
+   * @throws IOException
    */
   private static String GetInput() {
-    return inputScanner.nextLine();
+    try {
+      return inputStream.readLine();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return null;
   }
+  // #endregion
 
-  /**
-   * processes input for the CUI
-   * 
-   * @param input
-   */
-  private static void ProcessInput(String input) {
+  /** Display and process of the CUI menu */
+  private static void CUImenu() {
+
+    int num;
+    String string;
+    Artikel artikel;
+    String getInput;
+
+    // print top
+    System.out.println("/////////////////////////////////////////////");
     // first switch determines the menu level, the menu that should be displayed
     switch (Level()) {
-      case MAIN_MENU:// main menu
-        switch (input) {
-          case "1":// Anmelden
+      case MAIN_MENU:
+        // #region MAIN_MENU
+        System.out.println("____________E-Shop___________");
+        System.out.println("1 = Anmelden");
+        System.out.println("2 - Registrieren");
+        System.out.println("0 = Exit");
 
+        getInput = GetInput();
+
+        switch (getInput) {
+          case "1":// Anmelden
+            LevelMove(MenuLevel.LOGIN);
             break;
           case "2":// Registrieren
-
-            // eshop.KundeHinzufügen(name, username, password, nr, email, adress);1
-
+            LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
             break;
           case "0":// Exit
             endCUI();
             break;
         }
         break;
-
       case LOGIN:// Login menu
+        System.out.println("LOGIN");
+        System.out.println("username > ");
 				String username = input;
 				System.out.print("password  > ");
 				String password = liesEingabe();
@@ -74,7 +105,6 @@ public class CUI {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
             break;
-
           case MITARBEITER:
             this.LevelMove(MITARBEITER_ANSICHT);
             break;
@@ -84,27 +114,66 @@ public class CUI {
            break;
         }
         break;
+      // #endregion KUNDEN_REGISTRIEREN
+      case KUNDEN_ANSICHT:
+        // #region KUNDEN_ANSICHT
+        break;
+      // #endregion KUNDEN_ANSICHT
+      case KUNDEN_ARTIKEL:
+        // #region KUNDEN_ARTIKEL
+        break;
+      // #endregion KUNDEN_ARTIKEL
+      case WARENKORB:
+        // #region WARENKORB
+        System.out.println("____________________Warenkorb_____________________");
+        System.out.println(eshop.WK_getWarenkorb());// display warenkorb
+        System.out.println("--------------------------------------------------");
+        System.out.println("\t1 = Artikel anzahl ändern");
+        System.out.println("\t2 = Einzelnden Artikel löschen");
+        System.out.println("\t3 = Alle Artikel löschen");
+        System.out.println("\t0 = Exit");
+        System.out.print("\t>");
 
-      case WARENKORB:// Warenkorb menu
-        switch (input) {
+        getInput = GetInput();
+
+        switch (getInput) {
           case "1":// ändern
-            // eshop.WK_setArtikel(artikel, integar);
+            System.out.println("------Artikel anzahl ändern------");
+            System.out.println("\tInput Artikel Name");
+            System.out.print("\t>");
+            artikel = eshop.AV_findArtikelByName(GetInput());
+            System.out.println("\tInput Artikel anzahl");
+            System.out.print("\t>");
+            num = Integer.parseInt(GetInput());
+
+            eshop.WV_setArtikel(artikel, num);
+
             break;
           case "2":// löschen
-            // eshop.WK_removeArtikel(artikel);
+            System.out.println("------Einzelnden Artikel löschen------");
+            System.out.println("\tInput Artikel Name");
+            System.out.print("\t>");
+            artikel = eshop.AV_findArtikelByName(GetInput());
+
+            eshop.WV_removeArtikel(artikel);
             break;
           case "3":// Alle löschen
-            eshop.WK_clearAll();
+            eshop.WV_clearAll();
             break;
           case "0":// Exit
-
+            LevelReturn();
             break;
         }
         break;
-        
       case KUNDEN_ANSICHT:
+        System.out.println("____________KUNDE____________");
+        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println("2 = Artikel suchen");
+        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
+        System.out.println("4 = Warenkorb anzeigen");
+        System.out.println("0 = Exit");
         switch (input) {
-
+ 
           case "1":// Artikel ausgeben
             new Vector<Artikel> artikelListe = eshop.alleArtikel();
             gibArtikelListeAus(artikelListe);
@@ -137,9 +206,13 @@ public class CUI {
             break;
         }
         break;
-
       case MITARBEITER_ANSICHT:
         switch(input){
+            System.out.println("____________MITARBEITER____________");
+            System.out.println("1 = Artikel hinzufügen");
+            System.out.println("2 = Artikel Bestand ändern");
+            System.out.println("3 = Mitarbeiter hinzufügen");
+            System.out.println("0 = Exit");
           case "1"://artikel hinzufügen
             break;
           case "2"://Bestand ändern
@@ -156,66 +229,38 @@ public class CUI {
         }
         break;
 
-      default:
-        break;
-    }
-  }
-
-  /** Displays the menu */
-  private static void DisplayMenu() {
-
-    switch (Level()) {
-      case MAIN_MENU:
-        System.out.println("____________E-Shop___________");
-        System.out.println("1 = Anmelden");
-        System.out.println("2 - Registrieren");
-        System.out.println("0 = Exit");
-        break;
-      case LOGIN:
-        System.out.println("LOGIN");
-        System.out.println("username > ");
-        break;
-      case WARENKORB:
-        System.out.println("____________Warenkorb____________");
-        // System.out.println(warenkorb.getInhalt());//display warenkorb
-        System.out.println("--------------------------------");
-        System.out.println("1 = Artikel anzahl ändern");
-        System.out.println("2 = Einzelnden Artikel löschen");
-        System.out.println("3 = Alle Artikel löschen");
-        System.out.println("0 = Exit");
-        break;
-      case KUNDEN_ANSICHT:
-        System.out.println("____________KUNDE____________");
-        System.out.println("1 = alle Artikel ausgeben");
-        System.out.println("2 = Artikel suchen");
-        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
-        System.out.println("4 = Warenkorb anzeigen");
-        System.out.println("0 = Exit");
-        break;
+      // #endregion WARENKORB
       case MITARBEITER_ANSICHT:
-        System.out.println("____________MITARBEITER____________");
-        System.out.println("1 = Artikel hinzufügen");
-        System.out.println("2 = Artikel Bestand ändern");
-        System.out.println("3 = Mitarbeiter hinzufügen");
-        System.out.println("0 = Exit");
+        // #region MITARBEITER_ANSICHT
         break;
-      default:
+      // #endregion MITARBEITER_ANSICHT
+      case MITARBEITER_ARTIKEL:
+        // #region MITARBEITER_ARTIKEL
         break;
+      // #endregion MITARBEITER_ARTIKEL
+      case MITARBEITER_REGISTRIEREN:
+        // #region MITARBEITER_REGISTRIEREN
+        break;
+      // #endregion MITARBEITER_REGISTRIEREN
     }
   }
 
-  // #region level system
+  // #region level system ///////////////////////
 
   // menu level enum and value
   enum MenuLevel {
     MAIN_MENU, // start menu
     LOGIN,
+    KUNDEN_REGISTRIEREN,
     KUNDEN_ANSICHT,
+    KUNDEN_ARTIKEL,
+    WARENKORB,
     MITARBEITER_ANSICHT,
-    WARENKORB
+    MITARBEITER_ARTIKEL,
+    MITARBEITER_REGISTRIEREN
   }
 
-  /** S */
+  /** the start level, displayed on statup */
   static MenuLevel startLevel = MenuLevel.MAIN_MENU;
   /** Keeps track of current and all past menulevels */
   private static Stack<MenuLevel> levelStack = new Stack<MenuLevel>();
@@ -237,17 +282,35 @@ public class CUI {
    */
   private static MenuLevel LevelReturn() {
     if (levelStack.capacity() == 1)
-      return MenuLevel.MAIN_MENU;
+      return startLevel;
 
     return levelStack.pop();
   }
 
+  /**
+   * return current level
+   * 
+   * @return currently in use
+   */
   private static MenuLevel Level() {
     return levelStack.peek();
   }
 
-  // #endregion
-  private void gibArtikelListeAus(Vector<Artikel> artikelListe) {
+
+  /**
+   * resets level to start value
+   * 
+   * @return
+   */
+  private static MenuLevel LevelClear() {
+    levelStack.clear();
+    levelStack.push(startLevel);
+    return startLevel;
+  }
+
+  // #endregion ///////////////////////
+  
+   private void gibArtikelListeAus(Vector<Artikel> artikelListe) {
 		if (artikelListe.isEmpty()) {
 			System.out.println("Liste ist leer.");
 		} else {
@@ -256,6 +319,7 @@ public class CUI {
 			}
 		}
 	}
+
   /**
    * Ends the CUI
    */

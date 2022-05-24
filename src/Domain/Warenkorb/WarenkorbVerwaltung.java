@@ -21,6 +21,12 @@ public class WarenkorbVerwaltung {
   public HashMap<Artikel, Integer> getInhalt() {
     return this.warenkorb.inhalt;
   }
+  /*
+   * Gibt Wahrenkorb
+   */
+  public Warenkorb getWarenkorb() {
+    return this.warenkorb;
+  }
 
   /**
    * Setzt den gesamten inhalt des warenkorbs
@@ -52,7 +58,16 @@ public class WarenkorbVerwaltung {
     this.warenkorb.inhalt.clear();
   }
 
+  /**
+  *@author Maranderine
+  */
   public Rechnung ArtikelKaufen(){
-    
+    }
+
+
+  @Override
+  public String toString() {
+    return warenkorb.toString();
+
   }
 }
