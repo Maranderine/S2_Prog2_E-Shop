@@ -1,38 +1,21 @@
 package Domain;
-
 // import Exceptions.ArtikelExistiertBereitsException;
 import DatenObjekte.Artikel;
-
 import java.util.Vector;
 
 public class ArtikelVerwaltung {
 
-  private Vector<Artikel> artikelListe;
-  static int artikelNrCount = 0;
+  private Lager lager;
 
   public ArtikelVerwaltung() {
-    artikelListe = new Vector<Artikel>();
+    lager = new Lager();
   }
 
   /**
    * @author Maranderine
    */
-  public Vector<Artikel> alleArtikel() {
-    return artikelListe;
-  }
-
-  /**
-   * @author Maranderine
-   */
-  public Vector<Artikel> searchArtikel(String titel) {
-    Vector<Artikel> ergebnis = new Vector<Artikel>();
-    for (Artikel artikel : artikelListe) {
-      if (artikel.getName().equals(titel)) {
-        ergebnis.add(artikel);
-      }
-      return ergebnis;
-    }
-    return null;
+  public Lager alleArtikel() {
+    return lager;
   }
 
   /**
@@ -43,12 +26,13 @@ public class ArtikelVerwaltung {
    * @param einzelpreis
    * @return
    */
+
   public Artikel addArtikel(String name, int bestand, double einzelpreis) {
     Artikel artikel = findArtikelByName(name);
     if (artikel == null) {
-      artikel = new Artikel(artikelNrCount, name, bestand, einzelpreis);
-      artikelListe.add(artikel);
-      artikelNrCount++;
+      artikel = new Artikel(lager.artikelNrCount, name, bestand, einzelpreis);
+      lager.artikelListe.add(artikel);
+      lager.artikelNrCount++;
     }
     return artikel;
   }
@@ -63,7 +47,7 @@ public class ArtikelVerwaltung {
     // search for Artikel
     Artikel artikel = findArtikelByName(name);
     if (artikel != null)// if Artikel is found
-      return artikelListe.remove(artikel);// delete from list
+      return this.lager.artikelListe.remove(artikel);// delete from list
 
     return false;// if nothing could be deleted
   }
@@ -76,9 +60,8 @@ public class ArtikelVerwaltung {
    */
   public Artikel findArtikelByName(String name) {
     // iterates through artikelListe
-    for (Artikel artikel : artikelListe) {
-      if (artikel.getName().equals(name))
-        return artikel;
+    for (Artikel artikel : this.lager.artikelListe) {
+      if (artikel.getName().equals(name)) return artikel;
     }
     return null;
   }
@@ -90,8 +73,8 @@ public class ArtikelVerwaltung {
    * @return Artikel type Object or null
    */
   public Artikel getArtikel(int index) {
-    if (index < artikelListe.size())
-      return artikelListe.get(index);
+    if (index < lager.artikelListe.size())
+      return lager.artikelListe.get(index);
 
     return null;
   }
@@ -134,20 +117,7 @@ public class ArtikelVerwaltung {
    */
   public void loadListe() {
     // TEMP kreirt nur eine liste
-    artikelListe = new Vector<Artikel>();
+    lager.artikelListe = new Vector<Artikel>();
   }
   // #endregion
-
-  @Override
-  public String toString() {
-    String str = "Artikelnr\tName\tBestand\tPreis\n";
-    if (!artikelListe.isEmpty())
-      for (Artikel artikel : artikelListe) {
-        str += "\t" + artikel.toString() + "\n";
-      }
-    else
-      str += "Keine Artikel";
-
-    return str;
-  }
 }
