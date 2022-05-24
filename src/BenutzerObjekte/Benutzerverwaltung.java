@@ -26,14 +26,12 @@ public class Benutzerverwaltung {
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
-    benutzerRegister.add(einNutzer);
-  }
 
-  public void registrieren(String name, String username, String password, int mitarbeiterNr){
-    Benutzer einNutzer = new Mitarbeiter(name, username, password, nr, email, adress);
+  public void registrieren(String name, String username, String password, int nr){
+    Benutzer einNutzer = new Mitarbeiter(name, username, password, nr);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
-    benutzerRegister.add(einNutzer);
+    this.benutzerRegister.add(einNutzer);
   }
 
   public void loeschen(String username) {
@@ -53,14 +51,10 @@ public class Benutzerverwaltung {
 
   public AktiverNutzer login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
-    if(b == null || !(b.password.equals(passw))){return AktiverNutzer.NONE;}
-    if(b instanceof Mitarbeiter){return AktiverNutzer.MITARBEITER;}
-    if(b instanceof Mitarbeiter){return AktiverNutzer.KUNDE;}
+    if(b == null || !(b.getPassword().equals(passw))){return Enum.valueOf(AktiverNutzer.class,"NONE");}
+    if(b instanceof Mitarbeiter){return Enum.valueOf(AktiverNutzer.class,"MITARBEITER");}
+    if(b instanceof Kunde){return Enum.valueOf(AktiverNutzer.class,"KUNDE");}
     return null;
-  }
-
-  public void logout(){
-    this.aktiverNutzer = null;
   }
   
 }
