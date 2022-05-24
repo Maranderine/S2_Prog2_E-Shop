@@ -1,6 +1,7 @@
 package Domain;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
@@ -23,20 +24,20 @@ public class Eshop {
     BenutzerVw.registrieren(name, username, password, nr, email, adress);
   }
 
-  public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
-    BenutzerVw.registrieren(name, username, password, mitarbeiterNr);
+  public void mitarbeiterHinzufügen(String name, String username, String password) {
+    BenutzerVw.registrieren(name, username, password);
   }
 
   public void NutzerEntfernen(String username) {
 
   }
 
-  public Enum login(String username, String password) {
+  public int login(String username, String password) {
     return BenutzerVw.login(username, password);
   }
 
   public void logout() {
-    Benutzerverwaltung.logout();
+    BenutzerVw.logout();
   }
 
   // #endregion
@@ -47,7 +48,7 @@ public class Eshop {
    * @return HashMap<Artikel, Integer>
    */
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    return WarenkorbVerwaltung.getInhalt();s
+    return WarenkorbVw.getInhalt();
   }
   /**
    * gibt warenkorb
@@ -88,13 +89,13 @@ public class Eshop {
   *@author Maranderine
   */
   public Vector<Artikel> AV_alleArtikel(){
-   return ArtikelVerwaltung.alleArtikel();
+   return ArtikelVw.alleArtikel();
   }
   /**
   *@author Maranderine
   */
   public Vector<Artikel> AV_searchArtikel(String titel){
-    return ArtikelVerwaltung.searchArtikel(titel);
+    return ArtikelVw.searchArtikel(titel);
   }
   /**
    * Add Artikel to artikelListe

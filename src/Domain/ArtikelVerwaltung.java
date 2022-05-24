@@ -23,8 +23,8 @@ public class ArtikelVerwaltung {
   /**
   *@author Maranderine
   */
-  public Artikel searchArtikel(String titel){
-    Vextor<artikel> ergebnis = new Vector<>();
+  public Vector<Artikel> searchArtikel(String titel){
+    Vector<Artikel> ergebnis = new Vector<Artikel>();
     for (Artikel artikel : artikelListe) {
       if (artikel.getName().equals(titel)) {
         ergebnis.add(artikel);
