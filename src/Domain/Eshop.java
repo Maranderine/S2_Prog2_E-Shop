@@ -19,25 +19,24 @@ public class Eshop {
   }
 
   // #region NutzerVerwaltung
-
-  public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
+   public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
     BenutzerVw.registrieren(name, username, password, nr, email, adress);
   }
 
-  public void MitarbeiterHinzufügen(String username) {
-
+  public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
+    BenutzerVw.registrieren(name, username, password, mitarbeiterNr);
   }
 
   public void NutzerEntfernen(String username) {
 
   }
 
-  public void Login() {
-    // return BenutzerVw.Login();
+  public Enum login(String username, String password) {
+    return BenutzerVw.login(username, password);
   }
 
-  public void Logout() {
-    BenutzerVw.Logout();
+  public void logout() {
+    Benutzerverwaltung.logout();
   }
 
   // #endregion
@@ -48,7 +47,7 @@ public class Eshop {
    * @return HashMap<Artikel, Integer>
    */
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    return WarenkorbVw.getInhalt();
+    return WarenkorbVerwaltung.getInhalt();s
   }
   /**
    * gibt warenkorb
@@ -57,16 +56,6 @@ public class Eshop {
   public Object WK_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
-
-  /**
-   * Setzt den gesamten inhalt des warenkorbs
-   * 
-   * @param inhalt
-   */
-  public void WV_setInhalt(HashMap<Artikel, Integer> inhalt) {
-    WarenkorbVw.setInhalt(inhalt);
-  }
-
   /**
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    * 
@@ -92,9 +81,21 @@ public class Eshop {
   public void WV_clearAll() {
     WarenkorbVw.clearAll();
   }
-  // #endregion Warenkorb
-  // #region Artikel
 
+  // #endregion Warenkorb
+  // Region Artikelvw
+  /**
+  *@author Maranderine
+  */
+  public Vector<Artikel> AV_alleArtikel(){
+   return ArtikelVerwaltung.alleArtikel();
+  }
+  /**
+  *@author Maranderine
+  */
+  public Vector<Artikel> AV_searchArtikel(String titel){
+    return ArtikelVerwaltung.searchArtikel(titel);
+  }
   /**
    * Add Artikel to artikelListe
    * 

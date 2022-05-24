@@ -22,6 +22,7 @@ public class Kunde extends Benutzer{
         this.kundenNr = kundenNr;
         this.email = email;
         this.adress = adress;
+        this.warenkorb = new Warenkorb;
     }
 
     //#region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
