@@ -47,6 +47,7 @@ public class Artikel {
 
   // tostring
   public String toString() {
-    return this.name;
+    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " + this.preis;
+    return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
   }
 }

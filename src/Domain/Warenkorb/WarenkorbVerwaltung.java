@@ -21,6 +21,12 @@ public class WarenkorbVerwaltung {
   public HashMap<Artikel, Integer> getInhalt() {
     return this.warenkorb.inhalt;
   }
+  /*
+   * Gibt Wahrenkorb
+   */
+  public Warenkorb getWarenkorb() {
+    return this.warenkorb;
+  }
 
   /**
    * Setzt den gesamten inhalt des warenkorbs
@@ -50,5 +56,10 @@ public class WarenkorbVerwaltung {
    */
   public void clearAll() {
     this.warenkorb.inhalt.clear();
+  }
+
+  @Override
+  public String toString() {
+    return warenkorb.toString();
   }
 }
