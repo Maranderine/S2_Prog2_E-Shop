@@ -68,7 +68,6 @@ public class CUI {
     int num;
     String string;
     Artikel artikel;
-    String getInput;
 
     // print top
     System.out.println("/////////////////////////////////////////////");
@@ -81,11 +80,11 @@ public class CUI {
         System.out.println("2 - Registrieren");
         System.out.println("0 = Exit");
 
-        getInput = GetInput();
+        string = GetInput();
 
-        switch (getInput) {
+        switch (string) {
           case "1":// Anmelden
-            LevelMove(MenuLevel.LOGIN);
+            LevelMove(MenuLevel.ANMELDUNG);
             break;
           case "2":// Registrieren
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
@@ -96,22 +95,22 @@ public class CUI {
         }
         break;
       // #endregion MAIN_MENU
-      case LOGIN:
-        // #region LOGIN
+      case ANMELDUNG:
+        // #region ANMELDUNG
         System.out.println("____________LOGIN___________");
-        getInput = GetInput();
-        switch (getInput) {
+        string = GetInput();
+        switch (string) {
           case "":
 
             break;
         }
         break;
-      // #endregion LOGIN
+      // #endregion ANMELDUNG
       case KUNDEN_REGISTRIEREN:
         // #region KUNDEN_REGISTRIEREN
         System.out.println("________REGISTRIEREN_______");
-        getInput = GetInput();
-        switch (getInput) {
+        string = GetInput();
+        switch (string) {
           case "":
 
             break;
@@ -122,7 +121,6 @@ public class CUI {
         // #region KUNDEN_ANSICHT
         break;
       // #endregion KUNDEN_ANSICHT
-
       case KUNDEN_ARTIKEL:
         // #region KUNDEN_ARTIKEL
         break;
@@ -135,12 +133,13 @@ public class CUI {
         System.out.println("\t1 = Artikel anzahl ändern");
         System.out.println("\t2 = Einzelnden Artikel löschen");
         System.out.println("\t3 = Alle Artikel löschen");
+        System.out.println("\t4 = KAUFEN");
         System.out.println("\t0 = Exit");
         System.out.print("\t>");
 
-        getInput = GetInput();
+        string = GetInput();
 
-        switch (getInput) {
+        switch (string) {
           case "1":// ändern
             System.out.println("------Artikel anzahl ändern------");
             System.out.println("\tInput Artikel Name");
@@ -164,6 +163,18 @@ public class CUI {
           case "3":// Alle löschen
             eshop.WV_clearAll();
             break;
+          case "4":// KAUFEN
+            System.out.println("------ KAUF BESTÄTIGUNG ------");
+            System.out.println("\tKaufbestätigung:");
+            System.out.println("\ty = ja kaufen");
+            System.out.println("\tn = nein zurück");
+            System.out.print("\t>");
+            string = GetInput();
+
+            
+
+
+            break;
           case "0":// Exit
             LevelReturn();
             break;
@@ -182,6 +193,10 @@ public class CUI {
         // #region MITARBEITER_REGISTRIEREN
         break;
       // #endregion MITARBEITER_REGISTRIEREN
+      case MITARBEITER_EREIGNISLOG:
+        // #region MITARBEITER_EREIGNISLOG
+        break;
+      // #endregion MITARBEITER_EREIGNISLOG
     }
   }
 
@@ -190,14 +205,15 @@ public class CUI {
   // menu level enum and value
   enum MenuLevel {
     MAIN_MENU, // start menu
-    LOGIN,
+    ANMELDUNG,
     KUNDEN_REGISTRIEREN,
     KUNDEN_ANSICHT,
     KUNDEN_ARTIKEL,
     WARENKORB,
     MITARBEITER_ANSICHT,
     MITARBEITER_ARTIKEL,
-    MITARBEITER_REGISTRIEREN
+    MITARBEITER_REGISTRIEREN,
+    MITARBEITER_EREIGNISLOG
   }
 
   /** the start level, displayed on statup */
