@@ -20,7 +20,6 @@ public class Eshop {
   }
 
   // #region NutzerVerwaltung
-
    public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
     BenutzerVw.registrieren(name, username, password, nr, email, adress);
   }
@@ -37,8 +36,8 @@ public class Eshop {
     return BenutzerVw.login(username, password);
   }
 
-  public void Logout() {
-    BenutzerVw.Logout();
+  public void logout() {
+    Benutzerverwaltung.logout();
   }
 
   // #endregion
@@ -49,7 +48,7 @@ public class Eshop {
    * @return HashMap<Artikel, Integer>
    */
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    return WarenkorbVw.getInhalt();
+    return WarenkorbVerwaltung.getInhalt();s
   }
 
   /**
@@ -87,5 +86,13 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
   // #endregion
+  // Region Artikelvw
 
+  public Vector<Artikel> alleArtikel(){
+   return ArtikelVerwaltung.alleArtikel();
+  }
+
+  public Vector<Artikel> searchArtikel(String titel){
+    return ArtikelVerwaltung.searchArtikel(titel);
+  }
 }

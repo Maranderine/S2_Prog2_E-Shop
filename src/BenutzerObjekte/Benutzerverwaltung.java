@@ -26,8 +26,6 @@ public class Benutzerverwaltung {
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
-    this.benutzerRegister.add(einNutzer);
-  }
 
   public void registrieren(String name, String username, String password, int nr){
     Benutzer einNutzer = new Mitarbeiter(name, username, password, nr);
@@ -58,6 +56,5 @@ public class Benutzerverwaltung {
     if(b instanceof Kunde){return Enum.valueOf(AktiverNutzer.class,"KUNDE");}
     return null;
   }
-
   
 }
