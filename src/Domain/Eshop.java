@@ -21,20 +21,20 @@ public class Eshop {
 
   // #region NutzerVerwaltung
 
-  public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
+   public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
     BenutzerVw.registrieren(name, username, password, nr, email, adress);
   }
 
-  public void MitarbeiterHinzufügen(String username) {
-
+  public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
+    BenutzerVw.registrieren(name, username, password, mitarbeiterNr);
   }
 
   public void NutzerEntfernen(String username) {
 
   }
 
-  public void Login() {
-    // return BenutzerVw.Login();
+  public Enum login(String username, String password) {
+    return BenutzerVw.login(username, password);
   }
 
   public void Logout() {
