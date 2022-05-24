@@ -2,7 +2,6 @@ package Domain;
 
 import java.util.HashMap;
 
-import BenutzerObjekte.Benutzer;
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
 import Domain.Warenkorb.WarenkorbVerwaltung;
@@ -42,7 +41,7 @@ public class Eshop {
   }
 
   // #endregion
-  // #region warenkorb
+  // #region Warenkorb
   /**
    * Gibt Wahrenkorb Inhalt zurüc
    * 
@@ -51,13 +50,20 @@ public class Eshop {
   public HashMap<Artikel, Integer> WK_getInhalt() {
     return WarenkorbVw.getInhalt();
   }
+  /**
+   * gibt warenkorb
+   * @return
+   */
+  public Object WK_getWarenkorb() {
+    return WarenkorbVw.getWarenkorb();
+  }
 
   /**
    * Setzt den gesamten inhalt des warenkorbs
    * 
    * @param inhalt
    */
-  public void WK_setInhalt(HashMap<Artikel, Integer> inhalt) {
+  public void WV_setInhalt(HashMap<Artikel, Integer> inhalt) {
     WarenkorbVw.setInhalt(inhalt);
   }
 
@@ -67,7 +73,7 @@ public class Eshop {
    * @param artikel artikel objekt
    * @param integar artikel stückzahl
    */
-  public void WK_setArtikel(Artikel artikel, Integer integar) {
+  public void WV_setArtikel(Artikel artikel, int integar) {
     WarenkorbVw.setArtikel(artikel, integar);
   }
 
@@ -76,16 +82,45 @@ public class Eshop {
    * 
    * @param artikel artikel zu entfernen
    */
-  public void WK_removeArtikel(Artikel artikel) {
+  public void WV_removeArtikel(Artikel artikel) {
     WarenkorbVw.removeArtikel(artikel);
   }
 
   /**
    * löscht den gesamten inhalt des Warenkorbes
    */
-  public void WK_clearAll() {
+  public void WV_clearAll() {
     WarenkorbVw.clearAll();
   }
-  // #endregion
+  // #endregion Warenkorb
+  // #region Artikel
 
+  /**
+   * Add Artikel to artikelListe
+   * 
+   * @param name
+   * @param bestand
+   * @param einzelpreis
+   */
+  public Artikel AV_addArtikel(String name, int bestand, double einzelpreis) {
+    return ArtikelVw.addArtikel(name, bestand, einzelpreis);
+  }
+
+  public boolean AV_deleteArtikel(String name) {
+    return ArtikelVw.deleteArtikel(name);
+  }
+
+  /**
+   * find Artikel by name in artikelListe
+   * 
+   * @param name of artikel
+   * @return Artikel type object or null
+   */
+  public Artikel AV_findArtikelByName(String name) {
+    return ArtikelVw.findArtikelByName(name);
+  }
+
+  // set artikel
+
+  // #endregion Artikel
 }
