@@ -29,8 +29,9 @@ public class Benutzerverwaltung {
     this.benutzerRegister.add(einNutzer);
   }
 
-  public void registrieren(String name, String username, String password, int nr) {
-    Benutzer einNutzer = new Mitarbeiter(name, username, password, nr);
+  public void registrieren(String name, String username, String password){
+    Benutzer einNutzer = new Mitarbeiter(name, username, password);
+
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     this.benutzerRegister.add(einNutzer);
@@ -51,7 +52,7 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public AktiverNutzer login(String username, String passw) {
+  public int login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
     if (b == null || !(b.getPassword().equals(passw))) {
       return Enum.valueOf(AktiverNutzer.class, "NONE");

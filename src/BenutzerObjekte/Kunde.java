@@ -21,7 +21,7 @@ public class Kunde extends Benutzer{
         super(name, username, password);
         this.kundenNr = kundenNr;
         this.email = email;
-        this.address = address;
+        this.adress = address;
         // this.warenkorb = new Warenkorb; //erstmal rausgenommen Warenkorb wird in der Warenkorbverwaltung gemanaged
     }
 
@@ -29,11 +29,11 @@ public class Kunde extends Benutzer{
     // z.B. getStrasse() und setStrasse()
 
     public String getAdress() {
-        return address;
+        return adress;
     }
 
     public void setAdress(String adress) {
-        this.address = adress;
+        this.adress = adress;
     }
 
     public String getEmail() {

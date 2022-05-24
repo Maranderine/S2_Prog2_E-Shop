@@ -25,8 +25,8 @@ public class Eshop {
     BenutzerVw.registrieren(name, username, password, nr, email, address);
   }
 
-  public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
-    BenutzerVw.registrieren(name, username, password, mitarbeiterNr);
+  public void mitarbeiterHinzufügen(String name, String username, String password) {
+    BenutzerVw.registrieren(name, username, password);
   }
 
   public void NutzerEntfernen(String username) {

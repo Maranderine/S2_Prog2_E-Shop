@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
+import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
@@ -67,6 +68,7 @@ public class CUI {
 
     int num;
     String string;
+    String string2;
     Artikel artikel;
 
     // print top
@@ -100,6 +102,7 @@ public class CUI {
 
         System.out.println("LOGIN");
         System.out.println("username > ");
+
 				String username = GetInput();
 				System.out.print("password  > ");
 				String password = GetInput();
@@ -190,7 +193,6 @@ public class CUI {
         System.out.print("\t>");
 
         string = GetInput();
-
         switch (string) {
           case "1":// ändern
             System.out.println("------Artikel anzahl ändern------");
@@ -222,51 +224,106 @@ public class CUI {
             System.out.println("\tn = nein zurück");
             System.out.print("\t>");
             string = GetInput();
-
-            
-
-
             break;
           case "0":// Exit
             LevelReturn();
             break;
         }
         break;
-      // #endregion WARENKORB
-      case MITARBEITER_ANSICHT:
-        // #region MITARBEITER_ANSICHT
-        System.out.println("____________MITARBEITER____________");
-        System.out.println("1 = Artikel hinzufügen");
-        System.out.println("2 = Artikel Bestand ändern");
-        System.out.println("3 = Mitarbeiter hinzufügen");
+      case KUNDEN_ANSICHT:
+        System.out.println("____________KUNDE____________");
+        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println("2 = Artikel suchen");
+        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
+        System.out.println("4 = Warenkorb");
         System.out.println("0 = Exit");
 
-        string = GetInput();
+        getInput = GetInput();
 
-        switch(string){
-        case "1"://artikel hinzufügen
+        switch (getInput) {
+ 
+          case "1":// Artikel ausgeben
+            gibArtikelListeAus(eshop.AV_alleArtikel());
+            break;
 
-          break;
-        case "2"://Bestand ändern
+          case "2":// artikel suchen
+            System.out.print("Artikel Name  > ");
+				    String titel = GetInput();
+            gibArtikelListeAus(eshop.AV_searchArtikel(titel));
+            break;
 
-          break;
-        case "3"://Mitarbeiter hinzufügen
+          case "3":// artikel in den Warenkorb 
+            System.out.print("Artikel Name  > ");
+				    artikel = eshop.AV_findArtikelByName(GetInput());
+            System.out.print("Anzahl  > ");
+            num = Integer.parseInt(GetInput());
+            eshop.WV_setArtikel(artikel, num);
+            break;
+            
+          case "4":// Warenkorb
+            LevelMove(MenuLevel.WARENKORB);
+            break;
+
+          case "0":// Exit
+            LevelReturn();
+            break;
+        }
+        break;
+      case KUNDEN_ARTIKEL:
+        // #region KUNDEN_ARTIKEL
+        break;
+      // #endregion KUNDEN_ARTIKEL
+      case KUNDEN_REGISTRIEREN:
+        // #region MITARBEITER_REGISTRIEREN
+        break;
+
+      case MITARBEITER_ANSICHT:
+        System.out.println("____________MITARBEITER____________");
+        System.out.println("1 = Artikel Verwalten");
+        System.out.println("2 = Mitarbeiter hinzufügen");
+        System.out.println("0 = Exit");
+
+        getInput = GetInput();
           
-          break;
-        case "0":
-          LevelReturn();
-          break;
-      }
-      break;
+        switch(getInput){
+          case "1"://artikel Verwalten
+          LevelMove(MenuLevel.MITARBEITER_ARTIKEL);
+            break;
+          case "2"://Mitarbeiter hinzufügen
+          LevelMove(MenuLevel.MITARBEITER_REGISTRIEREN);
+            break;
+          case "0":
+
+            LevelReturn();
+            break;
+        }
+        break;
       // #endregion MITARBEITER_ANSICHT
       case MITARBEITER_ARTIKEL:
-        // #region MITARBEITER_ARTIKEL
+      System.out.println("Artikel Verwalten");
+        System.out.println("1 = Artikel löschen");
+        System.out.println("2 = Atikel hinzufügen");
+        System.out.println("3 = Artikel Bestand ändern");
+        System.out.println("0 = Exit");
+
+        getInput = GetInput();
+
+        switch(getInput){
+
+          case "1":
+            break;
+          case "2":
+            break;
+          case "3":
+            break;
+          case "0":
+            LevelReturn();
+            break;
+        }
         break;
       // #endregion MITARBEITER_ARTIKEL
       case MITARBEITER_REGISTRIEREN:
-        // #region MITARBEITER_REGISTRIEREN
         System.out.println("__________Mitarbeiter Registrieren_________");
-        
         System.out.println("\tName:");
         System.out.print("\t>");
         String name = GetInput();
@@ -276,12 +333,9 @@ public class CUI {
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String passwort = GetInput();
-        System.out.println("\tnummer:");
-        System.out.print("\t>");
-        int nummer = Integer.parseInt(GetInput());
-
-        eshop.mitarbeiterHinzufügen(name, un, passwort, nummer);
+        eshop.mitarbeiterHinzufügen(name, un, passwort);
         break;
+
       // #endregion MITARBEITER_REGISTRIEREN
       case MITARBEITER_EREIGNISLOG:
         // #region MITARBEITER_EREIGNISLOG
@@ -292,7 +346,6 @@ public class CUI {
 
         break;
         // #endregion MITARBEITER_EREIGNISLOG
-      
     }
   }
 
@@ -304,7 +357,6 @@ public class CUI {
     ANMELDUNG,
     KUNDEN_REGISTRIEREN,
     KUNDEN_ANSICHT,
-    KUNDEN_ARTIKEL,
     WARENKORB,
     MITARBEITER_ANSICHT,
     MITARBEITER_ARTIKEL,
@@ -358,9 +410,7 @@ public class CUI {
     levelStack.push(startLevel);
     return startLevel;
   }
-
   // #endregion ///////////////////////
-
   /**
    * Ends the CUI
    */
