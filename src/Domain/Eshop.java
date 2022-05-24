@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
+import DatenObjekte.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 
 public class Eshop {
@@ -87,6 +88,9 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
 
+  public Rechnung WV_kaufen(){
+    return WarenkorbVw.ArtikelKaufen();
+  }
   // #endregion Warenkorb
   // #region Artikelvw
   /**

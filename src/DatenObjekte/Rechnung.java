@@ -1,25 +1,29 @@
 package DatenObjekte;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class Rechnung {
-  double betrag;
+  double betrag = 0;
 
   // Klassenvariablen
   private String rechnungsId;
-  private Date kaufDatum;
+  private String kaufDatum;
   // private inhalt;
 
-  // Konstruktor für Rechnung
-  // public Rechnung(BenutzerObjekte.Kunde kunde, Date kaufDatum, inhalt) {
-  // this.rechnungsId = "0-" + kunde.getKundenNr() + "-" + (100 +
-  // kunde.getKundenRechnungen().size()); //info ????
-  // this.kaufDatum = kaufDatum;
-  // this.inhalt = inhalt;
-  // }
+  public Rechnung(HashMap<Artikel, Integer> inhalt) {
+    inhalt.forEach((artikel, bestand) -> {
+      this.betrag = this.betrag + artikel.getPreis()*bestand;
+    });
+
+    Date date = new Date();
+    this.kaufDatum = date.toString();
+    this.rechnungsId = "1";
+    //RechnungsId nur testweise
+  }
 
   // Getter für das Kaufdatum, welcher das Kaufdatum übergibt.
-  public Date getKaufDatum() {
+  public String getKaufDatum() {
     return kaufDatum;
   }
 
@@ -32,5 +36,10 @@ public class Rechnung {
   // dazu(z.B. DataObjects.Artikel & Anzahl)
   public void getGesamtPreis() {
     this.betrag = 0;
+  }
+
+  public String toString() {
+    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " + this.preis;
+    return this.rechnungsId + "\t" + this.kaufDatum + "\t" + this.betrag;
   }
 }

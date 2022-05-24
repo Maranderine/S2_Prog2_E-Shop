@@ -63,7 +63,8 @@ public class WarenkorbVerwaltung {
   *@author Maranderine
   */
   public Rechnung ArtikelKaufen(){
-    return null;
+    Rechnung rechnung = new Rechnung(warenkorb.inhalt);
+    return rechnung;
     }
 
 

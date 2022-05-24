@@ -166,6 +166,7 @@ public class CUI {
             System.out.println("\tn = nein zurück");
             System.out.print("\t>");
             string = GetInput();
+            if(string.equals("y")){System.out.print(eshop.WV_kaufen());}
             break;
           case "0":// Exit
             LevelReturn();
