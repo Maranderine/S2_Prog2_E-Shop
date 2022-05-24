@@ -259,9 +259,10 @@ public class CUI {
       // #endregion MITARBEITER_ANSICHT
       case MITARBEITER_ARTIKEL:
       System.out.println("Artikel Verwalten");
-        System.out.println("1 = Artikel löschen");
-        System.out.println("2 = Atikel hinzufügen");
-        System.out.println("3 = Artikel Bestand ändern");
+        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println("2 = Artikel löschen");
+        System.out.println("3 = Atikel hinzufügen");
+        System.out.println("4 = Artikel Bestand ändern");
         System.out.println("0 = Exit");
 
         string = GetInput();
@@ -269,10 +270,21 @@ public class CUI {
         switch(string){
 
           case "1":
+            System.out.println(eshop.AV_alleArtikel());
             break;
           case "2":
+            System.out.println("zu löschender Artikel > ");
+            string = GetInput();
+            eshop.AV_deleteArtikel(string);
             break;
           case "3":
+            System.out.println("neuer Artikel > ");
+            String artikelName = GetInput();
+            System.out.println("bestand > ");
+            int bestand = Integer.parseInt(GetInput());
+            System.out.println("Preis > ");
+            double preis = Double.parseDouble(GetInput());
+            eshop.AV_addArtikel(artikelName, bestand, preis);
             break;
           case "0":
             LevelReturn();

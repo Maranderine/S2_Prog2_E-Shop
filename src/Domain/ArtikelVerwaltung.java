@@ -86,8 +86,9 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param name    of article
    */
-  public void setArtikelName(Artikel artikel, String name) {
-    artikel.setName(name);
+  public boolean setArtikelName(String name, String newName) {
+    findArtikelByName(name).setName(newName); 
+    return true;
   }
 
   /**
@@ -96,8 +97,9 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param bestand of article
    */
-  public void setArtikelBestand(Artikel artikel, int bestand) {
-    artikel.setBestand(bestand);
+  public boolean setArtikelBestand(String name, int bestand) {
+    findArtikelByName(name).setBestand(bestand); 
+    return true;
   }
 
   /**
@@ -106,8 +108,9 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param preis   of article
    */
-  public void setArtikelPreis(Artikel artikel, double preis) {
-    artikel.setPreis(preis);
+  public boolean setArtikelPreis(String name, double preis) {
+    findArtikelByName(name).setPreis(preis);
+    return true;
   }
 
   // #endregion

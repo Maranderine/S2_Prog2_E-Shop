@@ -111,6 +111,9 @@ public class Eshop {
     return ArtikelVw.deleteArtikel(name);
   }
 
+  public boolean AV_setArtikelBestand(String name, int bestand) {
+    return ArtikelVw.setArtikelBestand(name, bestand);
+  }
   /**
    * find Artikel by name in artikelListe
    * 
