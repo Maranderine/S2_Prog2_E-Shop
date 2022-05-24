@@ -58,8 +58,16 @@ public class WarenkorbVerwaltung {
     this.warenkorb.inhalt.clear();
   }
 
+  /**
+  *@author Maranderine
+  */
+  public Rechnung ArtikelKaufen(){
+    }
+
+
   @Override
   public String toString() {
     return warenkorb.toString();
+
   }
 }
