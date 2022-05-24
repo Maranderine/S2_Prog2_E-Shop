@@ -12,22 +12,28 @@ public class Benutzerverwaltung {
   // Verwaltung der Nutzer in einer verketteten Liste
   private List<Benutzer> benutzerRegister;
 
+  enum AktiverNutzer{
+    MITARBEITER,
+    KUNDE,
+    NONE;
+  }
+
   public Benutzerverwaltung() {
     benutzerRegister = new Vector<Benutzer>();
   }
 
-  public void registrieren(String name, String username, String password, int nr, String email, String adress) /*
-                                                                                                                * throws
-                                                                                                                * NutzerExistiertBereitsException
-                                                                                                                */ {
-
+  public void registrieren(String name, String username, String password, int nr, String email, String adress) {
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
-
-    if (benutzerRegister.contains(einNutzer)) {
-      // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
-    }
+    // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
-    benutzerRegister.add(einNutzer);
+    this.benutzerRegister.add(einNutzer);
+  }
+
+  public void registrieren(String name, String username, String password, int nr){
+    Benutzer einNutzer = new Mitarbeiter(name, username, password, nr);
+    // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
+    // übernimmt Vector:
+    this.benutzerRegister.add(einNutzer);
   }
 
   public void loeschen(String username) {
@@ -45,11 +51,13 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public void Login() {
-
+  public AktiverNutzer login(String username, String passw) {
+    Benutzer b = this.sucheNutzer(username);
+    if(b == null || !(b.getPassword().equals(passw))){return Enum.valueOf(AktiverNutzer.class,"NONE");}
+    if(b instanceof Mitarbeiter){return Enum.valueOf(AktiverNutzer.class,"MITARBEITER");}
+    if(b instanceof Kunde){return Enum.valueOf(AktiverNutzer.class,"KUNDE");}
+    return null;
   }
 
-  public void Logout() {
-
-  }
+  
 }
