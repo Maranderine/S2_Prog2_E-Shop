@@ -3,7 +3,7 @@ package BenutzerObjekte;
 public class Kunde extends Benutzer{
 
     private String email;
-    private String adress = "";
+    private String address = "";
     private int kundenNr;
     //private String plz = "";
     //private String wohnort = "";
@@ -12,28 +12,28 @@ public class Kunde extends Benutzer{
      * 
      * @param name  name des kunden
      * @param username benutzername für login
-     * @param password passwort zum einlloggen
+     * @param password passwort zum einloggen
      * @param kundenNr 
      * @param email
-     * @param adress
+     * @param address
      */
-    public Kunde(String name, String username, String password, int kundenNr, String email, String adress) {
+    public Kunde(String name, String username, String password, int kundenNr, String email, String address) {
         super(name, username, password);
         this.kundenNr = kundenNr;
         this.email = email;
-        this.adress = adress;
-        this.warenkorb = new Warenkorb;
+        this.address = address;
+        // this.warenkorb = new Warenkorb; //erstmal rausgenommen Warenkorb wird in der Warenkorbverwaltung gemanaged
     }
 
     //#region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
     // z.B. getStrasse() und setStrasse()
 
     public String getAdress() {
-        return adress;
+        return address;
     }
 
     public void setAdress(String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     public String getEmail() {
@@ -48,5 +48,5 @@ public class Kunde extends Benutzer{
         return kundenNr;
     }
     //#endregion
-    // Weitere Dienste der Kunden-Objekte
+    // weitere Dienste der Kunden-Objekte
 }

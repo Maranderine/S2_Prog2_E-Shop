@@ -12,7 +12,7 @@ public class Benutzerverwaltung {
   // Verwaltung der Nutzer in einer verketteten Liste
   private List<Benutzer> benutzerRegister;
 
-  enum AktiverNutzer{
+  public enum AktiverNutzer {
     MITARBEITER,
     KUNDE,
     NONE;
@@ -26,8 +26,10 @@ public class Benutzerverwaltung {
     Benutzer einNutzer = new Kunde(name, username, password, nr, email, adress);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
+    this.benutzerRegister.add(einNutzer);
+  }
 
-  public void registrieren(String name, String username, String password, int nr){
+  public void registrieren(String name, String username, String password, int nr) {
     Benutzer einNutzer = new Mitarbeiter(name, username, password, nr);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
@@ -51,10 +53,19 @@ public class Benutzerverwaltung {
 
   public AktiverNutzer login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
-    if(b == null || !(b.getPassword().equals(passw))){return Enum.valueOf(AktiverNutzer.class,"NONE");}
-    if(b instanceof Mitarbeiter){return Enum.valueOf(AktiverNutzer.class,"MITARBEITER");}
-    if(b instanceof Kunde){return Enum.valueOf(AktiverNutzer.class,"KUNDE");}
+    if (b == null || !(b.getPassword().equals(passw))) {
+      return Enum.valueOf(AktiverNutzer.class, "NONE");
+    }
+    if (b instanceof Mitarbeiter) {
+      return Enum.valueOf(AktiverNutzer.class, "MITARBEITER");
+    }
+    if (b instanceof Kunde) {
+      return Enum.valueOf(AktiverNutzer.class, "KUNDE");
+    }
     return null;
   }
-  
+  public void logout() {
+    
+  }
+
 }

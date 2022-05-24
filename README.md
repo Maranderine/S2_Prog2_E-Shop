@@ -28,13 +28,13 @@ Anforderungen Blatt 1:
       Neue Artikel anlegen
       Bestand Artikel ändern
 
-5. Kunden Wahrenkorb
-    Mehrere Artikel in den Wahrenkorb
+5. Kunden Warenkorb
+    Mehrere Artikel in den Warenkorb
     Stückzahl ändern
-    Wahrenkorb Leeren
+    Warenkorb Leeren
 
 6.  Kunden kaufen den wahren korb
-      Wahrenkorb leehrung + Bestand entfehrnung
+      Warenkorb leehrung + Bestand entfehrnung
       Rechnung erzeugt und ausgegeben
         Kunde
         Datum

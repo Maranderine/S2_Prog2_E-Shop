@@ -1,6 +1,8 @@
 package Domain;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
@@ -19,8 +21,8 @@ public class Eshop {
   }
 
   // #region NutzerVerwaltung
-   public void KundeHinzufügen(String name, String username, String password, int nr, String email, String adress) {
-    BenutzerVw.registrieren(name, username, password, nr, email, adress);
+  public void KundeHinzufügen(String name, String username, String password, int nr, String email, String address) {
+    BenutzerVw.registrieren(name, username, password, nr, email, address);
   }
 
   public void mitarbeiterHinzufügen(String name, String username, String password, int mitarbeiterNr) {
@@ -31,39 +33,42 @@ public class Eshop {
 
   }
 
-  public Enum login(String username, String password) {
+  public Benutzerverwaltung.AktiverNutzer login(String username, String password) {
     return BenutzerVw.login(username, password);
   }
 
   public void logout() {
-    Benutzerverwaltung.logout();
+    BenutzerVw.logout();
   }
 
   // #endregion
   // #region Warenkorb
   /**
-   * Gibt Wahrenkorb Inhalt zurüc
+   * gibt Warenkorb Inhalt zurück
    * 
    * @return HashMap<Artikel, Integer>
    */
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    return WarenkorbVerwaltung.getInhalt();s
+    return WarenkorbVw.getInhalt();
   }
+
   /**
    * gibt warenkorb
+   * 
    * @return
    */
   public Object WK_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
+
   /**
-   * erstellt einen neuen eintrag oder ändert einen vorhandenen
+   * erstellt einen neuen Eintrag oder ändert einen vorhandenen
    * 
-   * @param artikel artikel objekt
-   * @param integar artikel stückzahl
+   * @param artikel artikel object
+   * @param integer artikel Stückzahl
    */
-  public void WV_setArtikel(Artikel artikel, int integar) {
-    WarenkorbVw.setArtikel(artikel, integar);
+  public void WV_setArtikel(Artikel artikel, int integer) {
+    WarenkorbVw.setArtikel(artikel, integer);
   }
 
   /**
@@ -83,19 +88,21 @@ public class Eshop {
   }
 
   // #endregion Warenkorb
-  // Region Artikelvw
+  // #region Artikelvw
   /**
-  *@author Maranderine
-  */
-  public Vector<Artikel> AV_alleArtikel(){
-   return ArtikelVerwaltung.alleArtikel();
+   * @author Maranderine
+   */
+  public Vector<Artikel> AV_alleArtikel() {
+    return ArtikelVw.alleArtikel();
   }
+
   /**
-  *@author Maranderine
-  */
-  public Vector<Artikel> AV_searchArtikel(String titel){
-    return ArtikelVerwaltung.searchArtikel(titel);
+   * @author Maranderine
+   */
+  public Vector<Artikel> AV_searchArtikel(String titel) {
+    return ArtikelVw.searchArtikel(titel);
   }
+
   /**
    * Add Artikel to artikelListe
    * 
@@ -120,8 +127,6 @@ public class Eshop {
   public Artikel AV_findArtikelByName(String name) {
     return ArtikelVw.findArtikelByName(name);
   }
-
-  // set artikel
 
   // #endregion Artikel
 }
