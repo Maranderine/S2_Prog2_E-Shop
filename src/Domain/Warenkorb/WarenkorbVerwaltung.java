@@ -3,9 +3,10 @@ package Domain.Warenkorb;
 import java.util.HashMap;
 
 import DatenObjekte.Artikel;
+import DatenObjekte.Rechnung;
 
 /**
- * Verwaltet den warenkorb
+ * verwaltet den warenkorb
  */
 public class WarenkorbVerwaltung {
 
@@ -16,20 +17,20 @@ public class WarenkorbVerwaltung {
   }
 
   /*
-   * Gibt Wahrenkorb Inhalt zurück
+   * Gibt Warenkorb Inhalt zurück
    */
   public HashMap<Artikel, Integer> getInhalt() {
     return this.warenkorb.inhalt;
   }
   /*
-   * Gibt Wahrenkorb
+   * Gibt Warenkorb
    */
   public Warenkorb getWarenkorb() {
     return this.warenkorb;
   }
 
   /**
-   * Setzt den gesamten inhalt des warenkorbs
+   * Setzt den gesamten inhalt des Warenkorbes
    * 
    * @param inhalt
    */
@@ -40,8 +41,8 @@ public class WarenkorbVerwaltung {
   /**
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    */
-  public void setArtikel(Artikel artikel, Integer integar) {
-    this.warenkorb.inhalt.put(artikel, integar);
+  public void setArtikel(Artikel artikel, Integer integer) {
+    this.warenkorb.inhalt.put(artikel, integer);
   }
 
   /**
@@ -62,6 +63,7 @@ public class WarenkorbVerwaltung {
   *@author Maranderine
   */
   public Rechnung ArtikelKaufen(){
+    return null;
     }
 
 

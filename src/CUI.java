@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 import java.util.Vector;
 
+import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
 import Domain.Eshop;
 
@@ -69,7 +70,6 @@ public class CUI {
     String string;
     String string2;
     Artikel artikel;
-    String getInput;
 
     // print top
     System.out.println("/////////////////////////////////////////////");
@@ -82,11 +82,11 @@ public class CUI {
         System.out.println("2 - Registrieren");
         System.out.println("0 = Exit");
 
-        getInput = GetInput();
+        string = GetInput();
 
-        switch (getInput) {
+        switch (string) {
           case "1":// Anmelden
-            LevelMove(MenuLevel.LOGIN);
+            LevelMove(MenuLevel.ANMELDUNG);
             break;
           case "2":// Registrieren
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
@@ -96,27 +96,90 @@ public class CUI {
             break;
         }
         break;
-      case LOGIN:// Login menu
+        //#endregion MAIN_MENU
+      case ANMELDUNG:// Login menu
+        //#region ANMELDUNG
+
         System.out.println("LOGIN");
         System.out.println("username > ");
-				string = GetInput();
-				System.out.print("password  > ");
-				string2 = GetInput();
 
-        switch(eshop.login(string, string2)){
-          case 0:
+				String username = GetInput();
+				System.out.print("password  > ");
+				String password = GetInput();
+
+        // Benutzerverwaltung.AktiverNutzer nutzer = eshop.login(username, password);
+        switch(eshop.login(username, password)){
+          case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
             break;
-          case 1:
+          case MITARBEITER:
             LevelMove(MenuLevel.MITARBEITER_ANSICHT);
             break;
 
-          case 2:
-           LevelMove(MenuLevel.KUNDEN_ANSICHT);
+          case KUNDE:
+           LevelMove(MenuLevel.MITARBEITER_ANSICHT);
            break;
         }
         break;
+      // #endregion ANMELDUNG
+      case KUNDEN_REGISTRIEREN:
+      // #region KUNDEN_REGISTRIEREN
 
+
+
+
+        
+        break;
+        // #endregion KUNDEN_REGISTRIEREN
+      case KUNDEN_ANSICHT:
+        // #region KUNDEN_ANSICHT
+        System.out.println("____________KUNDE____________");
+        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println("2 = Artikel suchen");
+        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
+        System.out.println("4 = Warenkorb anzeigen");
+        System.out.println("0 = Exit");
+
+        string = GetInput();
+        
+        switch (string) {
+ 
+          case "1":// Artikel ausgeben
+            new Vector<Artikel> artikelListe = eshop.alleArtikel();
+            gibArtikelListeAus(artikelListe);
+            break;
+          case "2":// artikel suchen
+            System.out.print("Artikel Name  > ");
+				    string = GetInput();
+            Vector<Artikel> artikelListe = new Vector<Artikel>;
+            artikelListe = eshop.searchArtikel(string);
+            gibArtikelListeAus(artikelListe);
+            break;
+
+          case "3":// artikel in den Warenkorb 
+            System.out.print("Artikel Name  > ");
+				    string = GetInput();
+            System.out.print("Anzahl  > ");
+				    String anzahl = GetInput();
+            int anz = Integer.parseInt(anzahl);
+            WarenkorbVw.setArtikel(string, anz);
+            break;
+            
+          case "4":// Warenkorb
+            LevelMove(MenuLevel.WARENKORB);
+            break;
+
+          case "0":// Exit
+            LevelReturn();
+
+            break;
+        }
+        break;
+      // #endregion KUNDEN_ANSICHT
+      case KUNDEN_ARTIKEL:
+        // #region KUNDEN_ARTIKEL
+        break;
+      // #endregion KUNDEN_ARTIKEL
       case WARENKORB:
         // #region WARENKORB
         System.out.println("____________________Warenkorb_____________________");
@@ -125,12 +188,12 @@ public class CUI {
         System.out.println("\t1 = Artikel anzahl ändern");
         System.out.println("\t2 = Einzelnden Artikel löschen");
         System.out.println("\t3 = Alle Artikel löschen");
+        System.out.println("\t4 = KAUFEN");
         System.out.println("\t0 = Exit");
         System.out.print("\t>");
 
-        getInput = GetInput();
-
-        switch(getInput) {
+        string = GetInput();
+        switch (string) {
           case "1":// ändern
             System.out.println("------Artikel anzahl ändern------");
             System.out.println("\tInput Artikel Name");
@@ -153,6 +216,14 @@ public class CUI {
             break;
           case "3":// Alle löschen
             eshop.WV_clearAll();
+            break;
+          case "4":// KAUFEN
+            System.out.println("------ KAUF BESTÄTIGUNG ------");
+            System.out.println("\tKaufbestätigung:");
+            System.out.println("\ty = ja kaufen");
+            System.out.println("\tn = nein zurück");
+            System.out.print("\t>");
+            string = GetInput();
             break;
           case "0":// Exit
             LevelReturn();
@@ -195,11 +266,9 @@ public class CUI {
 
           case "0":// Exit
             LevelReturn();
-
             break;
         }
         break;
-
       case KUNDEN_ARTIKEL:
         // #region KUNDEN_ARTIKEL
         break;
@@ -224,6 +293,7 @@ public class CUI {
           LevelMove(MenuLevel.MITARBEITER_REGISTRIEREN);
             break;
           case "0":
+
             LevelReturn();
             break;
         }
@@ -250,19 +320,32 @@ public class CUI {
             LevelReturn();
             break;
         }
-
         break;
       // #endregion MITARBEITER_ARTIKEL
       case MITARBEITER_REGISTRIEREN:
-        System.out.println("Name > ");
-        getInput = GetInput();
-        System.out.println("username > ");
-        string = GetInput();
-        System.out.println("passwort > ");
-        string2 = GetInput();
-        eshop.mitarbeiterHinzufügen(getInput, string, string2);//name, username, password
-        // #region MITARBEITER_REGISTRIEREN
+        System.out.println("__________Mitarbeiter Registrieren_________");
+        System.out.println("\tName:");
+        System.out.print("\t>");
+        String name = GetInput();
+        System.out.println("\tusername:");
+        System.out.print("\t>");
+        String un = GetInput();
+        System.out.println("\tpasswort:");
+        System.out.print("\t>");
+        String passwort = GetInput();
+        eshop.mitarbeiterHinzufügen(name, un, passwort);
         break;
+
+      // #endregion MITARBEITER_REGISTRIEREN
+      case MITARBEITER_EREIGNISLOG:
+        // #region MITARBEITER_EREIGNISLOG
+
+
+
+
+
+        break;
+        // #endregion MITARBEITER_EREIGNISLOG
     }
   }
 
@@ -271,14 +354,14 @@ public class CUI {
   // menu level enum and value
   enum MenuLevel {
     MAIN_MENU, // start menu
-    LOGIN,
+    ANMELDUNG,
     KUNDEN_REGISTRIEREN,
     KUNDEN_ANSICHT,
-    KUNDEN_ARTIKEL,
     WARENKORB,
     MITARBEITER_ANSICHT,
     MITARBEITER_ARTIKEL,
-    MITARBEITER_REGISTRIEREN
+    MITARBEITER_REGISTRIEREN,
+    MITARBEITER_EREIGNISLOG
   }
 
   /** the start level, displayed on statup */
@@ -317,7 +400,6 @@ public class CUI {
     return levelStack.peek();
   }
 
-
   /**
    * resets level to start value
    * 
@@ -328,19 +410,7 @@ public class CUI {
     levelStack.push(startLevel);
     return startLevel;
   }
-
   // #endregion ///////////////////////
-  
-   private static void gibArtikelListeAus(Vector<Artikel> artikelListe) {
-		if (artikelListe.isEmpty()) {
-			System.out.println("Liste ist leer.");
-		} else {
-			for (Artikel artikel: artikelListe) {
-				System.out.println(artikel);
-			}
-		}
-	}
-
   /**
    * Ends the CUI
    */

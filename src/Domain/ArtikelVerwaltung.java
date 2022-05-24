@@ -15,25 +15,26 @@ public class ArtikelVerwaltung {
   }
 
   /**
-  *@author Maranderine
-  */
-  public Vector<Artikel> alleArtikel(){
+   * @author Maranderine
+   */
+  public Vector<Artikel> alleArtikel() {
     return artikelListe;
-  } 
+  }
+
   /**
-  *@author Maranderine
-  */
-  public Vector<Artikel> searchArtikel(String titel){
+   * @author Maranderine
+   */
+  public Vector<Artikel> searchArtikel(String titel) {
     Vector<Artikel> ergebnis = new Vector<Artikel>();
     for (Artikel artikel : artikelListe) {
       if (artikel.getName().equals(titel)) {
         ergebnis.add(artikel);
-        return ergebnis;
       }
-          }
+      return ergebnis;
+    }
     return null;
   }
-  
+
   /**
    * Add Artikel to artikelListe
    * 
@@ -44,7 +45,7 @@ public class ArtikelVerwaltung {
    */
   public Artikel addArtikel(String name, int bestand, double einzelpreis) {
     Artikel artikel = findArtikelByName(name);
-     if(artikel == null){
+    if (artikel == null) {
       artikel = new Artikel(artikelNrCount, name, bestand, einzelpreis);
       artikelListe.add(artikel);
       artikelNrCount++;
@@ -78,7 +79,7 @@ public class ArtikelVerwaltung {
     for (Artikel artikel : artikelListe) {
       if (artikel.getName().equals(name))
         return artikel;
-      }
+    }
     return null;
   }
 
