@@ -5,6 +5,7 @@ public class Kunde extends Benutzer{
     private String email;
     private String address = "";
     private int kundenNr;
+    private static int kundenNrZähler = 1;
     //private String plz = "";
     //private String wohnort = "";
 
@@ -17,11 +18,12 @@ public class Kunde extends Benutzer{
      * @param email
      * @param address
      */
-    public Kunde(String name, String username, String password, int kundenNr, String email, String address) {
+    public Kunde(String name, String username, String password, String email, String address) {
         super(name, username, password);
-        this.kundenNr = kundenNr;
+        this.kundenNr = kundenNrZähler;
+        kundenNrZähler++;
         this.email = email;
-        this.adress = address;
+        this.address = address;
         // this.warenkorb = new Warenkorb; //erstmal rausgenommen Warenkorb wird in der Warenkorbverwaltung gemanaged
     }
 
@@ -29,11 +31,11 @@ public class Kunde extends Benutzer{
     // z.B. getStrasse() und setStrasse()
 
     public String getAdress() {
-        return adress;
+        return address;
     }
 
     public void setAdress(String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     public String getEmail() {

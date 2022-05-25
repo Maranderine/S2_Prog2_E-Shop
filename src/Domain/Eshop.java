@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
+import DatenObjekte.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 
 public class Eshop {
@@ -21,8 +22,8 @@ public class Eshop {
   }
 
   // #region NutzerVerwaltung
-  public void KundeHinzufügen(String name, String username, String password, int nr, String email, String address) {
-    BenutzerVw.registrieren(name, username, password, nr, email, address);
+  public void kundeHinzufügen(String name, String username, String password, String email, String address) {
+    BenutzerVw.registrieren(name, username, password, email, address);
   }
 
   public void mitarbeiterHinzufügen(String name, String username, String password) {
@@ -87,20 +88,16 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
 
+  public Rechnung WV_kaufen(){
+    return WarenkorbVw.ArtikelKaufen();
+  }
   // #endregion Warenkorb
   // #region Artikelvw
   /**
    * @author Maranderine
    */
-  public Vector<Artikel> AV_alleArtikel() {
+  public Lager AV_alleArtikel() {
     return ArtikelVw.alleArtikel();
-  }
-
-  /**
-   * @author Maranderine
-   */
-  public Vector<Artikel> AV_searchArtikel(String titel) {
-    return ArtikelVw.searchArtikel(titel);
   }
 
   /**
@@ -118,6 +115,9 @@ public class Eshop {
     return ArtikelVw.deleteArtikel(name);
   }
 
+  public boolean AV_setArtikelBestand(String name, int bestand) {
+    return ArtikelVw.setArtikelBestand(name, bestand);
+  }
   /**
    * find Artikel by name in artikelListe
    * 
