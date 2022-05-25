@@ -1,4 +1,4 @@
-package BenutzerObjekte;
+package Domain.BenutzerObjekte;
 
 class Kunde extends Benutzer {
   private String email;
@@ -17,7 +17,7 @@ class Kunde extends Benutzer {
    * @param email
    * @param address
    */
-  public Kunde(String name, String username, byte[] password, String email, String address) {
+  protected Kunde(String name, String username, byte[] password, String email, String address) {
     super(name, username, password);
     this.kundenNr = kundenNrZähler;
     kundenNrZähler++;
@@ -30,23 +30,23 @@ class Kunde extends Benutzer {
   // #region Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
   // z.B. getStrasse() und setStrasse()
 
-  public String getAdress() {
+  protected String getAdress() {
     return address;
   }
 
-  public void setAdress(String adress) {
+  protected void setAdress(String adress) {
     this.address = adress;
   }
 
-  public String getEmail() {
+  protected String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  protected void setEmail(String email) {
     this.email = email;
   }
 
-  public int getKundenNr() {
+  protected int getKundenNr() {
     return kundenNr;
   }
   // #endregion

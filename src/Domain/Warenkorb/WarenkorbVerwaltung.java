@@ -3,12 +3,11 @@ package Domain.Warenkorb;
 import java.util.HashMap;
 
 import Domain.Artikel.Artikel;
-import Domain.Artikel.Rechnung;
 
 /**
  * verwaltet den warenkorb
  */
-public class WarenkorbVerwaltung {
+public class WarenkorbVerwaltung{
 
   Warenkorb warenkorb;
 
@@ -22,6 +21,7 @@ public class WarenkorbVerwaltung {
   public HashMap<Artikel, Integer> getInhalt() {
     return this.warenkorb.inhalt;
   }
+
   /*
    * Gibt Warenkorb
    */
@@ -60,15 +60,14 @@ public class WarenkorbVerwaltung {
   }
 
   /**
-  *@author Maranderine
-  */
-  public Rechnung ArtikelKaufen(){
+   * @author Maranderine
+   */
+  public Rechnung ArtikelKaufen() {
     Rechnung rechnung = new Rechnung(warenkorb.inhalt);
-    //leere warenkorb
+    // leere warenkorb
     clearAll();
     return rechnung;
-    }
-
+  }
 
   @Override
   public String toString() {

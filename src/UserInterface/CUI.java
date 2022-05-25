@@ -8,7 +8,7 @@ import java.util.Stack;
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
 
-public class CUI extends UserInterface {
+public class CUI extends UserInterface{
 
   public CUI() {
     // move level to start menu

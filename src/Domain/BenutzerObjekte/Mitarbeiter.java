@@ -1,10 +1,10 @@
-package BenutzerObjekte;
+package Domain.BenutzerObjekte;
 
 class Mitarbeiter extends Benutzer {
-  public static int zähler = 1;
-  public int mitarbeiterNr;
+  private static int zähler = 1;
+  private int mitarbeiterNr;
 
-  public Mitarbeiter(String name, String username, byte[] password) {
+  protected Mitarbeiter(String name, String username, byte[] password) {
     super(name, username, password);
     this.mitarbeiterNr = zähler;
     zähler++;
@@ -13,7 +13,7 @@ class Mitarbeiter extends Benutzer {
   // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
   // z.B. getStrasse() und setStrasse()
 
-  public int getKundenNr() {
+  protected int getKundenNr() {
     return mitarbeiterNr;
   }
 

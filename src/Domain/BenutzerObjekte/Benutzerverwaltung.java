@@ -1,4 +1,4 @@
-package BenutzerObjekte;
+package Domain.BenutzerObjekte;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

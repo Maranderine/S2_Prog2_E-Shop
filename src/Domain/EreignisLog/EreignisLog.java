@@ -2,7 +2,7 @@ package Domain.EreignisLog;
 
 import java.util.Vector;
 
-import BenutzerObjekte.Benutzer;
+import Domain.BenutzerObjekte.Benutzer;
 
 class EreignisLog {
   Vector<Ereignis> log = new Vector<Ereignis>();

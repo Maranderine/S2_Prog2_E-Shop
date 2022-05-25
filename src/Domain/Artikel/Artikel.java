@@ -7,7 +7,7 @@ public class Artikel {
   private int bestand;
   private double preis;
 
-  public Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
+  protected Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
     this.artikelNr = artikelNr;
     this.name = name;
     this.bestand = bestand;
@@ -16,38 +16,39 @@ public class Artikel {
   }
 
   // getter
-  public int getArtikelNr() {
+  protected int getArtikelNr() {
     return this.artikelNr;
   }
 
-  public String getName() {
+  protected String getName() {
     return this.name;
   }
 
-  public int getBestand() {
+  protected int getBestand() {
     return this.bestand;
   }
 
-  public double getPreis() {
+  protected double getPreis() {
     return this.preis;
   }
 
   // setter
-  public void setName(String name) {
+  protected void setName(String name) {
     this.name = name;
   }
 
-  public void setBestand(int bestand) {
+  protected void setBestand(int bestand) {
     this.bestand = bestand;
   }
 
-  public void setPreis(double preis) {
+  protected void setPreis(double preis) {
     this.preis = preis;
   }
 
   // tostring
   public String toString() {
-    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " + this.preis;
+    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
+    // this.preis;
     return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
   }
 }

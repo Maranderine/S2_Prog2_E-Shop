@@ -1,4 +1,4 @@
-package BenutzerObjekte;
+package Domain.BenutzerObjekte;
 
 public abstract class Benutzer {
 
@@ -7,25 +7,25 @@ public abstract class Benutzer {
   private byte[] password;
   private String name;
 
-  public Benutzer(String name, String username, byte[] password) {
+  protected Benutzer(String name, String username, byte[] password) {
     this.name = name;
     this.username = username;
     this.password = password;
   }
 
-  String getUsername() {
+  protected String getUsername() {
     return username;
   }
 
-  byte[] getPassword() {
+  protected byte[] getPassword() {
     return password;
   }
 
-  String getName() {
+  protected String getName() {
     return name;
   }
 
-  void setName(String name) {
+  protected void setName(String name) {
     this.name = name;
   }
 

@@ -1,7 +1,7 @@
 
 package Domain.EreignisLog;
 
-import BenutzerObjekte.Benutzer;
+import Domain.BenutzerObjekte.Benutzer;
 
 /**
  * EreignisLogVerwaltung
@@ -15,7 +15,7 @@ public class EreignisLogVerwaltung {
   }
 
   
-  private void ereignisAdd(Benutzer user, String type) {
+  public void ereignisAdd(Benutzer user, String type) {
     log.add(user, type);
   }
 
