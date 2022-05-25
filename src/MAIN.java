@@ -1,23 +1,26 @@
-import Local.*;
+import Domain.Eshop;
+import UserInterface.*;
 
 /**
- * Main loop des programms
+ * Main class was quasi das programm repräsentiert
  */
 abstract class MAIN {
 
-  // loop main bool
-  public static Boolean LOOP = true;
+  // create eshop
+  private final static Eshop eshop = new Eshop();
+  // get used user interface from Eshop
+  private final static UserInterface ui = eshop.createUserInterface();
 
   /**
-   * main methode
+   * main loop method des programmes
    * 
    * @param args()
    */
   public static void main(String args[]) {
 
-    CUI cui = new CUI();
-
-    while (cui.CUImenu()) {
+    // main loop
+    // called die methode bis sie false zurück gibt
+    while (ui.run()) {
     }
   }
 }

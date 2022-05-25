@@ -7,8 +7,7 @@ import BenutzerObjekte.Benutzer;
 class EreignisLog {
   Vector<Ereignis> log = new Vector<Ereignis>();
 
-
-  void add(Benutzer user, String type){
+  void add(Benutzer user, String type) {
     this.log.add(new Ereignis(user, type));
   }
 

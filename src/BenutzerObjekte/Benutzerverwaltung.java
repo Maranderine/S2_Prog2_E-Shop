@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,7 +19,7 @@ public class Benutzerverwaltung {
     NONE;
   }
 
-  public enum NutzerDaten{
+  public enum NutzerDaten {
     TYPE,
     HASH
   }
@@ -59,17 +58,13 @@ public class Benutzerverwaltung {
     return null;
   }
 
-  public HashMap<NutzerDaten> login(String username, String passw) {
+  public AktiverNutzer login(String username, String passw) {
     Benutzer b = this.sucheNutzer(username);
-    
-
     // no user found or not matching password
     if (b == null || !(Arrays.equals(b.getPassword(), encryptString(passw)))) {
       return AktiverNutzer.NONE;
-    } else {// user is found
-
-      
-
+    } else {
+      // user is found
       if (b instanceof Mitarbeiter) {
         return AktiverNutzer.MITARBEITER;
       }
@@ -101,7 +96,6 @@ public class Benutzerverwaltung {
       crypt.update(string.getBytes("UTF-8"));
       // encoded die daten und gibt sie in variable
       sha1 = crypt.digest();
-      System.out.println("sha1: " + sha1);
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     } catch (UnsupportedEncodingException e) {

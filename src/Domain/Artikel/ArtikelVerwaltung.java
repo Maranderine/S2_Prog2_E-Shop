@@ -1,6 +1,4 @@
-package Domain;
-// import Exceptions.ArtikelExistiertBereitsException;
-import DatenObjekte.Artikel;
+package Domain.Artikel;
 import java.util.Vector;
 
 public class ArtikelVerwaltung {

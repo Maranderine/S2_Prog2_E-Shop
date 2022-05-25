@@ -3,10 +3,14 @@ package Domain;
 import java.util.HashMap;
 
 import BenutzerObjekte.Benutzerverwaltung;
-import DatenObjekte.Artikel;
-import DatenObjekte.Rechnung;
+import Domain.Artikel.Artikel;
+import Domain.Artikel.ArtikelVerwaltung;
+import Domain.Artikel.Lager;
+import Domain.Artikel.Rechnung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
+import UserInterface.*;
+
 
 public class Eshop {
 
@@ -15,13 +19,13 @@ public class Eshop {
   static private WarenkorbVerwaltung WarenkorbVw;
   static private EreignisLogVerwaltung EreignisVw;
   
-
   public Eshop() {
     BenutzerVw = new Benutzerverwaltung();
     ArtikelVw = new ArtikelVerwaltung();
     WarenkorbVw = new WarenkorbVerwaltung();
-  }
 
+  }
+  
   // #region NutzerVerwaltung
   public void kundeHinzufügen(String name, String username, String password, String email, String address) {
     BenutzerVw.registrieren(name, username, password, email, address);
@@ -143,4 +147,13 @@ public class Eshop {
 
 
   // #endregion
+
+  /**
+   * creates used User Interface object. for example CUI or GUI
+   * @return UserInterface UserInterface Object
+   */
+  public UserInterface createUserInterface(){
+    return new CUI();
+  }
+
 }

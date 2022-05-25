@@ -1,14 +1,14 @@
-package Local;
+package UserInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-import DatenObjekte.Artikel;
 import Domain.Eshop;
+import Domain.Artikel.Artikel;
 
-public class CUI extends Local {
+public class CUI extends UserInterface {
 
   public CUI() {
     // move level to start menu
@@ -60,7 +60,7 @@ public class CUI extends Local {
   // #endregion
 
   /** Display and process of the CUI menu */
-  public boolean CUImenu() {
+  public boolean run() {
 
     int num;
     String string;

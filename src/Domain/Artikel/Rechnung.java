@@ -1,4 +1,4 @@
-package DatenObjekte;
+package Domain.Artikel;
 
 import java.util.Date;
 import java.util.HashMap;

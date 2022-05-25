@@ -1,5 +1,4 @@
-package Domain;
-import DatenObjekte.Artikel;
+package Domain.Artikel;
 import java.util.Vector;
 
 public class Lager {

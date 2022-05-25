@@ -2,8 +2,8 @@ package Domain.Warenkorb;
 
 import java.util.HashMap;
 
-import DatenObjekte.Artikel;
-import DatenObjekte.Rechnung;
+import Domain.Artikel.Artikel;
+import Domain.Artikel.Rechnung;
 
 /**
  * verwaltet den warenkorb

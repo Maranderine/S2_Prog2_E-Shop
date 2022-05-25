@@ -1,6 +1,6 @@
 package BenutzerObjekte;
 
-public class Mitarbeiter extends Benutzer {
+class Mitarbeiter extends Benutzer {
   public static int zähler = 1;
   public int mitarbeiterNr;
 

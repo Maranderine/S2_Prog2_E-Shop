@@ -13,19 +13,19 @@ public abstract class Benutzer {
     this.password = password;
   }
 
-  public String getUsername() {
+  String getUsername() {
     return username;
   }
 
-  public byte[] getPassword() {
+  byte[] getPassword() {
     return password;
   }
 
-  public String getName() {
+  String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  void setName(String name) {
     this.name = name;
   }
 

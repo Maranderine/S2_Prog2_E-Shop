@@ -1,4 +1,4 @@
-package DatenObjekte;
+package Domain.Artikel;
 
 public class Artikel {
 
