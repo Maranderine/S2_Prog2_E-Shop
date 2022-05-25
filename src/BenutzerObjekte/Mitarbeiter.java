@@ -4,7 +4,7 @@ public class Mitarbeiter extends Benutzer {
   public static int zähler = 1;
   public int mitarbeiterNr;
 
-  public Mitarbeiter(String name, String username, String password) {
+  public Mitarbeiter(String name, String username, byte[] password) {
     super(name, username, password);
     this.mitarbeiterNr = zähler;
     zähler++;

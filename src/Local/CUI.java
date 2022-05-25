@@ -1,3 +1,5 @@
+package Local;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,43 +8,38 @@ import java.util.Stack;
 import DatenObjekte.Artikel;
 import Domain.Eshop;
 
-public class CUI extends Local{
+public class CUI extends Local {
 
-  // create eshop
-  private static Eshop eshop = new Eshop();
-  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
-  private static BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-  // loop main bool
-  private static Boolean LOOP = true;
-
-  /**
-   * main methode
-   * 
-   * @param args()
-   */
-  public static void main(String args[]) {
-
-    // #region setup
-
+  public CUI() {
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
     eshop.mitarbeiterHinzufügen("Admin", "Admin", "123456");
-    // #endregion setup
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
-    LevelMove(MenuLevel.WARENKORB);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
+
+    // test user
+    eshop.kundeHinzufügen("test", "test", "123456", "test", "test");
+
+    // Artikel
+    eshop.AV_addArtikel("Banane", 150, 1.99);
+    eshop.AV_addArtikel("Melone", 999999, 5.00);
+    eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
+    eshop.AV_addArtikel("Apfel", 5, 1.77);
+
+    // LevelMove(MenuLevel.WARENKORB);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
 
     // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
-
-    do {
-      CUImenu();
-    } while (LOOP);
   }
+
+  // create eshop
+  private Eshop eshop = new Eshop();
+  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
+  private BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 
   // #region input
   /**
@@ -51,9 +48,9 @@ public class CUI extends Local{
    * @return input
    * @throws IOException
    */
-  private static String GetInput() {
+  private String GetInput() {
     try {
-      return inputStream.readLine();
+      return this.inputStream.readLine();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -63,7 +60,7 @@ public class CUI extends Local{
   // #endregion
 
   /** Display and process of the CUI menu */
-  private static void CUImenu() {
+  public boolean CUImenu() {
 
     int num;
     String string;
@@ -90,8 +87,7 @@ public class CUI extends Local{
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
             break;
           case "0":// Exit
-            endCUI();
-            break;
+            return false;
         }
         break;
       // #endregion MAIN_MENU
@@ -326,6 +322,9 @@ public class CUI extends Local{
         break;
       // #endregion MITARBEITER_EREIGNISLOG
     }
+
+    // true to continue
+    return true;
   }
 
   // #region level system ///////////////////////
@@ -391,12 +390,5 @@ public class CUI extends Local{
   }
 
   // #endregion ///////////////////////
-  /**
-   * Ends the CUI
-   */
-  private static void endCUI() {
-    System.out.println("Ending CUI");
-    LOOP = false;
-  }
 
 }
