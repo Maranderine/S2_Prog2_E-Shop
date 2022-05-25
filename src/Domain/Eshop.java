@@ -5,6 +5,7 @@ import java.util.HashMap;
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;
 import DatenObjekte.Rechnung;
+import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 
 public class Eshop {
@@ -12,6 +13,8 @@ public class Eshop {
   static private Benutzerverwaltung BenutzerVw;
   static private ArtikelVerwaltung ArtikelVw;
   static private WarenkorbVerwaltung WarenkorbVw;
+  static private EreignisLogVerwaltung EreignisVw;
+  
 
   public Eshop() {
     BenutzerVw = new Benutzerverwaltung();
@@ -86,9 +89,10 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
 
-  public Rechnung WV_kaufen(){
+  public Rechnung WV_kaufen() {
     return WarenkorbVw.ArtikelKaufen();
   }
+
   // #endregion Warenkorb
   // #region Artikelvw
   /**
@@ -106,6 +110,7 @@ public class Eshop {
    * @param einzelpreis
    */
   public Artikel AV_addArtikel(String name, int bestand, double einzelpreis) {
+    // EreignisVw.ereignisAdd();
     return ArtikelVw.addArtikel(name, bestand, einzelpreis);
   }
 
@@ -116,6 +121,7 @@ public class Eshop {
   public boolean AV_setArtikelBestand(String name, int bestand) {
     return ArtikelVw.setArtikelBestand(name, bestand);
   }
+
   /**
    * find Artikel by name in artikelListe
    * 
@@ -127,4 +133,11 @@ public class Eshop {
   }
 
   // #endregion Artikel
+  // #region LOG
+
+  public String LOGshow(){
+    return "";
+  }
+
+  // #endregion
 }

@@ -37,4 +37,9 @@ public abstract class Benutzer {
 			return false;
 		}
 	}
+
+  @Override
+  public String toString() {
+  return "\t"+ this.name+"\t"+ this.username;
+  }
 }
