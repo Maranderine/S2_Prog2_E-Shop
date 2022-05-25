@@ -64,6 +64,8 @@ public class WarenkorbVerwaltung {
   */
   public Rechnung ArtikelKaufen(){
     Rechnung rechnung = new Rechnung(warenkorb.inhalt);
+    //leere warenkorb
+    clearAll();
     return rechnung;
     }
 

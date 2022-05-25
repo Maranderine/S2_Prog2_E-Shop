@@ -6,7 +6,7 @@ import java.util.Stack;
 import DatenObjekte.Artikel;
 import Domain.Eshop;
 
-public class CUI {
+public class CUI extends Local{
 
   // create eshop
   private static Eshop eshop = new Eshop();
@@ -26,7 +26,8 @@ public class CUI {
 
     // move level to start menu
     LevelMove(startLevel);
-
+    // default mitarbeiter
+    eshop.mitarbeiterHinzufügen("Admin", "Admin", "123456");
     // #endregion setup
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
@@ -243,6 +244,7 @@ public class CUI {
         System.out.println("____________MITARBEITER____________");
         System.out.println("1 = Artikel Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
+        System.out.println("3 = Ereignis Log");
         System.out.println("0 = Exit");
 
         string = GetInput();
@@ -253,6 +255,9 @@ public class CUI {
             break;
           case "2":// Mitarbeiter hinzufügen
             LevelMove(MenuLevel.MITARBEITER_REGISTRIEREN);
+            break;
+          case "3":// Mitarbeiter hinzufügen
+            LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
             break;
           case "0":
 
@@ -266,7 +271,7 @@ public class CUI {
         System.out.println("Artikel Verwalten");
         System.out.println("1 = alle Artikel ausgeben");
         System.out.println("2 = Artikel löschen");
-        System.out.println("3 = Atikel hinzufügen");
+        System.out.println("3 = Artikel hinzufügen");
         System.out.println("4 = Artikel Bestand ändern");
         System.out.println("0 = Exit");
 
@@ -282,7 +287,7 @@ public class CUI {
             eshop.AV_deleteArtikel(string);
             break;
           case "3":
-            System.out.println("neuer Artikel > ");
+            System.out.println("neuer Artikel name > ");
             String artikelName = GetInput();
             System.out.println("bestand > ");
             int bestand = Integer.parseInt(GetInput());
@@ -317,7 +322,7 @@ public class CUI {
       // #endregion MITARBEITER_REGISTRIEREN
       case MITARBEITER_EREIGNISLOG:
         // #region MITARBEITER_EREIGNISLOG
-
+        eshop.LOGshow();
         break;
       // #endregion MITARBEITER_EREIGNISLOG
     }

@@ -7,7 +7,9 @@ public class Benutzerverwaltung {
 
   // Verwaltung der Nutzer in einer verketteten Liste
   private List<Benutzer> benutzerRegister;
+  // private List<Benutzer, > aktiveNutzer;
 
+  
   public enum AktiverNutzer {
     MITARBEITER,
     KUNDE,

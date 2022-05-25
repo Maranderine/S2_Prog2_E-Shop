@@ -1,7 +1,6 @@
 package BenutzerObjekte;
 
 public class Kunde extends Benutzer{
-
     private String email;
     private String address = "";
     private int kundenNr;
@@ -51,4 +50,10 @@ public class Kunde extends Benutzer{
     }
     //#endregion
     // weitere Dienste der Kunden-Objekte
+
+    @Override
+    public String toString() {
+      //parent name + username
+    return "Kunde:\t" + super.toString() + "\t" + this.kundenNr;
+    }
 }
