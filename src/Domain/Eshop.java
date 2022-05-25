@@ -1,8 +1,6 @@
 package Domain;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Vector;
 
 import BenutzerObjekte.Benutzerverwaltung;
 import DatenObjekte.Artikel;

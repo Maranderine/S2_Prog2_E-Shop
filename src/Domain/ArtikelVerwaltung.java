@@ -30,9 +30,9 @@ public class ArtikelVerwaltung {
   public Artikel addArtikel(String name, int bestand, double einzelpreis) {
     Artikel artikel = findArtikelByName(name);
     if (artikel == null) {
-      artikel = new Artikel(lager.artikelNrCount, name, bestand, einzelpreis);
+      artikel = new Artikel(Lager.artikelNrCount, name, bestand, einzelpreis);
       lager.artikelListe.add(artikel);
-      lager.artikelNrCount++;
+      Lager.artikelNrCount++;
     }
     return artikel;
   }

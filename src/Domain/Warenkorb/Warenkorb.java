@@ -1,6 +1,7 @@
 package Domain.Warenkorb;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import DatenObjekte.Artikel;
 
@@ -24,7 +25,7 @@ class Warenkorb {/* "protected" */
     String str = "Artikelnr\tName\tBestand\tPreis\n";
 
     if (!inhalt.isEmpty())
-      for (var entry : inhalt.entrySet()) {
+      for (Entry<Artikel, Integer> entry : inhalt.entrySet()) {
         str += "\t" + entry.getKey() + "\t" + entry.getValue() + "\n";
       }
     else
