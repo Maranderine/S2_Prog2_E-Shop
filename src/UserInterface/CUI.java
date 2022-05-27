@@ -14,12 +14,12 @@ public class CUI extends UserInterface{
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
-    eshop.mitarbeiterHinzufügen("Admin", "Admin", "123456");
+    eshop.BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
 
     // test user
-    eshop.kundeHinzufügen("test", "test", "123456", "test", "test");
+    eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
 
     // Artikel
     eshop.AV_addArtikel("Banane", 150, 1.99);
@@ -101,7 +101,7 @@ public class CUI extends UserInterface{
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverNutzerType nutzer = eshop.login(username, password);
+        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username, password);
         switch (eshop.login(username, password)) {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
@@ -133,7 +133,7 @@ public class CUI extends UserInterface{
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String passwort = GetInput();
-        eshop.kundeHinzufügen(name, un, passwort, email, address);
+        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
 
         LevelReturn();
 
@@ -183,7 +183,7 @@ public class CUI extends UserInterface{
       case WARENKORB:
         // #region WARENKORB
         System.out.println("____________________Warenkorb_____________________");
-        System.out.println(eshop.WK_getWarenkorb());// display warenkorb
+        System.out.println(eshop.WV_getWarenkorb());// display warenkorb
         System.out.println("--------------------------------------------------");
         System.out.println("\t1 = Artikel anzahl ändern");
         System.out.println("\t2 = Einzelnden Artikel löschen");
@@ -307,7 +307,7 @@ public class CUI extends UserInterface{
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String pass = GetInput();
-        eshop.mitarbeiterHinzufügen(nam, user, pass);
+        eshop.BV_mitarbeiterHinzufügen(nam, user, pass);
 
         LevelReturn();
 
@@ -316,7 +316,7 @@ public class CUI extends UserInterface{
       // #endregion MITARBEITER_REGISTRIEREN
       case MITARBEITER_EREIGNISLOG:
         // #region MITARBEITER_EREIGNISLOG
-        eshop.LOGshow();
+        eshop.EV_logShow();
         break;
       // #endregion MITARBEITER_EREIGNISLOG
     }

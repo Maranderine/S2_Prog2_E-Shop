@@ -16,13 +16,12 @@ class Ereignis {
     this.type = type;
     this.user = user;
     this.date = new Date();
-    
+
     EreignisZaehler++;
   }
 
   @Override
   public String toString() {
-    
-    return EreignisNummer + "\t" + user + "\t" + type + "\t" + date;
+    return this.EreignisNummer + "\t" + this.user + "\t" + this.type + "\t" + this.date;
   }
 }

@@ -4,7 +4,7 @@ import UserInterface.*;
 /**
  * Main class was quasi das programm repräsentiert
  */
-abstract class MAIN {
+public abstract class MAIN {
 
   // create eshop
   private final static Eshop eshop = new Eshop();
