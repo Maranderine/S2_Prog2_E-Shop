@@ -24,7 +24,6 @@ public class ArtikelVerwaltung {
    * @param einzelpreis
    * @return
    */
-
   public Artikel addArtikel(String name, int bestand, double einzelpreis) {
     Artikel artikel = findArtikelByName(name);
     if (artikel == null) {

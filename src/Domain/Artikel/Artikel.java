@@ -16,19 +16,19 @@ public class Artikel {
   }
 
   // getter
-  protected int getArtikelNr() {
+  public int getArtikelNr() {
     return this.artikelNr;
   }
 
-  protected String getName() {
+  public String getName() {
     return this.name;
   }
 
-  protected int getBestand() {
+  public int getBestand() {
     return this.bestand;
   }
 
-  protected double getPreis() {
+  public double getPreis() {
     return this.preis;
   }
 

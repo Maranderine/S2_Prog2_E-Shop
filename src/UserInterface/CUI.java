@@ -101,7 +101,7 @@ public class CUI extends UserInterface{
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverNutzer nutzer = eshop.login(username, password);
+        // Benutzerverwaltung.AktiverNutzerType nutzer = eshop.login(username, password);
         switch (eshop.login(username, password)) {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
@@ -109,7 +109,6 @@ public class CUI extends UserInterface{
           case MITARBEITER:
             LevelMove(MenuLevel.MITARBEITER_ANSICHT);
             break;
-
           case KUNDE:
             LevelMove(MenuLevel.KUNDEN_ANSICHT);
             break;
@@ -147,7 +146,7 @@ public class CUI extends UserInterface{
         System.out.println("2 = Artikel suchen");
         System.out.println("3 = Artikel dem Warenkorb hinzufügen");
         System.out.println("4 = Warenkorb");
-        System.out.println("0 = Exit");
+        System.out.println("0 = Logout");
 
         string = GetInput();
 
@@ -176,7 +175,7 @@ public class CUI extends UserInterface{
             break;
 
           case "0":// Exit
-            LevelReturn();
+            Logout();
             break;
         }
         break;
@@ -241,7 +240,7 @@ public class CUI extends UserInterface{
         System.out.println("1 = Artikel Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
         System.out.println("3 = Ereignis Log");
-        System.out.println("0 = Exit");
+        System.out.println("0 = Logout");
 
         string = GetInput();
 
@@ -255,9 +254,8 @@ public class CUI extends UserInterface{
           case "3":// Mitarbeiter hinzufügen
             LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
             break;
-          case "0":
-
-            LevelReturn();
+          case "0"://logout
+            Logout();
             break;
         }
         break;
@@ -391,4 +389,11 @@ public class CUI extends UserInterface{
 
   // #endregion ///////////////////////
 
+  /**
+   * logs the user out and LevelReturn()
+   */
+  private void Logout(){
+    eshop.logout();
+    LevelReturn();
+  }
 }

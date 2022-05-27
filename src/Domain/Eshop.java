@@ -39,7 +39,7 @@ public class Eshop {
 
   }
 
-  public Benutzerverwaltung.AktiverNutzer login(String username, String password) {
+  public Benutzerverwaltung.AktiverNutzerType login(String username, String password) {
     return BenutzerVw.login(username, password);
   }
 
