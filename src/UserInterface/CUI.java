@@ -1,48 +1,45 @@
+package UserInterface;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
 
-import DatenObjekte.Artikel;
 import Domain.Eshop;
+import Domain.Artikel.Artikel;
 
-public class CUI extends Local{
+public class CUI extends UserInterface{
 
-  // create eshop
-  private static Eshop eshop = new Eshop();
-  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
-  private static BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-  // loop main bool
-  private static Boolean LOOP = true;
-
-  /**
-   * main methode
-   * 
-   * @param args()
-   */
-  public static void main(String args[]) {
-
-    // #region setup
-
+  public CUI() {
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
-    eshop.mitarbeiterHinzufügen("Admin", "Admin", "123456");
-    // #endregion setup
+    eshop.BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
-    LevelMove(MenuLevel.WARENKORB);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
-    eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
+
+    // test user
+    eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
+
+    // Artikel
+    eshop.AV_addArtikel("Banane", 150, 1.99);
+    eshop.AV_addArtikel("Melone", 999999, 5.00);
+    eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
+    eshop.AV_addArtikel("Apfel", 5, 1.77);
+
+    // LevelMove(MenuLevel.WARENKORB);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
 
     // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
-
-    do {
-      CUImenu();
-    } while (LOOP);
   }
+
+  // create eshop
+  private Eshop eshop = new Eshop();
+  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
+  private BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 
   // #region input
   /**
@@ -51,9 +48,9 @@ public class CUI extends Local{
    * @return input
    * @throws IOException
    */
-  private static String GetInput() {
+  private String GetInput() {
     try {
-      return inputStream.readLine();
+      return this.inputStream.readLine();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -63,7 +60,7 @@ public class CUI extends Local{
   // #endregion
 
   /** Display and process of the CUI menu */
-  private static void CUImenu() {
+  public boolean run() {
 
     int num;
     String string;
@@ -90,8 +87,7 @@ public class CUI extends Local{
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
             break;
           case "0":// Exit
-            endCUI();
-            break;
+            return false;
         }
         break;
       // #endregion MAIN_MENU
@@ -105,7 +101,7 @@ public class CUI extends Local{
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverNutzer nutzer = eshop.login(username, password);
+        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username, password);
         switch (eshop.login(username, password)) {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
@@ -113,7 +109,6 @@ public class CUI extends Local{
           case MITARBEITER:
             LevelMove(MenuLevel.MITARBEITER_ANSICHT);
             break;
-
           case KUNDE:
             LevelMove(MenuLevel.KUNDEN_ANSICHT);
             break;
@@ -138,7 +133,7 @@ public class CUI extends Local{
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String passwort = GetInput();
-        eshop.kundeHinzufügen(name, un, passwort, email, address);
+        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
 
         LevelReturn();
 
@@ -151,7 +146,7 @@ public class CUI extends Local{
         System.out.println("2 = Artikel suchen");
         System.out.println("3 = Artikel dem Warenkorb hinzufügen");
         System.out.println("4 = Warenkorb");
-        System.out.println("0 = Exit");
+        System.out.println("0 = Logout");
 
         string = GetInput();
 
@@ -180,7 +175,7 @@ public class CUI extends Local{
             break;
 
           case "0":// Exit
-            LevelReturn();
+            Logout();
             break;
         }
         break;
@@ -188,7 +183,7 @@ public class CUI extends Local{
       case WARENKORB:
         // #region WARENKORB
         System.out.println("____________________Warenkorb_____________________");
-        System.out.println(eshop.WK_getWarenkorb());// display warenkorb
+        System.out.println(eshop.WV_getWarenkorb());// display warenkorb
         System.out.println("--------------------------------------------------");
         System.out.println("\t1 = Artikel anzahl ändern");
         System.out.println("\t2 = Einzelnden Artikel löschen");
@@ -245,7 +240,7 @@ public class CUI extends Local{
         System.out.println("1 = Artikel Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
         System.out.println("3 = Ereignis Log");
-        System.out.println("0 = Exit");
+        System.out.println("0 = Logout");
 
         string = GetInput();
 
@@ -259,9 +254,8 @@ public class CUI extends Local{
           case "3":// Mitarbeiter hinzufügen
             LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
             break;
-          case "0":
-
-            LevelReturn();
+          case "0"://logout
+            Logout();
             break;
         }
         break;
@@ -313,7 +307,7 @@ public class CUI extends Local{
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String pass = GetInput();
-        eshop.mitarbeiterHinzufügen(nam, user, pass);
+        eshop.BV_mitarbeiterHinzufügen(nam, user, pass);
 
         LevelReturn();
 
@@ -322,10 +316,13 @@ public class CUI extends Local{
       // #endregion MITARBEITER_REGISTRIEREN
       case MITARBEITER_EREIGNISLOG:
         // #region MITARBEITER_EREIGNISLOG
-        eshop.LOGshow();
+        eshop.EV_logShow();
         break;
       // #endregion MITARBEITER_EREIGNISLOG
     }
+
+    // true to continue
+    return true;
   }
 
   // #region level system ///////////////////////
@@ -391,12 +388,12 @@ public class CUI extends Local{
   }
 
   // #endregion ///////////////////////
-  /**
-   * Ends the CUI
-   */
-  private static void endCUI() {
-    System.out.println("Ending CUI");
-    LOOP = false;
-  }
 
+  /**
+   * logs the user out and LevelReturn()
+   */
+  private void Logout(){
+    eshop.logout();
+    LevelReturn();
+  }
 }

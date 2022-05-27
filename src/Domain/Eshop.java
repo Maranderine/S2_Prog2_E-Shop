@@ -2,45 +2,62 @@ package Domain;
 
 import java.util.HashMap;
 
-import BenutzerObjekte.Benutzerverwaltung;
-import DatenObjekte.Artikel;
-import DatenObjekte.Rechnung;
+import Domain.Artikel.Artikel;
+import Domain.Artikel.ArtikelVerwaltung;
+import Domain.Artikel.Lager;
+import Domain.BenutzerObjekte.Benutzer;
+import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
+import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
+import UserInterface.CUI;
+import UserInterface.UserInterface;
 
 public class Eshop {
 
-  static private Benutzerverwaltung BenutzerVw;
-  static private ArtikelVerwaltung ArtikelVw;
-  static private WarenkorbVerwaltung WarenkorbVw;
-  static private EreignisLogVerwaltung EreignisVw;
-  
+  private Benutzerverwaltung BenutzerVw;
+  private ArtikelVerwaltung ArtikelVw;
+  private WarenkorbVerwaltung WarenkorbVw;
+  private EreignisLogVerwaltung EreignisVw;
 
   public Eshop() {
     BenutzerVw = new Benutzerverwaltung();
     ArtikelVw = new ArtikelVerwaltung();
     WarenkorbVw = new WarenkorbVerwaltung();
+    EreignisVw = new EreignisLogVerwaltung();
   }
 
   // #region NutzerVerwaltung
-  public void kundeHinzufügen(String name, String username, String password, String email, String address) {
+  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
     BenutzerVw.registrieren(name, username, password, email, address);
+    // EreignisVw.ereignisAdd(user, type);
   }
 
-  public void mitarbeiterHinzufügen(String name, String username, String password) {
+  public void BV_mitarbeiterHinzufügen(String name, String username, String password) {
     BenutzerVw.registrieren(name, username, password);
   }
 
-  public void NutzerEntfernen(String username) {
+  public void BV_NutzerEntfernen(String username) {
 
   }
 
-  public Benutzerverwaltung.AktiverNutzer login(String username, String password) {
+  public Benutzerverwaltung.AktiverBeutzerType login(String username, String password) {
     return BenutzerVw.login(username, password);
   }
 
   public void logout() {
     BenutzerVw.logout();
+  }
+
+  // aktive nutzer managen
+  /**
+   * returnt das Benutzer Objekt assoziert mit dem userHash
+   * 
+   * @param userHash
+   * @return
+   */
+  public Benutzer BV_getAktiverBenutzer(byte[] userHash) {
+    return BenutzerVw.getAktiverBenutzer(userHash);
   }
 
   // #endregion
@@ -59,7 +76,7 @@ public class Eshop {
    * 
    * @return
    */
-  public Object WK_getWarenkorb() {
+  public Object WV_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
 
@@ -133,11 +150,33 @@ public class Eshop {
   }
 
   // #endregion Artikel
-  // #region LOG
+  // #region Ereignis Log
 
-  public String LOGshow(){
+  public String EV_logShow() {
     return "";
   }
 
+  /**
+   * logt eine ereignis im ereignis log
+   * 
+   * @param userHash
+   * @param type
+   * @return
+   */
+  public boolean EV_logEreignis(byte[] userHash, String type) {
+    return EreignisVw.neuesEreignis(userHash, type);
+  }
+  // TODO eine sichere newlog methode die den benutzer braucht, so dass nicht
+  // jedes mal die map benutzt werden muss
   // #endregion
+
+  /**
+   * creates used User Interface object. for example CUI or GUI
+   * 
+   * @return UserInterface UserInterface Object
+   */
+  public UserInterface createUserInterface() {
+    return new CUI();
+  }
+
 }

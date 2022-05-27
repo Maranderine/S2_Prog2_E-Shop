@@ -3,7 +3,7 @@ package Domain.Warenkorb;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import DatenObjekte.Artikel;
+import Domain.Artikel.Artikel;
 
 /**
  * Der direkte Warenkorb.

@@ -1,8 +1,6 @@
 
 package Domain.EreignisLog;
 
-import BenutzerObjekte.Benutzer;
-
 /**
  * EreignisLogVerwaltung
  */
@@ -14,9 +12,14 @@ public class EreignisLogVerwaltung {
 
   }
 
-  
-  private void ereignisAdd(Benutzer user, String type) {
-    log.add(user, type);
+  public boolean neuesEreignis(byte[] userHash, String type) {
+
+    // Benutzer user = eshop.BV_getAktiverBenutzer(userHash);
+      
+    // log.add(, type);
+    // return true;
+
+    return false;
   }
 
 }

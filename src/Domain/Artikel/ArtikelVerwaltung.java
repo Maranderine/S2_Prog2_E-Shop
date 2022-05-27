@@ -1,6 +1,4 @@
-package Domain;
-// import Exceptions.ArtikelExistiertBereitsException;
-import DatenObjekte.Artikel;
+package Domain.Artikel;
 import java.util.Vector;
 
 public class ArtikelVerwaltung {
@@ -26,7 +24,6 @@ public class ArtikelVerwaltung {
    * @param einzelpreis
    * @return
    */
-
   public Artikel addArtikel(String name, int bestand, double einzelpreis) {
     Artikel artikel = findArtikelByName(name);
     if (artikel == null) {
