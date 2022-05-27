@@ -206,24 +206,13 @@ public class Benutzerverwaltung {
     ActiverNutzerListe.remove(userHash);
   }
 
-  // active user get info
-  /**
-   * checkt ob benutzer online ist
-   * 
-   * @param user object
-   * @return boolen ob benutzer online ist
-   */
-  private boolean istBenutzerAktiv(Benutzer user) {
-    return ActiverNutzerListe.containsValue(user);
-  }
-
   /**
    * checkt ob benutzer online ist
    * 
    * @param userHash
    * @return boolen ob benutzer online ist
    */
-  private boolean istBenutzerAktiv(byte[] userHash) {
+  public boolean istBenutzerAktiv(byte[] userHash) {
     return ActiverNutzerListe.containsKey(userHash);
   }
 
