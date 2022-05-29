@@ -176,7 +176,8 @@ public class Eshop {
    * @return UserInterface UserInterface Object
    */
   public UserInterface createUserInterface() {
-    return new CUI();
+    
+    return new CUI(this);
   }
 
 }

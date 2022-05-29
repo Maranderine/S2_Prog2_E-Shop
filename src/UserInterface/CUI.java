@@ -8,9 +8,13 @@ import java.util.Stack;
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
 
-public class CUI extends UserInterface{
+public class CUI extends UserInterface {
 
-  public CUI() {
+  //wird im parent constructor gesetzt
+  private Eshop eshop;
+
+  public CUI(Eshop eshop) {
+    super(eshop);
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
@@ -36,8 +40,6 @@ public class CUI extends UserInterface{
     // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
   }
 
-  // create eshop
-  private Eshop eshop = new Eshop();
   /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
   private BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 
@@ -101,7 +103,8 @@ public class CUI extends UserInterface{
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username, password);
+        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username,
+        // password);
         switch (eshop.login(username, password)) {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
@@ -254,7 +257,7 @@ public class CUI extends UserInterface{
           case "3":// Mitarbeiter hinzufügen
             LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
             break;
-          case "0"://logout
+          case "0":// logout
             Logout();
             break;
         }
@@ -392,7 +395,7 @@ public class CUI extends UserInterface{
   /**
    * logs the user out and LevelReturn()
    */
-  private void Logout(){
+  private void Logout() {
     eshop.logout();
     LevelReturn();
   }
