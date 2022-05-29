@@ -1,9 +1,14 @@
 package Domain.Artikel;
+import java.io.IOException;
 import java.util.Vector;
+
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
 
 public class ArtikelVerwaltung {
 
   private Lager lager;
+  private PersistenceManager pm = new FilePersistenceManager();
 
   public ArtikelVerwaltung() {
     lager = new Lager();
@@ -12,6 +17,35 @@ public class ArtikelVerwaltung {
   /**
    * @author Maranderine
    */
+  
+	public void liesDaten(String datei) throws IOException {
+		// PersistenzManager für Lesevorgänge öffnen
+		pm.openForReading(datei);
+
+		Artikel artikel;
+		while ((artikel = pm.ladeArtikel()) != null) {
+				addArtikel(artikel);
+    }
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+	}
+
+	/**
+	 * Methode zum Schreiben der Buchdaten in eine Datei.
+	 *
+	 * @param datei Datei, in die der Bücherbestand geschrieben werden soll
+	 * @throws IOException
+	 */
+	public void schreibeDaten(String datei) throws IOException  {
+		// PersistenzManager für Schreibvorgänge öffnen
+		pm.openForWriting(datei);
+
+		for (Artikel artikel : this.lager.artikelListe){
+				pm.speichereArtikel(artikel);
+			}
+    pm.close();
+	}
+
   public Lager alleArtikel() {
     return lager;
   }
@@ -34,6 +68,11 @@ public class ArtikelVerwaltung {
     return artikel;
   }
 
+  public void addArtikel(Artikel artikel){
+    lager.artikelListe.add(artikel);
+    Lager.artikelNrCount++;
+  }
+  
   /**
    * Deletes a artikel from the artikelListe by name
    * 

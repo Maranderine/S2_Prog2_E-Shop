@@ -1,0 +1,16 @@
+0
+Banane
+150
+1.99
+1
+Melone
+999999
+5.0
+2
+Seltener Fisch
+1
+99999.0
+3
+Apfel
+5
+1.77

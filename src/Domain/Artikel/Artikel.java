@@ -7,7 +7,7 @@ public class Artikel {
   private int bestand;
   private double preis;
 
-  protected Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
+  public Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
     this.artikelNr = artikelNr;
     this.name = name;
     this.bestand = bestand;
