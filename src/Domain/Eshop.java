@@ -1,5 +1,6 @@
 package Domain;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import Domain.Artikel.Artikel;
@@ -15,16 +16,28 @@ import UserInterface.UserInterface;
 
 public class Eshop {
 
+  private String artikelDoc;
+
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop() {
+  public Eshop(String artikelDox){
+
+   this.artikelDoc = artikelDox;
+
+    try{
     BenutzerVw = new Benutzerverwaltung();
     ArtikelVw = new ArtikelVerwaltung();
+    ArtikelVw.liesDaten(artikelDoc);
     WarenkorbVw = new WarenkorbVerwaltung();
     EreignisVw = new EreignisLogVerwaltung();
+    }catch(IOException e){
+      e.printStackTrace();
+    }
+
+
   }
 
   // #region NutzerVerwaltung
@@ -170,6 +183,13 @@ public class Eshop {
   // jedes mal die map benutzt werden muss
   // #endregion
 
+  public void saveData(){
+    try{
+    ArtikelVw.schreibeDaten(artikelDoc);
+    }catch(IOException e){
+      e.printStackTrace();
+    }
+  }
   /**
    * creates used User Interface object. for example CUI or GUI
    * 

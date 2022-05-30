@@ -15,6 +15,7 @@ public class CUI extends UserInterface {
 
   public CUI(Eshop eshop) {
     super(eshop);
+    this.eshop = eshop;
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
@@ -26,10 +27,12 @@ public class CUI extends UserInterface {
     eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
 
     // Artikel
+    /*
     eshop.AV_addArtikel("Banane", 150, 1.99);
     eshop.AV_addArtikel("Melone", 999999, 5.00);
     eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
     eshop.AV_addArtikel("Apfel", 5, 1.77);
+    */
 
     // LevelMove(MenuLevel.WARENKORB);
     // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
@@ -62,7 +65,7 @@ public class CUI extends UserInterface {
   // #endregion
 
   /** Display and process of the CUI menu */
-  public boolean run() {
+  public boolean run(){
 
     int num;
     String string;
@@ -89,6 +92,7 @@ public class CUI extends UserInterface {
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
             break;
           case "0":// Exit
+            eshop.saveData();
             return false;
         }
         break;

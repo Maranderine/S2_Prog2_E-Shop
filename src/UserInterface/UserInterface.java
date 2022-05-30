@@ -11,7 +11,7 @@ public abstract class UserInterface {
   private Eshop eshop;
 
   public UserInterface(Eshop eshop) {
-    this.eshop = eshop;
+    //this.eshop = eshop;
   }
 
   /**
