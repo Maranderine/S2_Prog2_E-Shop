@@ -4,14 +4,15 @@ import Domain.Eshop;
 
 /**
  * Parent for local usability classes like CUI or GUI
+ * aall variables and methods must be implemented into child
  */
 public abstract class UserInterface {
   // a unique hash value to identify the user when logged in
   public static byte[] userHash = {};
-  private Eshop eshop;
+  protected Eshop eshop;
 
   public UserInterface(Eshop eshop) {
-    //this.eshop = eshop;
+    this.eshop = eshop;
   }
 
   /**

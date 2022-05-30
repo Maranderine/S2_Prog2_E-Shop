@@ -10,12 +10,9 @@ import Domain.Artikel.Artikel;
 
 public class CUI extends UserInterface {
 
-  //wird im parent constructor gesetzt
-  private Eshop eshop;
-
+  // wird im parent constructor gesetzt
   public CUI(Eshop eshop) {
     super(eshop);
-    this.eshop = eshop;
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
@@ -28,11 +25,11 @@ public class CUI extends UserInterface {
 
     // Artikel
     /*
-    eshop.AV_addArtikel("Banane", 150, 1.99);
-    eshop.AV_addArtikel("Melone", 999999, 5.00);
-    eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
-    eshop.AV_addArtikel("Apfel", 5, 1.77);
-    */
+     * eshop.AV_addArtikel("Banane", 150, 1.99);
+     * eshop.AV_addArtikel("Melone", 999999, 5.00);
+     * eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
+     * eshop.AV_addArtikel("Apfel", 5, 1.77);
+     */
 
     // LevelMove(MenuLevel.WARENKORB);
     // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
@@ -65,7 +62,7 @@ public class CUI extends UserInterface {
   // #endregion
 
   /** Display and process of the CUI menu */
-  public boolean run(){
+  public boolean run() {
 
     int num;
     String string;

@@ -4,8 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import Domain.Artikel.Artikel;
-import Domain.Artikel.Lager;
-import Domain.BenutzerObjekte.Benutzer;
+
 //import Domain.EreignisLog;
 
 public interface PersistenceManager {
