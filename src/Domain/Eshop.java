@@ -14,6 +14,12 @@ import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
 
+/**
+ * main eshop class
+ * alle befehle der CUI laufen hier durch
+ * 
+ * @param artikelDox
+ */
 public class Eshop {
 
   private String artikelDoc;
@@ -23,27 +29,69 @@ public class Eshop {
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox){
+  public Eshop() {
 
-   this.artikelDoc = artikelDox;
+    this.artikelDoc = "Artikel.txt";
 
-    try{
-    BenutzerVw = new Benutzerverwaltung();
-    ArtikelVw = new ArtikelVerwaltung();
-    ArtikelVw.liesDaten(artikelDoc);
-    WarenkorbVw = new WarenkorbVerwaltung();
-    EreignisVw = new EreignisLogVerwaltung();
-    }catch(IOException e){
+    // create Verwaltungen
+    try {
+      BenutzerVw = new Benutzerverwaltung();
+      ArtikelVw = new ArtikelVerwaltung();
+      ArtikelVw.liesDaten(artikelDoc);
+      WarenkorbVw = new WarenkorbVerwaltung();
+      EreignisVw = new EreignisLogVerwaltung(this);
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
+    // create default admin mitarbeiter
+    BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
 
+    // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
+
+    // test user
+    BV_kundeHinzufügen("test", "test", "123456", "test", "test");
+
+    // Artikel
+    /*
+     * eshop.AV_addArtikel("Banane", 150, 1.99);
+     * eshop.AV_addArtikel("Melone", 999999, 5.00);
+     * eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
+     * eshop.AV_addArtikel("Apfel", 5, 1.77);
+     */
+
+    // LevelMove(MenuLevel.WARENKORB);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
+    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
+
+    // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
   }
 
-  // #region NutzerVerwaltung
-  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
+  // #region BenutzerVerwaltung
+
+  /* admin/inobj method */
+  private void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
     BenutzerVw.registrieren(name, username, password, email, address);
     // EreignisVw.ereignisAdd(user, type);
+  }
+
+  /**
+   * create new user
+   * 
+   * @param callingUI the calling user obj, use "this"
+   * @param name
+   * @param username
+   * @param password
+   * @param email
+   * @param address
+   */
+  public void BV_kundeHinzufügen(UserInterface callingUI, String name, String username, String password, String email,
+      String address) {
+    if (true)// add ereignis logging
+      BV_kundeHinzufügen(name, username, password, email, address);
+
   }
 
   public void BV_mitarbeiterHinzufügen(String name, String username, String password) {
@@ -54,12 +102,25 @@ public class Eshop {
 
   }
 
-  public Benutzerverwaltung.AktiverBeutzerType login(String username, String password) {
-    return BenutzerVw.login(username, password);
+  /**
+   * login to user profile
+   * 
+   * @param callingUI calling user Interface, use "this"
+   * @param username
+   * @param password
+   * @return
+   */
+  public Benutzerverwaltung.AktiverBeutzerType login(UserInterface callingUI, String username, String password) {
+    return BenutzerVw.login(callingUI, username, password);
   }
 
-  public void logout() {
-    BenutzerVw.logout();
+  /**
+   * logout the user
+   * 
+   * @param callingUI calling user Interface, use "this"
+   */
+  public void logout(UserInterface callingUI) {
+    BenutzerVw.logout(callingUI);
   }
 
   // aktive nutzer managen
@@ -163,10 +224,15 @@ public class Eshop {
   }
 
   // #endregion Artikel
-  // #region Ereignis Log
+  // #region Ereignis Log /////////////////////////////////////////
 
-  public String EV_logShow() {
-    return "";
+  /**
+   * displays Ereignis Log in short
+   * 
+   * @return ereignis log as a string
+   */
+  public String EV_logDisplay() {
+    return EreignisVw.displayLog();
   }
 
   /**
@@ -176,27 +242,27 @@ public class Eshop {
    * @param type
    * @return
    */
-  public boolean EV_logEreignis(byte[] userHash, String type) {
-    return EreignisVw.neuesEreignis(userHash, type);
+  public boolean EV_logNewMitarbeiter(byte[] userHash) {
+    return EreignisVw.neuesEreignis(userHash, "new User");
   }
-  // TODO eine sichere newlog methode die den benutzer braucht, so dass nicht
-  // jedes mal die map benutzt werden muss
-  // #endregion
 
-  public void saveData(){
-    try{
-    ArtikelVw.schreibeDaten(artikelDoc);
-    }catch(IOException e){
+  // #endregion ////////////////////////////////////////////////
+
+  public void saveData() {
+    try {
+      ArtikelVw.schreibeDaten(artikelDoc);
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
   /**
    * creates used User Interface object. for example CUI or GUI
    * 
    * @return UserInterface UserInterface Object
    */
   public UserInterface createUserInterface() {
-    
+
     return new CUI(this);
   }
 

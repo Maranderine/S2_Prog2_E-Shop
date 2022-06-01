@@ -1,4 +1,5 @@
 package Domain.Artikel;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -17,37 +18,37 @@ public class ArtikelVerwaltung {
   /**
    * @author Maranderine
    */
-  
-	public void liesDaten(String datei) throws IOException {
-		// PersistenzManager für Lesevorgänge öffnen
-		pm.openForReading(datei);
 
-		Artikel artikel;
-		while ((artikel = pm.ladeArtikel()) != null) {
-				addArtikel(artikel);
+  public void liesDaten(String datei) throws IOException {
+    // PersistenzManager für Lesevorgänge öffnen
+    pm.openForReading(datei);
+
+    Artikel artikel;
+    while ((artikel = pm.ladeArtikel()) != null) {
+      addArtikel(artikel);
     }
-		// Persistenz-Schnittstelle wieder schließen
-		pm.close();
-	}
-
-	/**
-	 * Methode zum Schreiben der Buchdaten in eine Datei.
-	 *
-	 * @param datei Datei, in die der Bücherbestand geschrieben werden soll
-	 * @throws IOException
-	 */
-	public void schreibeDaten(String datei) throws IOException  {
-		// PersistenzManager für Schreibvorgänge öffnen
-		pm.openForWriting(datei);
-
-		for (Artikel artikel : this.lager.artikelListe){
-				pm.speichereArtikel(artikel);
-			}
+    // Persistenz-Schnittstelle wieder schließen
     pm.close();
-	}
+  }
+
+  /**
+   * Methode zum Schreiben der Buchdaten in eine Datei.
+   *
+   * @param datei Datei, in die der Bücherbestand geschrieben werden soll
+   * @throws IOException
+   */
+  public void schreibeDaten(String datei) throws IOException {
+    // PersistenzManager für Schreibvorgänge öffnen
+    pm.openForWriting(datei);
+
+    for (Artikel artikel : this.lager.artikelListe) {
+      pm.speichereArtikel(artikel);
+    }
+    pm.close();
+  }
 
   public Lager alleArtikel() {
-    return lager;
+    return this.lager;
   }
 
   /**
@@ -68,11 +69,11 @@ public class ArtikelVerwaltung {
     return artikel;
   }
 
-  public void addArtikel(Artikel artikel){
+  public void addArtikel(Artikel artikel) {
     lager.artikelListe.add(artikel);
     Lager.artikelNrCount++;
   }
-  
+
   /**
    * Deletes a artikel from the artikelListe by name
    * 
@@ -97,7 +98,8 @@ public class ArtikelVerwaltung {
   public Artikel findArtikelByName(String name) {
     // iterates through artikelListe
     for (Artikel artikel : this.lager.artikelListe) {
-      if (artikel.getName().equals(name)) return artikel;
+      if (artikel.getName().equals(name))
+        return artikel;
     }
     return null;
   }
@@ -123,7 +125,7 @@ public class ArtikelVerwaltung {
    * @param name    of article
    */
   public boolean setArtikelName(String name, String newName) {
-    findArtikelByName(name).setName(newName); 
+    findArtikelByName(name).setName(newName);
     return true;
   }
 
@@ -134,7 +136,7 @@ public class ArtikelVerwaltung {
    * @param bestand of article
    */
   public boolean setArtikelBestand(String name, int bestand) {
-    findArtikelByName(name).setBestand(bestand); 
+    findArtikelByName(name).setBestand(bestand);
     return true;
   }
 

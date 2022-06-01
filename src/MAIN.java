@@ -1,4 +1,3 @@
-import java.io.IOException;
 
 import Domain.Eshop;
 import UserInterface.*;
@@ -9,8 +8,8 @@ import UserInterface.*;
 public abstract class MAIN {
 
   // create eshop
-  private final static Eshop eshop = new Eshop("Artikel.txt");
-      
+  private final static Eshop eshop = new Eshop();
+
   // get used user interface from Eshop
   private final static UserInterface ui = eshop.createUserInterface();
 
@@ -20,6 +19,8 @@ public abstract class MAIN {
    * @param args()
    */
   public static void main(String args[]) {
-  while (ui.run()) {}
-  }  
+    // main loop des programmes
+    while (ui.run()) {
+    }
+  }
 }

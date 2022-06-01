@@ -5,23 +5,30 @@ import java.util.Date;
 import Domain.BenutzerObjekte.Benutzer;
 
 class Ereignis {
-  static int EreignisZaehler = 1;
-  int EreignisNummer;
-  String type;
-  Benutzer user;
-  Date date;
+  protected int EreignisNummer;
+  protected String type;
+  protected Date date;
 
-  protected Ereignis(Benutzer user, String type) {
-    this.EreignisNummer = EreignisZaehler;
+  // user
+  protected String usertype;
+  protected String username;
+
+  protected Ereignis(int nummer, Benutzer user, String type) {
+    this.EreignisNummer = nummer;
     this.type = type;
-    this.user = user;
     this.date = new Date();
 
-    EreignisZaehler++;
+    // user data
+
+    // if (user instanceof Kunde) user.get
   }
 
   @Override
   public String toString() {
-    return this.EreignisNummer + "\t" + this.user + "\t" + this.type + "\t" + this.date;
+    return this.EreignisNummer + "\t" + this.username + "\t" + this.type + "\t##\t" + this.date;
+  }
+
+  protected String toStringDetailed() {
+    return toString();
   }
 }

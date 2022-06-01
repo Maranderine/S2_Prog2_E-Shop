@@ -44,7 +44,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	public Artikel ladeArtikel() throws IOException {
 		// Titel einlesen
 		String stringNr = liesZeile();
-        if(stringNr == null){return null;}
+    if(stringNr == null){return null;}
         int artikelNr = Integer.parseInt(stringNr);
 		String name = liesZeile();
 		int bestand = Integer.parseInt(liesZeile());
@@ -59,7 +59,7 @@ public class FilePersistenceManager implements PersistenceManager {
 	 * Das Verfügbarkeitsattribut wird in der Datenquelle (Datei) als "t" oder "f"
 	 * codiert abgelegt.
 	 * 
-	 * @param b Buch-Objekt, das gespeichert werden soll
+	 * @param a Buch-Objekt, das gespeichert werden soll
 	 * @return true, wenn Schreibvorgang erfolgreich, false sonst
 	 */
 	public boolean speichereArtikel(Artikel a) throws IOException {
