@@ -402,6 +402,6 @@ public class CUI extends UserInterface {
    */
   private void Logout() {
     eshop.logout(this);
-    LevelReturn();
+    LevelReset();
   }
 }
