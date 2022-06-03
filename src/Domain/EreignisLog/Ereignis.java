@@ -3,8 +3,9 @@ package Domain.EreignisLog;
 import java.util.Date;
 
 import Domain.BenutzerObjekte.Benutzer;
+import Domain.Search.Searchable;
 
-class Ereignis {
+class Ereignis extends Searchable {
   protected int EreignisNummer;
   protected String type;
   protected Date date;
@@ -13,14 +14,12 @@ class Ereignis {
   protected String usertype;
   protected String username;
 
-  protected Ereignis(int nummer, Benutzer user, String type) {
+  protected Ereignis(int nummer, Benutzer user, String type, String[] searchTerms) {
+    super(searchTerms);
     this.EreignisNummer = nummer;
     this.type = type;
     this.date = new Date();
 
-    // user data
-
-    // if (user instanceof Kunde) user.get
   }
 
   @Override

@@ -1,6 +1,7 @@
 
 package Domain.EreignisLog;
 
+import java.lang.reflect.Parameter;
 import java.util.Vector;
 
 import Domain.Eshop;
@@ -25,11 +26,12 @@ public class EreignisLogVerwaltung {
   }
 
   // #region neues ereignis//////////////////////////////////////////////////////
-  private Ereignis createEreignis(byte[] userHash, String type) {
+  private Ereignis createEreignis(byte[] userHash, String type, String[] searchTerms) {
     Benutzer user = this.meinShop.BV_getAktiverBenutzer(userHash);
     if (user != null) {
       // add new event to log
-      Ereignis ereignis = new Ereignis(useZaehler(), user, type);
+
+      Ereignis ereignis = new Ereignis(useZaehler(), user, type, searchTerms);
       this.log.add(ereignis);
 
       return ereignis;
@@ -38,8 +40,18 @@ public class EreignisLogVerwaltung {
     return null;
   }
 
+  /**
+   * 
+   * @param userHash
+   * @param type
+   * @return
+   */
   public boolean neuesEreignis(byte[] userHash, String type) {
-    Ereignis ereignis = createEreignis(userHash, type);
+
+    String[] searchTerms = { "Hello" };
+
+    
+    Ereignis ereignis = createEreignis(userHash, type, searchTerms);
     return (ereignis != null);
   }
 

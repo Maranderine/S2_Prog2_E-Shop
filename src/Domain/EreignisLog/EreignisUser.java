@@ -7,7 +7,7 @@ import Domain.BenutzerObjekte.Benutzer;
  */
 class EreignisUser extends Ereignis {
 
-  protected EreignisUser(int nummer, Benutzer user, String type) {
-    super(nummer, user, type);
+  protected EreignisUser(int nummer, Benutzer user, String type, String[] searchTerms) {
+    super(nummer, user, type, searchTerms);
   }
 }
