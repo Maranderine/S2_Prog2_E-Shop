@@ -1,11 +1,24 @@
 package Domain.Search;
 
+import java.util.HashSet;
+
 public class Searchable {
 
-  protected String[] searchTerms;
+  protected HashSet<String> searchTerms;
 
-  public Searchable(String[] searchTerms) {
+  public Searchable() {
+    this.searchTerms = new HashSet<String>();
+  }
+
+  public Searchable(HashSet<String> searchTerms) {
     this.searchTerms = searchTerms;
+  }
+
+  public Searchable(String[] stringArr) {
+    this.searchTerms = new HashSet<String>();
+    for (String string : stringArr) {
+      this.searchTerms.add(string);
+    }
   }
 
   /**
@@ -18,12 +31,7 @@ public class Searchable {
    * @return
    */
   protected boolean isSearchTerm(String term) {
-
-    for (String string : searchTerms) {
-      if (term.equalsIgnoreCase(string))
-        return true;
-    }
-    return false;
+    return this.searchTerms.contains(term);
   }
 
   /**
@@ -36,11 +44,9 @@ public class Searchable {
    */
   protected int containsSearchTerm(String termstring) {
     int val = 0;
-    termstring = termstring.toLowerCase();
-    for (String string : searchTerms) {
-      if (termstring.contains(string))
-        val++;
-    }
+
+    this.searchTerms.forEach();
+
     return val;
   }
 
