@@ -15,7 +15,12 @@ public class Benutzerverwaltung {
 
   // Verwaltung der Nutzer in einer verketteten Liste
   private List<Benutzer> benutzerRegister;
-  // private List<Benutzer, > aktiveNutzer;
+
+  public enum BeutzerType {
+    MITARBEITER,
+    KUNDE,
+    NONE
+  }
 
   public Benutzerverwaltung() {
     benutzerRegister = new Vector<Benutzer>();
@@ -37,15 +42,40 @@ public class Benutzerverwaltung {
   }
 
   void loeschen(String username) {
-    Benutzer benutzer = this.sucheNutzer(username);
+    Benutzer benutzer = this.sucheBenutzer(username);
     // übernimmt Vector:
     benutzerRegister.remove(benutzer);
   }
-
-  public Benutzer sucheNutzer(String username) {
+  /**
+   * suche nutzer bei namen
+   * @param username
+   * @return
+   */
+  public Benutzer sucheBenutzer(String username) {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getUsername().equals(username)) {
         return benutzer;
+      }
+    }
+    return null;
+  }
+  public Benutzer sucheKunde(int userNumber) {
+    for (Benutzer benutzer : benutzerRegister) {
+      if (benutzer.getType() == BeutzerType.KUNDE) {
+        if (((Kunde) benutzer).getKundenNr() == userNumber) {
+          return benutzer;
+        }
+      }
+      
+    }
+    return null;
+  }
+  public Benutzer sucheMitarbeiter(int userNumber) {
+    for (Benutzer benutzer : benutzerRegister) {
+      if (benutzer.getType() == BeutzerType.KUNDE) {
+        if (((Mitarbeiter) benutzer).getKundenNr() == userNumber) {
+          return benutzer;
+        }
       }
     }
     return null;
@@ -130,11 +160,6 @@ public class Benutzerverwaltung {
 
   // #endregion//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // #region active user management
-  public enum AktiverBeutzerType {
-    MITARBEITER,
-    KUNDE,
-    NONE;
-  }
 
   private Map<byte[], Benutzer> ActiverNutzerListe = new HashMap<byte[], Benutzer>();
 
@@ -147,11 +172,11 @@ public class Benutzerverwaltung {
    * @param passw
    * @return
    */
-  public AktiverBeutzerType login(UserInterface callingUI, String username, String passw) {
-    Benutzer benutzer = this.sucheNutzer(username);
+  public BeutzerType login(UserInterface callingUI, String username, String passw) {
+    Benutzer benutzer = this.sucheBenutzer(username);
     // no user found or not matching password
     if (benutzer == null || !(Arrays.equals(benutzer.getPassword(), encryptString(passw)))) {
-      return AktiverBeutzerType.NONE;
+      return BeutzerType.NONE;
     } else {
       //////////// if user is found ///////////
 
@@ -164,10 +189,10 @@ public class Benutzerverwaltung {
 
       // return type of user
       if (benutzer instanceof Mitarbeiter) {
-        return AktiverBeutzerType.MITARBEITER;
+        return BeutzerType.MITARBEITER;
       }
       if (benutzer instanceof Kunde) {
-        return AktiverBeutzerType.KUNDE;
+        return BeutzerType.KUNDE;
       }
     }
     return null;

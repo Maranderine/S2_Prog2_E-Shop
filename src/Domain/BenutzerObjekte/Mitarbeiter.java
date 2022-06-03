@@ -5,7 +5,7 @@ class Mitarbeiter extends Benutzer {
   private int mitarbeiterNr;
 
   protected Mitarbeiter(String name, String username, byte[] password) {
-    super(name, username, password);
+    super(Benutzerverwaltung.BeutzerType.MITARBEITER, name, username, password);
     this.mitarbeiterNr = zähler;
     zähler++;
   }

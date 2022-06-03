@@ -18,7 +18,7 @@ class Kunde extends Benutzer {
    * @param address
    */
   protected Kunde(String name, String username, byte[] password, String email, String address) {
-    super(name, username, password);
+    super(Benutzerverwaltung.BeutzerType.KUNDE, name, username, password);
     this.kundenNr = kundenNrZähler;
     kundenNrZähler++;
     this.email = email;

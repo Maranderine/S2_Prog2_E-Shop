@@ -1,24 +1,27 @@
 
 package Domain.EreignisLog;
 
-import java.lang.reflect.Parameter;
 import java.util.Vector;
 
 import Domain.Eshop;
+
 import Domain.BenutzerObjekte.Benutzer;
 
-/**
- * EreignisLogVerwaltung
- */
+
 public class EreignisLogVerwaltung {
 
-  protected int EreignisZaehler;
+  private int EreignisZaehler;
   private Eshop meinShop;
 
-  protected Vector<Ereignis> log = new Vector<Ereignis>();
+  private Vector<Ereignis> log = new Vector<Ereignis>();
 
+  /**
+   * EreignisLogVerwaltung
+   * 
+   * @param eshop Eshop
+   */
   public EreignisLogVerwaltung(Eshop eshop) {
-
+    // get verwaltungen von eshop
     this.meinShop = eshop;
 
     // TODO get ereignis Zähler: load oder 1
@@ -26,33 +29,21 @@ public class EreignisLogVerwaltung {
   }
 
   // #region neues ereignis//////////////////////////////////////////////////////
-  private Ereignis createEreignis(byte[] userHash, String type, String[] searchTerms) {
+
+  public Ereignis createEreignis(byte[] userHash, String type, String[] searchTermsArr) {
     Benutzer user = this.meinShop.BV_getAktiverBenutzer(userHash);
     if (user != null) {
+      
+      
       // add new event to log
+      // Ereignis ereignis = new EreignisArtikelDelete(useZaehler(), "TEST", user, CUserNumber, CUserType, searchTerms,
+      //     artikel, artikelNumber, artikelName, artikelBestand, artikelPreis);
+      // this.log.add(ereignis);
 
-      Ereignis ereignis = new Ereignis(useZaehler(), user, type, searchTerms);
-      this.log.add(ereignis);
-
-      return ereignis;
+      // return ereignis;
     }
     // return true;
     return null;
-  }
-
-  /**
-   * 
-   * @param userHash
-   * @param type
-   * @return
-   */
-  public boolean neuesEreignis(byte[] userHash, String type) {
-
-    String[] searchTerms = { "Hello" };
-
-    
-    Ereignis ereignis = createEreignis(userHash, type, searchTerms);
-    return (ereignis != null);
   }
 
   // #endregion///////////////////////////////////////////////////////////

@@ -80,7 +80,7 @@ public class CUI extends UserInterface {
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username,
+        // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
         // password);
         switch (eshop.login(this, username, password)) {
           case NONE:
@@ -321,6 +321,7 @@ public class CUI extends UserInterface {
             break;
           case "0":
             // #region
+            LevelReturn();
             // #endregion
             break;
         }

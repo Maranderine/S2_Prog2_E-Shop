@@ -110,7 +110,7 @@ public class Eshop {
    * @param password
    * @return
    */
-  public Benutzerverwaltung.AktiverBeutzerType login(UserInterface callingUI, String username, String password) {
+  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
   }
 
@@ -243,7 +243,7 @@ public class Eshop {
    * @return
    */
   public boolean EV_logNewMitarbeiter(byte[] userHash) {
-    return EreignisVw.neuesEreignis(userHash, "new User");
+    return true;
   }
 
   // #endregion ////////////////////////////////////////////////
