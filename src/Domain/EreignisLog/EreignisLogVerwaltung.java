@@ -37,7 +37,7 @@ public class EreignisLogVerwaltung {
       
       // add new event to log
       // Ereignis ereignis = new EreignisArtikelDelete(useZaehler(), "TEST", user, CUserNumber, CUserType, searchTerms,
-      //     artikel, artikelNumber, artikelName, artikelBestand, artikelPreis);
+      //     artikel, artikelNummer, artikelName, artikelBestand, artikelPreis);
       // this.log.add(ereignis);
 
       // return ereignis;

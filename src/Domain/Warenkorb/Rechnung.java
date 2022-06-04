@@ -18,8 +18,8 @@ public class Rechnung {
       this.betrag = this.betrag + artikel.getPreis() * bestand;
     });
 
-    Date date = new Date();
-    this.kaufDatum = date.toString();
+    Date datum = new Date();
+    this.kaufDatum = datum.toString();
     this.rechnungsId = "1";
     // RechnungsId nur testweise
   }
