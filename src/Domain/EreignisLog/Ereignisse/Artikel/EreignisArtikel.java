@@ -3,7 +3,7 @@ package Domain.EreignisLog.Ereignisse.Artikel;
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
-import Domain.EreignisLog.EreignisCalled;
+import Domain.EreignisLog.Ereignisse.EreignisCalled;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikel;
 
 /** Basis ereignis für artikel ereignisse */

@@ -65,7 +65,7 @@ public abstract class Searchable {
    * For one term only use SearchTermCheck
    * 
    * @param termstring to check for occurences
-   * @return int value of how many terms were found
+   * @return int value of how many terms were found, or 0
    */
   protected int SearchTermContains(String termstring) {
     int val = 0;

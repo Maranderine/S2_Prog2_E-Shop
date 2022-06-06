@@ -45,31 +45,26 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
   // #region implementations
   @Override
   public Artikel getZielArtikel() {
-    // TODO Auto-generated method stub
     return this.artikel;
   }
 
   @Override
   public int getZielArtikelNummer() {
-    // TODO Auto-generated method stub
     return this.artikelNummer;
   }
 
   @Override
   public String getZielArtikelName() {
-    // TODO Auto-generated method stub
     return this.artikelName;
   }
 
   @Override
   public int getZielArtikelBestand() {
-    // TODO Auto-generated method stub
     return this.artikelBestand;
   }
 
   @Override
   public double getZielArtikelPreis() {
-    // TODO Auto-generated method stub
     return this.artikelPreis;
   }
   // #endregion

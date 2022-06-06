@@ -1,6 +1,6 @@
 package Domain.EreignisLog.Ereignisse.System;
 
-import Domain.EreignisLog.Ereignis;
+import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.EreignisLog.Interfaces.EreignisInterface_System;
 
 /** abstrakte grund Ereignis Klasse für System erstellte ereignisse */

@@ -83,13 +83,6 @@ public class Benutzerverwaltung {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // #region security
-  /*
-   * TODO for online, define what user to logout
-   * at the moment the user logged out gets defined by the Hash set in the
-   * UserInterface
-   * This is always the currently logged in user locally
-   * but when the server runs its own eshop instance this wont work
-   */
   /**
    * encrypted einen sting to SHA-1
    * SHA-1 is a hash type

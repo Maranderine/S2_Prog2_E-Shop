@@ -1,4 +1,4 @@
-package Domain.EreignisLog;
+package Domain.EreignisLog.Ereignisse;
 
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;

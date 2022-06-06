@@ -6,7 +6,7 @@ import java.util.Vector;
 import Domain.Eshop;
 
 import Domain.BenutzerObjekte.Benutzer;
-
+import Domain.EreignisLog.Ereignisse.Ereignis;
 
 public class EreignisLogVerwaltung {
 
@@ -33,11 +33,11 @@ public class EreignisLogVerwaltung {
   public Ereignis createEreignis(byte[] userHash, String type, String[] searchTermsArr) {
     Benutzer user = this.meinShop.BV_getAktiverBenutzer(userHash);
     if (user != null) {
-      
-      
+
       // add new event to log
-      // Ereignis ereignis = new EreignisArtikelDelete(useZaehler(), "TEST", user, CUserNumber, CUserType, searchTerms,
-      //     artikel, artikelNummer, artikelName, artikelBestand, artikelPreis);
+      // Ereignis ereignis = new EreignisArtikelDelete(useZaehler(), "TEST", user,
+      // CUserNumber, CUserType, searchTerms,
+      // artikel, artikelNummer, artikelName, artikelBestand, artikelPreis);
       // this.log.add(ereignis);
 
       // return ereignis;

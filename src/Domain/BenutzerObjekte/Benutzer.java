@@ -40,14 +40,16 @@ public abstract class Benutzer {
     this.username = name;
   }
 
-  // public boolean setPassword(String oldPassword, String newPassword) {
-  // if (oldPassword.compareTo(this.password) == 0) {
-  // this.password = newPassword;
-  // return true;
-  // } else {
-  // return false;
-  // }
-  // }
+  public boolean setPassword(String oldPassword, String newPassword) {
+    // TODO complete
+    // if (oldPassword.compareTo(this.password) == 0) {
+    // this.password = newPassword;
+    // return true;
+    // } else {
+    // return false;
+    // }
+    return false;
+  }
 
   @Override
   public String toString() {

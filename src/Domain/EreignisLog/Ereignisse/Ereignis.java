@@ -1,4 +1,4 @@
-package Domain.EreignisLog;
+package Domain.EreignisLog.Ereignisse;
 
 import java.util.Date;
 
