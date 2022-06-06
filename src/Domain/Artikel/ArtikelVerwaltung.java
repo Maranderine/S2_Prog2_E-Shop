@@ -18,16 +18,8 @@ public class ArtikelVerwaltung {
    * @author Maranderine
    */
   
-	public void liesDaten(String datei) throws IOException {
-		// PersistenzManager für Lesevorgänge öffnen
-		pm.openForReading(datei);
-
-		Artikel artikel;
-		while ((artikel = pm.ladeArtikel()) != null) {
-				addArtikel(artikel);
-    }
-		// Persistenz-Schnittstelle wieder schließen
-		pm.close();
+	public void load(String datei) throws IOException {
+		 lager.artikelListe = pm.loadArticle(datei);
 	}
 
 	/**
@@ -36,14 +28,8 @@ public class ArtikelVerwaltung {
 	 * @param datei Datei, in die der Bücherbestand geschrieben werden soll
 	 * @throws IOException
 	 */
-	public void schreibeDaten(String datei) throws IOException  {
-		// PersistenzManager für Schreibvorgänge öffnen
-		pm.openForWriting(datei);
-
-		for (Artikel artikel : this.lager.artikelListe){
-				pm.speichereArtikel(artikel);
-			}
-    pm.close();
+	public void save(String datei) throws IOException  {
+		pm.saveArticle(datei, lager.artikelListe);
 	}
 
   public Lager alleArtikel() {

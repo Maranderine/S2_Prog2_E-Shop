@@ -8,29 +8,34 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
+import Domain.BenutzerObjekte.Kunde;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
-
 public class Eshop {
 
-  private String artikelDoc;
+  private String artikelDoc = "";
+  private String mitarbeiterDoc = "";
+  private String kundenDoc = "";
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox){
+  public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox){
 
    this.artikelDoc = artikelDox;
+   this.mitarbeiterDoc = mitarbeiterDox;
+   this.kundenDoc = kundenDox;
 
     try{
     BenutzerVw = new Benutzerverwaltung();
+    if(!(kundenDoc.equals(""))){BenutzerVw.load(kundenDoc);}
     ArtikelVw = new ArtikelVerwaltung();
-    ArtikelVw.liesDaten(artikelDoc);
+    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
     WarenkorbVw = new WarenkorbVerwaltung();
     EreignisVw = new EreignisLogVerwaltung();
     }catch(IOException e){
@@ -120,7 +125,10 @@ public class Eshop {
   }
 
   public Rechnung WV_kaufen() {
-    return WarenkorbVw.ArtikelKaufen();
+    Rechnung rechnung = new Rechnung(WarenkorbVw.ArtikelKaufen());
+    WarenkorbVw.clearAll();
+    return rechnung;
+    
   }
 
   // #endregion Warenkorb
@@ -185,7 +193,8 @@ public class Eshop {
 
   public void saveData(){
     try{
-    ArtikelVw.schreibeDaten(artikelDoc);
+    ArtikelVw.save(artikelDoc);
+    BenutzerVw.save(kundenDoc);
     }catch(IOException e){
       e.printStackTrace();
     }

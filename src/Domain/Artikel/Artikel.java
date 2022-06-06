@@ -51,4 +51,10 @@ public class Artikel {
     // this.preis;
     return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
   }
+
+  public String toData() {
+    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
+    // this.preis;
+    return this.artikelNr + ";" + this.name + ";" + this.bestand + ";" + this.preis;
+  }
 }

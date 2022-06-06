@@ -7,7 +7,7 @@ public class Lager {
   protected Vector<Artikel> artikelListe;
   protected static int artikelNrCount = 0;
 
-  protected Lager() {
+  public Lager() {
     this.artikelListe = new Vector<Artikel>();
   }
 

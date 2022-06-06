@@ -1,6 +1,8 @@
 package Domain.BenutzerObjekte;
 
-public abstract class Benutzer {
+import java.io.Serializable;
+
+public abstract class Benutzer implements Serializable{
 
   // Klassenvariablen
   private String username;

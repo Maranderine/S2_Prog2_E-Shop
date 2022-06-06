@@ -62,11 +62,8 @@ public class WarenkorbVerwaltung{
   /**
    * @author Maranderine
    */
-  public Rechnung ArtikelKaufen() {
-    Rechnung rechnung = new Rechnung(warenkorb.inhalt);
-    // leere warenkorb
-    clearAll();
-    return rechnung;
+  public HashMap<Artikel, Integer> ArtikelKaufen() {
+    return  warenkorb.inhalt;
   }
 
   @Override
