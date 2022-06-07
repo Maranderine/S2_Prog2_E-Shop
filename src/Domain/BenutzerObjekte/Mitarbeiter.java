@@ -1,7 +1,9 @@
 package Domain.BenutzerObjekte;
 
+
 class Mitarbeiter extends Benutzer {
   private static int mitarbeiterNrzähler = 1;
+
   private int mitarbeiterNr;
 
   protected Mitarbeiter(String name, String username, byte[] password) {

@@ -1,10 +1,12 @@
 package Domain.BenutzerObjekte;
 
-class Kunde extends Benutzer {
+import java.io.Serializable;
+
+public class Kunde extends Benutzer{
   private String email;
   private String address = "";
   private int kundenNr;
-  private static int kundenNrZähler = 1;
+  protected static int kundenNrZähler = 1;
   // private String plz = "";
   // private String wohnort = "";
 

@@ -7,6 +7,7 @@ import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
+import Domain.BenutzerObjekte.Kunde;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Warenkorb.Rechnung;
@@ -17,30 +18,32 @@ import UserInterface.UserInterface;
 /**
  * main eshop class
  * alle befehle der CUI laufen hier durch
- * 
- * @param artikelDox
  */
 public class Eshop {
 
-  private String artikelDoc;
+  private String artikelDoc = "";
+  private String mitarbeiterDoc = "";
+  private String kundenDoc = "";
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop() {
+  public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox){
 
-    this.artikelDoc = "Artikel.txt";
+   this.artikelDoc = artikelDox;
+   this.mitarbeiterDoc = mitarbeiterDox;
+   this.kundenDoc = kundenDox;
 
-    // create Verwaltungen
-    try {
-      BenutzerVw = new Benutzerverwaltung();
-      ArtikelVw = new ArtikelVerwaltung();
-      ArtikelVw.liesDaten(artikelDoc);
-      WarenkorbVw = new WarenkorbVerwaltung();
-      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-    } catch (IOException e) {
+    try{
+    BenutzerVw = new Benutzerverwaltung();
+    if(!(kundenDoc.equals(""))){BenutzerVw.load(kundenDoc);}
+    ArtikelVw = new ArtikelVerwaltung();
+    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
+    WarenkorbVw = new WarenkorbVerwaltung();
+    EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
+    }catch(IOException e){
       e.printStackTrace();
     }
 
@@ -161,7 +164,10 @@ public class Eshop {
   }
 
   public Rechnung WV_kaufen() {
-    return WarenkorbVw.ArtikelKaufen();
+    Rechnung rechnung = new Rechnung(WarenkorbVw.ArtikelKaufen());
+    WarenkorbVw.clearAll();
+    return rechnung;
+    
   }
 
   // #endregion Warenkorb
@@ -341,6 +347,7 @@ public class Eshop {
     return true;
   }
 
+
   /**
    * loggt neues Artikel Ereignis welches von dem Löschen eines Artikels handelt,
    * returnt true wenn ereignis erstellt wurde
@@ -405,8 +412,10 @@ public class Eshop {
 
   public void saveData() {
     try {
-      ArtikelVw.schreibeDaten(artikelDoc);
+      ArtikelVw.save(artikelDoc);
+    BenutzerVw.save(kundenDoc);
     } catch (IOException e) {
+
       e.printStackTrace();
     }
   }
