@@ -10,12 +10,14 @@ import java.util.Map;
 import java.util.Vector;
 
 import UserInterface.UserInterface;
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
 
 public class Benutzerverwaltung {
 
   // Verwaltung der Nutzer in einer verketteten Liste
-  private List<Benutzer> benutzerRegister;
-  // private List<Benutzer, > aktiveNutzer;
+  private Vector<Benutzer> benutzerRegister;
+  private PersistenceManager pm = new FilePersistenceManager();
 
   public Benutzerverwaltung() {
     benutzerRegister = new Vector<Benutzer>();
@@ -26,6 +28,7 @@ public class Benutzerverwaltung {
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     this.benutzerRegister.add(einNutzer);
+    System.out.println(""+Kunde.kundenNrZähler);
   }
 
   public void registrieren(String name, String username, String password) {
@@ -225,5 +228,54 @@ public class Benutzerverwaltung {
   public Benutzer getAktiverBenutzer(byte[] userHash) {
     return ActiverNutzerListe.get(userHash);
   }
+
+  /*public void schreibeDaten(String kundenDatei, String mitarbeiterDatei) throws IOException  {
+		// PersistenzManager für Schreibvorgänge in Kunde.txt öffnen
+		pm.openForWriting(kundenDatei);
+    //Liste durch iterieren, wenn nutzer = Kunde --> in Kunden Datei speichern 
+		for (Benutzer kunde : this.benutzerRegister){
+				if(kunde instanceof Kunde) {pm.speichereKunde(kunde);}
+    //Persistenz schließen
+    pm.close();
+    // PersistenzManager für Schreibvorgänge in Mitarbeiter.txt öffnen
+    pm.openForWriting(mitarbeiterDatei);
+    //Liste durch iterieren, 
+    for (Benutzer mitarbeiter : this.benutzerRegister){
+        if(mitarbeiter instanceof Kunde) {pm.speichereMitarbeiter(mitarbeiter);}
+        
+			}
+    pm.close();
+	}
+
+  public void liesDaten(String kundenDatei, String MitarbeiterDatei) throws IOException {
+		// PersistenzManager für Lesevorgänge öffnen
+		pm.openForReading(kundenDatei);
+		Kunde kunde;
+		while ((kunde = pm.ladeKunde()) != null) {
+				benutzerRegister.add(kunde);
+    }
+		// Persistenz-Schnittstelle wieder schließen
+		pm.close();
+
+    pm.openForReading(String MitarbeiterDatei);
+		Mitarbeiter mitarbeiter;
+		while ((mitarbeiter = pm.ladeMitarbeiter()) != null) {
+				benutzerRegister.add(mitarbeiter);
+    }
+	}*/
+
+  public void save(String nutzerDoc){
+    pm.saveNutzer(nutzerDoc, benutzerRegister);
+  }
+
+  public void load(String nutzerDoc){
+   benutzerRegister =  pm.loadNutzer(nutzerDoc);
+   int i = 0;
+   //zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler 
+   for(Benutzer b : benutzerRegister){if(b instanceof Kunde){i++;}};
+   Kunde.kundenNrZähler = i;
+   System.out.println(""+Kunde.kundenNrZähler);
   // #endregion
+  }
 }
+
