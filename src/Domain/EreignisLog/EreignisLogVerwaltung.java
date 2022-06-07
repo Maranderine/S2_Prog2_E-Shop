@@ -72,6 +72,7 @@ public class EreignisLogVerwaltung extends Searcher {
           this.artikelVW.getArtikelBestand(artikel),
           this.artikelVW.getArtikelPreis(artikel));
 
+      addToLog(ereignis);
       return ereignis;
     }
     // return true;
@@ -108,6 +109,7 @@ public class EreignisLogVerwaltung extends Searcher {
           this.artikelVW.getArtikelBestand(artikel),
           this.artikelVW.getArtikelPreis(artikel));
 
+      addToLog(ereignis);
       return ereignis;
     }
     // return true;
@@ -121,6 +123,9 @@ public class EreignisLogVerwaltung extends Searcher {
    * @param userHash
    * @param ereignisDesc
    * @param artikel
+   * @param AaltName
+   * @param AaltBestand
+   * @param AaltPreis
    * @return
    */
   public Ereignis Ereignis_EreignisArtikelData(byte[] userHash, String ereignisDesc, Artikel artikel, String AaltName,
@@ -149,6 +154,7 @@ public class EreignisLogVerwaltung extends Searcher {
           AaltBestand,
           AaltPreis);
 
+      addToLog(ereignis);
       return ereignis;
     }
     // return true;
@@ -161,7 +167,6 @@ public class EreignisLogVerwaltung extends Searcher {
    * Erstellt neues EreignisSystemArtikel Ereignis, fügt es allen listen hinzu und
    * gibt es zurück.
    * 
-   * @param userHash
    * @param ereignisDesc
    * @param artikel
    * @return
@@ -180,10 +185,15 @@ public class EreignisLogVerwaltung extends Searcher {
         this.artikelVW.getArtikelBestand(artikel),
         this.artikelVW.getArtikelPreis(artikel));
 
+    addToLog(ereignis);
     return ereignis;
   }
 
   // #endregion///////////////////////////////////////////////////////////
+
+  private void addToLog(Ereignis ereignis) {
+    log.add(ereignis);
+  }
 
   /**
    * displayd den gesamten Ereignis Log

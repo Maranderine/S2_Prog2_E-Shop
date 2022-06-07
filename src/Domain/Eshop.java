@@ -71,27 +71,18 @@ public class Eshop {
 
   // #region BenutzerVerwaltung
 
-  /* admin/inobj method */
-  private void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
-    BenutzerVw.registrieren(name, username, password, email, address);
-    // EreignisVw.ereignisAdd(user, type);
-  }
-
   /**
    * create new user
    * 
-   * @param callingUI the calling user obj, use "this"
    * @param name
    * @param username
    * @param password
    * @param email
    * @param address
    */
-  public void BV_kundeHinzufügen(UserInterface callingUI, String name, String username, String password, String email,
-      String address) {
-    if (true)// add ereignis logging
-      BV_kundeHinzufügen(name, username, password, email, address);
-
+  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
+    BenutzerVw.registrieren(name, username, password, email, address);
+    // EreignisVw.ereignisAdd(user, type);
   }
 
   public void BV_mitarbeiterHinzufügen(String name, String username, String password) {
@@ -189,17 +180,125 @@ public class Eshop {
    * @param bestand
    * @param einzelpreis
    */
-  public Artikel AV_addArtikel(String name, int bestand, double einzelpreis) {
-    // EreignisVw.ereignisAdd();
-    return ArtikelVw.addArtikel(name, bestand, einzelpreis);
+  public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis) {
+
+    Artikel artikel = ArtikelVw.addArtikel(name, bestand, einzelpreis);
+    // ereignis loggen
+    // TODO: EVENT - event basiert
+
+    EV_EreignisArtikelCreate(userHash, "Artikel Erstellen", artikel);
+
+    return artikel;
   }
 
-  public boolean AV_deleteArtikel(String name) {
-    return ArtikelVw.deleteArtikel(name);
+  public boolean AV_deleteArtikel(byte[] userHash, String name) {
+
+    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    if (artikel != null) {
+      // TODO: EVENT - basiert und fehlschlag
+      EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
+
+      return ArtikelVw.deleteArtikel(artikel);
+    }
+    return false;
   }
 
-  public boolean AV_setArtikelBestand(String name, int bestand) {
-    return ArtikelVw.setArtikelBestand(name, bestand);
+  /**
+   * set artikel data
+   * 
+   * @param userHash  userHash
+   * @param name      artikel name
+   * @param neuerName artikel neuer name
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, String name, String neuerName) {
+
+    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    if (artikel != null) {
+      String nameAlt = ArtikelVw.getArtikelName(artikel);
+      // set neuer Name
+      boolean bool = ArtikelVw.setArtikelName(name, neuerName);
+      // logt neuen und alten Namen
+      EV_EreignisArtikelData(userHash, "Artikel Name änderung", artikel, nameAlt, null, null);
+
+      return bool;
+    }
+    return false;
+  }
+
+  /**
+   * set artikel data bestand
+   * 
+   * @param userHash userHash
+   * @param name     artikel name
+   * @param bestand  artikel neuer bestand
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, String name, int bestand) {
+
+    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    if (artikel != null) {
+      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
+      // set neuer bestand
+      boolean bool = ArtikelVw.setArtikelBestand(name, bestand);
+      // logt neuen und alten bestand
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, bestandAlt, null);
+
+      return bool;
+    }
+    return false;
+  }
+
+  /**
+   * set artikel data preis
+   * 
+   * @param userHash userHash
+   * @param name     artikel name
+   * @param preis    artikel neuer preis
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, String name, double preis) {
+
+    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    if (artikel != null) {
+      double preisAlt = ArtikelVw.getArtikelPreis(artikel);
+      // set neuer preis
+      boolean bool = ArtikelVw.setArtikelPreis(name, preis);
+      // logt neuen und alten preis
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
+
+      return bool;
+    }
+    return false;
+  }
+
+  /**
+   * set artikel data
+   * 
+   * @param userHash  userHash
+   * @param name      artikel name
+   * @param neuerName artikel neuer name
+   * @param bestand   artikel neuer bestand
+   * @param preis     artikel neuer preis
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis) {
+
+    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    if (artikel != null) {
+      String nameAlt = ArtikelVw.getArtikelName(artikel);
+      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
+      double preisAlt = ArtikelVw.getArtikelPreis(artikel);
+      // set neuer Name
+      boolean bool1 = ArtikelVw.setArtikelName(name, neuerName);
+      boolean bool2 = ArtikelVw.setArtikelBestand(name, bestand);
+      boolean bool3 = ArtikelVw.setArtikelPreis(name, preis);
+      // logt neuen und alten preis
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, nameAlt, bestandAlt, preisAlt);
+
+      return (bool1 && bool2 && bool3);
+    }
+    return false;
   }
 
   /**
@@ -263,33 +362,44 @@ public class Eshop {
    * 
    * @param userHash
    * @param ereignisDesc
-   * @param artikel
-   * @param AaltName
-   * @param AaltBestand
-   * @param AaltPreis
+   * @param artikel      artiel onjekt
+   * @param AaltName     alte daten oder null (logt dann aktuelle daten)
+   * @param AaltBestand  alte daten oder null (logt dann aktuelle daten)
+   * @param AaltPreis    alte daten oder null (logt dann aktuelle daten)
    * @return
    */
   private boolean EV_EreignisArtikelData(byte[] userHash, String ereignisDesc, Artikel artikel, String AaltName,
-      int AaltBestand, double AaltPreis) {
+      Integer AaltBestand, Double AaltPreis) {
+
+    if (AaltName == null)
+      AaltName = ArtikelVw.getArtikelName(artikel);
+    if (AaltBestand == null)
+      AaltBestand = ArtikelVw.getArtikelBestand(artikel);
+    if (AaltPreis == null)
+      AaltPreis = ArtikelVw.getArtikelPreis(artikel);
+
     Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelData(userHash, ereignisDesc, artikel, AaltName, AaltBestand,
         AaltPreis);
 
     return true;
   }
 
-  /**
-   * loggt neues System Ereignis welches einen Artikel betrifft, returnt true wenn
-   * ereignis erstellt wurde
-   * 
-   * @param ereignisDesc
-   * @param artikel
-   * @return
-   */
-  private boolean EV_EreignisSystemArtikel(String ereignisDesc, Artikel artikel) {
-    Ereignis ereignis = EreignisVw.Ereignis_EreignisSystemArtikel(ereignisDesc, artikel);
+  // /**
+  // * loggt neues System Ereignis welches einen Artikel betrifft, returnt true
+  // wenn
+  // * ereignis erstellt wurde
+  // *
+  // * @param ereignisDesc
+  // * @param artikel
+  // * @return
+  // */
+  // private boolean EV_EreignisSystemArtikel(String ereignisDesc, Artikel
+  // artikel) {
+  // Ereignis ereignis = EreignisVw.Ereignis_EreignisSystemArtikel(ereignisDesc,
+  // artikel);
 
-    return true;
-  }
+  // return true;
+  // }
 
   // #endregion ////////////////////////////////////////////////
 

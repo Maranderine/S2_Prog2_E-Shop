@@ -76,6 +76,16 @@ public class ArtikelVerwaltung {
   }
 
   /**
+   * Deletes a artikel from the artikelListe
+   * 
+   * @param name of artikel
+   * @return boolean, true if something was deleted, false if not
+   */
+  public boolean deleteArtikel(Artikel artikel) {
+    return this.lager.artikelListe.remove(artikel);// delete from list
+  }
+
+  /**
    * Deletes a artikel from the artikelListe by name
    * 
    * @param name of artikel
@@ -85,7 +95,7 @@ public class ArtikelVerwaltung {
     // search for Artikel
     Artikel artikel = findArtikelByName(name);
     if (artikel != null)// if Artikel is found
-      return this.lager.artikelListe.remove(artikel);// delete from list
+      return deleteArtikel(artikel);
 
     return false;// if nothing could be deleted
   }
@@ -144,9 +154,22 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param name    of article
    */
+  public boolean setArtikelName(Artikel artikel, String newName) {
+    if (artikel != null) {
+      artikel.setName(newName);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * sets name of Artikel Object by name
+   * 
+   * @param name    name
+   * @param newName neuer name
+   */
   public boolean setArtikelName(String name, String newName) {
-    findArtikelByName(name).setName(newName);
-    return true;
+    return setArtikelName(findArtikelByName(name), newName);// checks fo null
   }
 
   /**
@@ -155,9 +178,23 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param bestand of article
    */
+  public boolean setArtikelBestand(Artikel artikel, int bestand) {
+    if (artikel != null) {
+      artikel.setBestand(bestand);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * sets bestand of Artikel Object by name
+   * 
+   * @param name    String
+   * @param bestand
+   * @return
+   */
   public boolean setArtikelBestand(String name, int bestand) {
-    findArtikelByName(name).setBestand(bestand);
-    return true;
+    return setArtikelBestand(findArtikelByName(name), bestand);// checks fo null
   }
 
   /**
@@ -165,10 +202,24 @@ public class ArtikelVerwaltung {
    * 
    * @param artikel object
    * @param preis   of article
+   * @return
+   */
+  public boolean setArtikelPreis(Artikel artikel, double preis) {
+    if (artikel != null) {
+      artikel.setPreis(preis);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * sets preis of Artikel Object
+   * 
+   * @param name  name
+   * @param preis of article
    */
   public boolean setArtikelPreis(String name, double preis) {
-    findArtikelByName(name).setPreis(preis);
-    return true;
+    return setArtikelPreis(findArtikelByName(name), preis);
   }
 
   // #endregion

@@ -8,7 +8,7 @@ import Domain.Eshop;
  */
 public abstract class UserInterface {
   // a unique hash value to identify the user when logged in
-  public byte[] userHash = {};
+  public byte[] userHash;
   protected Eshop eshop;
 
   public UserInterface(Eshop eshop) {

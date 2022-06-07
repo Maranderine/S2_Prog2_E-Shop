@@ -30,6 +30,8 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
     String[] searchTerms = { "Event", Integer.toString(this.ereignisNummer), this.ereignisDesc,
         this.ereignisDatum.toString() };
     SearchTermAdd(searchTerms);
+
+    System.out.println("EVENT CREATED");
   }
 
   // #region implementierung

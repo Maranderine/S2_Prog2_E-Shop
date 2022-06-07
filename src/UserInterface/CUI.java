@@ -113,7 +113,7 @@ public class CUI extends UserInterface {
         System.out.println("\tpasswort:");
         System.out.print("\t>");
         String passwort = GetInput();
-        eshop.BV_kundeHinzufügen(this, name, un, passwort, email, address);
+        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
 
         LevelReturn();
 
@@ -258,7 +258,7 @@ public class CUI extends UserInterface {
           case "2":
             System.out.println("zu löschender Artikel > ");
             string = GetInput();
-            eshop.AV_deleteArtikel(string);
+            eshop.AV_deleteArtikel(this.userHash, string);
             break;
           case "3":
             System.out.println("neuer Artikel name > ");
@@ -267,7 +267,12 @@ public class CUI extends UserInterface {
             int bestand = Integer.parseInt(GetInput());
             System.out.println("Preis > ");
             double preis = Double.parseDouble(GetInput());
-            eshop.AV_addArtikel(artikelName, bestand, preis);
+            // TODO CUI Artikel: was wenn falsche eingabe
+            Artikel art = eshop.AV_addArtikel(this.userHash, artikelName, bestand, preis);
+            if (art != null)
+              System.out.println("Erfolgreich erstellt!");
+            else
+              System.out.println("Etwas ist schief gelaufen.");
             break;
           case "0":
             LevelReturn();
