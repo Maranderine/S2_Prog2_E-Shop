@@ -8,12 +8,13 @@ public class Massengutartikel extends Artikel {
         this.minAnzahl = minAnzahl;
     }
 
+    // Gibt die MinAnzahl aus
     public int getMinAnzahl() {
         return minAnzahl;
     }
 
+    // Setzt die MinAnzahl als Integer-Wert fest
     public void setMinAnzahl(int minAnzahl) {
         this.minAnzahl = minAnzahl;
     }
 }
-
