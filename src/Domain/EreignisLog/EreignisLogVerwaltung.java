@@ -17,6 +17,9 @@ import Domain.Search.Searcher;
 
 public class EreignisLogVerwaltung extends Searcher {
 
+  //TODO: EVENTS - suche nach aartikel objekt
+
+  
   private int EreignisZaehler;
   private final Eshop meinShop;
   private final Benutzerverwaltung benutzerVW;
