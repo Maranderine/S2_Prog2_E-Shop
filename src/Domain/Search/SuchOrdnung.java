@@ -2,15 +2,18 @@ package Domain.Search;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Maanagement Klasse für eine geordnete liste mit Searchaable objekten
  */
 public class SuchOrdnung {
 
-  ArrayList<ArrayList<Object>> grid = new ArrayList<ArrayList<Object>>();
+  private ArrayList<HashMap<OrdnungIndex, Object>> grid = new ArrayList<HashMap<OrdnungIndex, Object>>();
 
+  /**
+   * 
+   */
   public SuchOrdnung() {
   }
 
@@ -18,28 +21,17 @@ public class SuchOrdnung {
    * ordnungs index
    */
   protected enum OrdnungIndex {
-    objekt(0),
-    relevanz(1);
+    OBJEKT,
+    RELEVANZ;
 
-    private int index;
-
-    OrdnungIndex(int index) {
-      this.index = index;
-    }
-
-    public int Index() {
-      return index;
-    }
-
-    static public int size() {
+    protected static int size() {
       return OrdnungIndex.values().length;
     }
-
   }
 
   public void add(Searchable searchable, int relevanz) {
     // create new entry
-    ArrayList<Object> entry = createNewEntry();
+    HashMap<OrdnungIndex, Object> entry = createNewEntry();
     // set values
     setEntry(entry, searchable);
     setEntry(entry, relevanz);
@@ -47,31 +39,28 @@ public class SuchOrdnung {
     grid.add(entry);
   }
 
-  private ArrayList<Object> createNewEntry() {
-    ArrayList<Object> entry = new ArrayList<Object>(2);
+  private HashMap<OrdnungIndex, Object> createNewEntry() {
+    HashMap<OrdnungIndex, Object> entry = new HashMap<OrdnungIndex, Object>(2);
 
-    for (int i = 0; i < OrdnungIndex.size(); i++) {
-      entry.add(null);
-    }
     return entry;
   }
 
   // set
-  private void setEntry(List<Object> list, Searchable searchable) {
-    list.set(OrdnungIndex.objekt.Index(), searchable);
+  private void setEntry(HashMap<OrdnungIndex, Object> entry, Searchable searchable) {
+    entry.put(OrdnungIndex.OBJEKT, searchable);
   }
 
-  private void setEntry(List<Object> list, int relevanz) {
-    list.set(OrdnungIndex.relevanz.Index(), relevanz);
+  private void setEntry(HashMap<OrdnungIndex, Object> entry, int relevanz) {
+    entry.put(OrdnungIndex.RELEVANZ, relevanz);
   }
 
   // get
-  private Searchable getEntry_searchable(List<Object> list) {
-    return (Searchable) list.get(OrdnungIndex.objekt.Index());
+  private Searchable getEntry_searchable(HashMap<OrdnungIndex, Object> entry) {
+    return (Searchable) entry.get(OrdnungIndex.OBJEKT);
   }
 
-  private int getEntry_relevanz(List<Object> list) {
-    return (int) list.get(OrdnungIndex.relevanz.Index());
+  private int getEntry_relevanz(HashMap<OrdnungIndex, Object> entry) {
+    return (int) entry.get(OrdnungIndex.RELEVANZ);
   }
 
   public Searchable getObjekt(int index) {
@@ -82,20 +71,44 @@ public class SuchOrdnung {
     return getEntry_relevanz(grid.get(index));
   }
 
-  // other
-  protected void sort(Comparator<ArrayList<Object>> comparator) {
-    // TODO complete, manager should do the comarator construction, maybe replace
-    // Search term eval with SearchCompileOrdnung with comparitor
+  // #region sorting
+  /**
+   * Comparator Object mit compare methode die nach relevanz ordnet. Hohe relevanz
+   * hoch (niedriger index) in der liste.
+   */
+  private Comparator<HashMap<OrdnungIndex, Object>> ComparatorRelevanz = new Comparator<HashMap<OrdnungIndex, Object>>() {
+    @Override
+    public int compare(HashMap<OrdnungIndex, Object> o1, HashMap<OrdnungIndex, Object> o2) {
+      return getEntry_relevanz(o1) - getEntry_relevanz(o2);
+    }
+  };
+
+  /**
+   * Sortiere nach relevanz
+   */
+  protected void sort() {
+    grid.sort(this.ComparatorRelevanz);
+  }
+
+  /**
+   * Sortiere mit custom Comparitor
+   * generell gilt für Comparator.compare: hohe werte = tief in der liste
+   * 
+   * @param comparator
+   */
+  protected void sort(Comparator<HashMap<OrdnungIndex, Object>> comparator) {
     grid.sort(comparator);
   }
 
+  // #endregion
   // #region generelles
   public int size() {
     return grid.size();
   }
-
+  /** gibt einen iterator über das grid zurück */
   public void iterator() {
     grid.iterator();
   }
   // #endregion
+
 }

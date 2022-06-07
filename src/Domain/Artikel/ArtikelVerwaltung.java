@@ -1,7 +1,6 @@
 package Domain.Artikel;
 
 import java.io.IOException;
-import java.util.Vector;
 
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
@@ -15,10 +14,10 @@ public class ArtikelVerwaltung {
     lager = new Lager();
   }
 
+  // #region persistenz
   /**
    * @author Maranderine
    */
-
   public void liesDaten(String datei) throws IOException {
     // PersistenzManager für Lesevorgänge öffnen
     pm.openForReading(datei);
@@ -46,6 +45,8 @@ public class ArtikelVerwaltung {
     }
     pm.close();
   }
+
+  // #endregion
 
   public Lager alleArtikel() {
     return this.lager;
@@ -117,7 +118,26 @@ public class ArtikelVerwaltung {
     return null;
   }
 
-  // #region set ///////////////////////////////
+  // #region getter
+
+  public int getArtikelNr(Artikel artikel) {
+    return artikel.getArtikelNr();
+  }
+
+  public String getArtikelName(Artikel artikel) {
+    return artikel.getName();
+  }
+
+  public int getArtikelBestand(Artikel artikel) {
+    return artikel.getBestand();
+  }
+
+  public double getArtikelPreis(Artikel artikel) {
+    return artikel.getPreis();
+  }
+
+  // #endregion
+  // #region setter ///////////////////////////////
   /**
    * sets name of Artikel Object
    * 
@@ -151,14 +171,5 @@ public class ArtikelVerwaltung {
     return true;
   }
 
-  // #endregion
-  // #region persistenz ///////////////////////////////
-  /**
-   * Läd eine artikel liste aus dem speicher
-   */
-  public void loadListe() {
-    // TEMP kreirt nur eine liste
-    lager.artikelListe = new Vector<Artikel>();
-  }
   // #endregion
 }

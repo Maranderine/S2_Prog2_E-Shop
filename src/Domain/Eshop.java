@@ -6,9 +6,9 @@ import java.util.HashMap;
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
-import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
+import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
@@ -39,7 +39,7 @@ public class Eshop {
       ArtikelVw = new ArtikelVerwaltung();
       ArtikelVw.liesDaten(artikelDoc);
       WarenkorbVw = new WarenkorbVerwaltung();
-      EreignisVw = new EreignisLogVerwaltung(this);
+      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -121,17 +121,6 @@ public class Eshop {
    */
   public void logout(UserInterface callingUI) {
     BenutzerVw.logout(callingUI);
-  }
-
-  // aktive nutzer managen
-  /**
-   * returnt das Benutzer Objekt assoziert mit dem userHash
-   * 
-   * @param userHash
-   * @return
-   */
-  public Benutzer BV_getAktiverBenutzer(byte[] userHash) {
-    return BenutzerVw.getAktiverBenutzer(userHash);
   }
 
   // #endregion
@@ -235,14 +224,70 @@ public class Eshop {
     return EreignisVw.displayLog();
   }
 
+  // neue ereignisse
+
   /**
-   * logt eine ereignis im ereignis log
+   * loggt neues Artikel Ereignis welches von dem Erstellen eines Artikels
+   * handelt,
+   * returnt true wenn ereignis erstellt wurde
    * 
    * @param userHash
-   * @param type
+   * @param ereignisDesc
+   * @param artikel
    * @return
    */
-  public boolean EV_logNewMitarbeiter(byte[] userHash) {
+  private boolean EV_EreignisArtikelCreate(byte[] userHash, String ereignisDesc, Artikel artikel) {
+    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelCreate(userHash, ereignisDesc, artikel);
+
+    return true;
+  }
+
+  /**
+   * loggt neues Artikel Ereignis welches von dem Löschen eines Artikels handelt,
+   * returnt true wenn ereignis erstellt wurde
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  private boolean EV_EreignisArtikelDelete(byte[] userHash, String ereignisDesc, Artikel artikel) {
+    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelDelete(userHash, ereignisDesc, artikel);
+
+    return true;
+  }
+
+  /**
+   * loggt neues Artikel Ereignis welches sich mit daten änderungen befasst,
+   * returnt true wenn ereignis erstellt wurde
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @param AaltName
+   * @param AaltBestand
+   * @param AaltPreis
+   * @return
+   */
+  private boolean EV_EreignisArtikelData(byte[] userHash, String ereignisDesc, Artikel artikel, String AaltName,
+      int AaltBestand, double AaltPreis) {
+    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelData(userHash, ereignisDesc, artikel, AaltName, AaltBestand,
+        AaltPreis);
+
+    return true;
+  }
+
+  /**
+   * loggt neues System Ereignis welches einen Artikel betrifft, returnt true wenn
+   * ereignis erstellt wurde
+   * 
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  private boolean EV_EreignisSystemArtikel(String ereignisDesc, Artikel artikel) {
+    Ereignis ereignis = EreignisVw.Ereignis_EreignisSystemArtikel(ereignisDesc, artikel);
+
     return true;
   }
 

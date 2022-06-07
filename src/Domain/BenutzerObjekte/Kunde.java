@@ -46,9 +46,11 @@ class Kunde extends Benutzer {
     this.email = email;
   }
 
+  @Override
   protected int getKundenNr() {
     return kundenNr;
   }
+
   // #endregion
   // weitere Dienste der Kunden-Objekte
 
@@ -57,4 +59,5 @@ class Kunde extends Benutzer {
     // parent name + username
     return "Kunde:\t" + super.toString() + "\t" + this.kundenNr;
   }
+
 }

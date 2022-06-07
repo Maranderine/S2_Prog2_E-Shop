@@ -15,6 +15,10 @@ public abstract class Benutzer {
     this.password = password;
   }
 
+  // #region getter
+  /** kunden nummer */
+  protected abstract int getKundenNr();
+
   protected Benutzerverwaltung.BeutzerType getType() {
     return benutzerType;
   }
@@ -31,7 +35,8 @@ public abstract class Benutzer {
     return name;
   }
 
-  // setter
+  // #endregion
+  // #region setter
   protected void setUsername(String name) {
     this.name = name;
   }
@@ -40,7 +45,9 @@ public abstract class Benutzer {
     this.username = name;
   }
 
-  public boolean setPassword(String oldPassword, String newPassword) {
+  // #endregion
+
+  protected boolean changePassword(String oldPassword, String newPassword) {
     // TODO complete
     // if (oldPassword.compareTo(this.password) == 0) {
     // this.password = newPassword;

@@ -4,14 +4,23 @@ package Domain.EreignisLog;
 import java.util.Vector;
 
 import Domain.Eshop;
-
+import Domain.Artikel.Artikel;
+import Domain.Artikel.ArtikelVerwaltung;
 import Domain.BenutzerObjekte.Benutzer;
+import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
+import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelCreate;
+import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
+import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
+import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
+import Domain.Search.Searcher;
 
-public class EreignisLogVerwaltung {
+public class EreignisLogVerwaltung extends Searcher {
 
   private int EreignisZaehler;
-  private Eshop meinShop;
+  private final Eshop meinShop;
+  private final Benutzerverwaltung benutzerVW;
+  private final ArtikelVerwaltung artikelVW;
 
   private Vector<Ereignis> log = new Vector<Ereignis>();
 
@@ -20,9 +29,11 @@ public class EreignisLogVerwaltung {
    * 
    * @param eshop Eshop
    */
-  public EreignisLogVerwaltung(Eshop eshop) {
+  public EreignisLogVerwaltung(Eshop eshop, Benutzerverwaltung benutzerVW, ArtikelVerwaltung artikelVW) {
     // get verwaltungen von eshop
     this.meinShop = eshop;
+    this.benutzerVW = benutzerVW;
+    this.artikelVW = artikelVW;
 
     // TODO get ereignis Zähler: load oder 1
     this.EreignisZaehler = 1;
@@ -30,26 +41,152 @@ public class EreignisLogVerwaltung {
 
   // #region neues ereignis//////////////////////////////////////////////////////
 
-  public Ereignis createEreignis(byte[] userHash, String type, String[] searchTermsArr) {
-    Benutzer user = this.meinShop.BV_getAktiverBenutzer(userHash);
+  // Artikel
+  /**
+   * Erstellt neues EreignisArtikelCreate Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  public Ereignis Ereignis_EreignisArtikelCreate(byte[] userHash, String ereignisDesc, Artikel artikel) {
+    Benutzer user = this.benutzerVW.getAktiverBenutzer(userHash);
     if (user != null) {
 
-      // add new event to log
-      // Ereignis ereignis = new EreignisArtikelDelete(useZaehler(), "TEST", user,
-      // CUserNumber, CUserType, searchTerms,
-      // artikel, artikelNummer, artikelName, artikelBestand, artikelPreis);
-      // this.log.add(ereignis);
+      // neues ereignis
+      Ereignis ereignis = new EreignisArtikelCreate(
+          // ereignis
+          useZaehler(),
+          ereignisDesc,
+          // user
+          user,
+          this.benutzerVW.getDataNummer(user),
+          this.benutzerVW.getDataTyp(user),
+          this.benutzerVW.getDataName(user),
+          // artikel
+          artikel,
+          this.artikelVW.getArtikelNr(artikel),
+          this.artikelVW.getArtikelName(artikel),
+          this.artikelVW.getArtikelBestand(artikel),
+          this.artikelVW.getArtikelPreis(artikel));
 
-      // return ereignis;
+      return ereignis;
     }
     // return true;
     return null;
   }
 
+  /**
+   * Erstellt neues EreignisArtikelDelete Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  public Ereignis Ereignis_EreignisArtikelDelete(byte[] userHash, String ereignisDesc, Artikel artikel) {
+    Benutzer user = this.benutzerVW.getAktiverBenutzer(userHash);
+    if (user != null) {
+
+      // neues ereignis
+      Ereignis ereignis = new EreignisArtikelDelete(
+          // ereignis
+          useZaehler(),
+          ereignisDesc,
+          // user
+          user,
+          this.benutzerVW.getDataNummer(user),
+          this.benutzerVW.getDataTyp(user),
+          this.benutzerVW.getDataName(user),
+          // artikel
+          artikel,
+          this.artikelVW.getArtikelNr(artikel),
+          this.artikelVW.getArtikelName(artikel),
+          this.artikelVW.getArtikelBestand(artikel),
+          this.artikelVW.getArtikelPreis(artikel));
+
+      return ereignis;
+    }
+    // return true;
+    return null;
+  }
+
+  /**
+   * Erstellt neues EreignisArtikelData Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  public Ereignis Ereignis_EreignisArtikelData(byte[] userHash, String ereignisDesc, Artikel artikel, String AaltName,
+      int AaltBestand, double AaltPreis) {
+    Benutzer user = this.benutzerVW.getAktiverBenutzer(userHash);
+    if (user != null) {
+
+      // neues ereignis
+      Ereignis ereignis = new EreignisArtikelData(
+          // ereignis
+          useZaehler(),
+          ereignisDesc,
+          // user
+          user,
+          this.benutzerVW.getDataNummer(user),
+          this.benutzerVW.getDataTyp(user),
+          this.benutzerVW.getDataName(user),
+          // artikel
+          artikel,
+          this.artikelVW.getArtikelNr(artikel),
+          this.artikelVW.getArtikelName(artikel),
+          this.artikelVW.getArtikelBestand(artikel),
+          this.artikelVW.getArtikelPreis(artikel),
+          // alt
+          AaltName,
+          AaltBestand,
+          AaltPreis);
+
+      return ereignis;
+    }
+    // return true;
+    return null;
+  }
+
+  // system
+
+  /**
+   * Erstellt neues EreignisSystemArtikel Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param userHash
+   * @param ereignisDesc
+   * @param artikel
+   * @return
+   */
+  public Ereignis Ereignis_EreignisSystemArtikel(String ereignisDesc, Artikel artikel) {
+
+    // neues ereignis
+    Ereignis ereignis = new EreignisSystemArtikel(
+        // ereignis
+        useZaehler(),
+        ereignisDesc,
+        // artikel
+        artikel,
+        this.artikelVW.getArtikelNr(artikel),
+        this.artikelVW.getArtikelName(artikel),
+        this.artikelVW.getArtikelBestand(artikel),
+        this.artikelVW.getArtikelPreis(artikel));
+
+    return ereignis;
+  }
+
   // #endregion///////////////////////////////////////////////////////////
 
   /**
-   * displays the Ereignis Log
+   * displayd den gesamten Ereignis Log
    * 
    * @return ereignis log string
    */

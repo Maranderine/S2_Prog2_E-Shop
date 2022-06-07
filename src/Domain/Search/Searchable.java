@@ -72,8 +72,7 @@ public abstract class Searchable {
     termstring = termstring.toLowerCase();
     for (String string : this.searchTerms) {
       if (termstring.contains(string))
-        ;
-      val++;
+        val++;
     }
     return val;
   }
@@ -133,4 +132,5 @@ public abstract class Searchable {
     SearchTermRemove(target);
     SearchTermAdd(newTerm);
   }
+
 }

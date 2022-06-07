@@ -46,8 +46,10 @@ public class Benutzerverwaltung {
     // übernimmt Vector:
     benutzerRegister.remove(benutzer);
   }
+
   /**
    * suche nutzer bei namen
+   * 
    * @param username
    * @return
    */
@@ -59,27 +61,68 @@ public class Benutzerverwaltung {
     }
     return null;
   }
+
   public Benutzer sucheKunde(int userNumber) {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
-        if (((Kunde) benutzer).getKundenNr() == userNumber) {
+        if (benutzer.getKundenNr() == userNumber) {
           return benutzer;
         }
       }
-      
+
     }
     return null;
   }
+
   public Benutzer sucheMitarbeiter(int userNumber) {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
-        if (((Mitarbeiter) benutzer).getKundenNr() == userNumber) {
+        if (benutzer.getKundenNr() == userNumber) {
           return benutzer;
         }
       }
     }
     return null;
   }
+
+  // #region get user data
+  /*
+   * get dddata methoden
+   * returnen daten unabhängig vom typ oder benutzung der daten
+   * 
+   */
+  /**
+   * get user identifikation number
+   * regardless of user type
+   * 
+   * @param user
+   * @return int identifikation number
+   */
+  public int getDataNummer(Benutzer user) {
+    return user.getKundenNr();
+  }
+
+  /**
+   * get user type
+   * 
+   * @param user
+   * @return BeutzerType user type
+   */
+  public BeutzerType getDataTyp(Benutzer user) {
+    return user.getType();
+  }
+
+  /**
+   * get user name
+   * 
+   * @param user
+   * @return String user name
+   */
+  public String getDataName(Benutzer user) {
+    return user.getName();
+  }
+
+  // #endregion
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // #region security

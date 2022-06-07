@@ -1,7 +1,6 @@
 package Domain.Search;
 
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Eine klasse die luch und listen kompilier funktionen enthält
@@ -14,27 +13,25 @@ public abstract class Searcher {
 
   }
 
-  /**
-   * Erstellt eine neue liste die alle Objecte enthält,
-   * die den Such Begriff enthalten
-   * 
-   * @param list        liste mir Objekten die durchsucht weren sollen
-   * @param Suchbegriff singulärer suchbegriff
-   * @return
-   */
-  protected List<Searchable> SearchCompileList(List<Searchable> list, String suchbegriff) {
-    Vector<Searchable> compiledList = new Vector<Searchable>();
-    // geht gegeben liste durch
-    for (Searchable searchable : list) {
-      // wenn suchbegriff gefunden wurdde
-      if (searchable.SearchTermCheck(suchbegriff))
-        // fürgt obj der liste hinzu
-        compiledList.add(searchable);
-    }
-    return compiledList;
-  }
-
-  // #region ordung
+  // /**
+  //  * Erstellt eine neue liste die alle Objecte enthält,
+  //  * die den Such Begriff enthalten
+  //  * 
+  //  * @param list        liste mir Objekten die durchsucht weren sollen
+  //  * @param Suchbegriff singulärer suchbegriff
+  //  * @return
+  //  */
+  // protected List<Searchable> SearchCompileList(List<Searchable> list, String suchbegriff) {
+  //   Vector<Searchable> compiledList = new Vector<Searchable>();
+  //   // geht gegeben liste durch
+  //   for (Searchable searchable : list) {
+  //     // wenn suchbegriff gefunden wurdde
+  //     if (searchable.SearchTermCheck(suchbegriff))
+  //       // fürgt obj der liste hinzu
+  //       compiledList.add(searchable);
+  //   }
+  //   return compiledList;
+  // }
 
   /**
    * Erstellt eine neue ordnung die alle Objecte enthält,
@@ -57,8 +54,5 @@ public abstract class Searcher {
       }
     }
     return ordnung;
-
   }
-
-  // #endregion
 }
