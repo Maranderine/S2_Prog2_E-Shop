@@ -8,12 +8,12 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
-import Domain.BenutzerObjekte.Kunde;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
+
 public class Eshop {
 
   private String artikelDoc = "";
@@ -25,23 +25,26 @@ public class Eshop {
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox){
+  public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox) {
 
-   this.artikelDoc = artikelDox;
-   this.mitarbeiterDoc = mitarbeiterDox;
-   this.kundenDoc = kundenDox;
+    this.artikelDoc = artikelDox;
+    this.mitarbeiterDoc = mitarbeiterDox;
+    this.kundenDoc = kundenDox;
 
-    try{
-    BenutzerVw = new Benutzerverwaltung();
-    if(!(kundenDoc.equals(""))){BenutzerVw.load(kundenDoc);}
-    ArtikelVw = new ArtikelVerwaltung();
-    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
-    WarenkorbVw = new WarenkorbVerwaltung();
-    EreignisVw = new EreignisLogVerwaltung();
-    }catch(IOException e){
+    try {
+      BenutzerVw = new Benutzerverwaltung();
+      if (!(kundenDoc.equals(""))) {
+        BenutzerVw.load(kundenDoc);
+      }
+      ArtikelVw = new ArtikelVerwaltung();
+      if (!(artikelDoc.equals(""))) {
+        ArtikelVw.load(artikelDoc);
+      }
+      WarenkorbVw = new WarenkorbVerwaltung();
+      EreignisVw = new EreignisLogVerwaltung();
+    } catch (IOException e) {
       e.printStackTrace();
     }
-
 
   }
 
@@ -128,7 +131,7 @@ public class Eshop {
     Rechnung rechnung = new Rechnung(WarenkorbVw.ArtikelKaufen());
     WarenkorbVw.clearAll();
     return rechnung;
-    
+
   }
 
   // #endregion Warenkorb
@@ -191,21 +194,22 @@ public class Eshop {
   // jedes mal die map benutzt werden muss
   // #endregion
 
-  public void saveData(){
-    try{
-    ArtikelVw.save(artikelDoc);
-    BenutzerVw.save(kundenDoc);
-    }catch(IOException e){
+  public void saveData() {
+    try {
+      ArtikelVw.save(artikelDoc);
+      BenutzerVw.save(kundenDoc);
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
   /**
    * creates used User Interface object. for example CUI or GUI
    * 
    * @return UserInterface UserInterface Object
    */
   public UserInterface createUserInterface() {
-    
+
     return new CUI(this);
   }
 
