@@ -8,6 +8,7 @@ import UserInterface.UserInterface;
 public abstract class MAIN {
 
   // create eshop
+
   private final static Eshop eshop = new Eshop("Artikel.txt", "Kunden.txt", "");
 
   // get used user interface from Eshop
@@ -19,6 +20,7 @@ public abstract class MAIN {
    * @param args()
    */
   public static void main(String args[]) {
+    // main loop des programmes
     while (ui.run()) {
     }
   }

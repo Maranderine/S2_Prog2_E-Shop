@@ -10,36 +10,10 @@ import Domain.Artikel.Artikel;
 
 public class CUI extends UserInterface {
 
-  // wird im parent constructor gesetzt
   public CUI(Eshop eshop) {
     super(eshop);
     // move level to start menu
     LevelMove(startLevel);
-    // default mitarbeiter
-    eshop.BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
-
-    // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
-
-    // test user
-    /*eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
-    eshop.BV_kundeHinzufügen("test2", "test2", "123456", "test", "test");
-    eshop.BV_kundeHinzufügen("test3", "test3", "123456", "test", "test");*/
-
-    // Artikel
-    /*
-     * eshop.AV_addArtikel("Banane", 150, 1.99);
-     * eshop.AV_addArtikel("Melone", 999999, 5.00);
-     * eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
-     * eshop.AV_addArtikel("Apfel", 5, 1.77);
-     */
-
-    // LevelMove(MenuLevel.WARENKORB);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
-
-    // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
   }
 
   /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
@@ -100,15 +74,15 @@ public class CUI extends UserInterface {
         // #region ANMELDUNG
         LevelReturn();
         System.out.println("LOGIN");
-        System.out.println("username > ");
-
+        System.out.print("username > ");
         String username = GetInput();
+
         System.out.print("password  > ");
         String password = GetInput();
 
-        // Benutzerverwaltung.AktiverBeutzerType nutzer = eshop.login(username,
+        // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
         // password);
-        switch (eshop.login(username, password)) {
+        switch (eshop.login(this, username, password)) {
           case NONE:
             System.out.println(" Benutzername oder Passwort falsch");
             break;
@@ -284,7 +258,7 @@ public class CUI extends UserInterface {
           case "2":
             System.out.println("zu löschender Artikel > ");
             string = GetInput();
-            eshop.AV_deleteArtikel(string);
+            eshop.AV_deleteArtikel(this.userHash, string);
             break;
           case "3":
             System.out.println("neuer Artikel name > ");
@@ -293,7 +267,12 @@ public class CUI extends UserInterface {
             int bestand = Integer.parseInt(GetInput());
             System.out.println("Preis > ");
             double preis = Double.parseDouble(GetInput());
-            eshop.AV_addArtikel(artikelName, bestand, preis);
+            // TODO CUI Artikel: was wenn falsche eingabe
+            Artikel art = eshop.AV_addArtikel(this.userHash, artikelName, bestand, preis);
+            if (art != null)
+              System.out.println("Erfolgreich erstellt!");
+            else
+              System.out.println("Etwas ist schief gelaufen.");
             break;
           case "0":
             LevelReturn();
@@ -322,7 +301,36 @@ public class CUI extends UserInterface {
       // #endregion MITARBEITER_REGISTRIEREN
       case MITARBEITER_EREIGNISLOG:
         // #region MITARBEITER_EREIGNISLOG
-        eshop.EV_logShow();
+        System.out.println("____________Ereignis Log____________");
+        System.out.print(eshop.EV_logDisplay());
+        System.out.println("------------------------------------");
+        System.out.println("1 = ");
+        System.out.println("2 = ");
+        System.out.println("3 = ");
+        System.out.println("0 = Exit");
+
+        string = GetInput();
+
+        switch (string) {
+          case "1":
+            // #region
+            // #endregion
+            break;
+          case "2":
+            // #region
+            // #endregion
+            break;
+          case "3":
+            // #region
+            // #endregion
+            break;
+          case "0":
+            // #region
+            LevelReturn();
+            // #endregion
+            break;
+        }
+
         break;
       // #endregion MITARBEITER_EREIGNISLOG
     }
@@ -387,7 +395,7 @@ public class CUI extends UserInterface {
    * 
    * @return
    */
-  private static MenuLevel LevelClear() {
+  private static MenuLevel LevelReset() {
     levelStack.clear();
     levelStack.push(startLevel);
     return startLevel;
@@ -399,7 +407,7 @@ public class CUI extends UserInterface {
    * logs the user out and LevelReturn()
    */
   private void Logout() {
-    eshop.logout();
-    LevelReturn();
+    eshop.logout(this);
+    LevelReset();
   }
 }
