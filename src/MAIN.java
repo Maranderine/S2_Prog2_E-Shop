@@ -9,7 +9,7 @@ import UserInterface.*;
 public abstract class MAIN {
 
   // create eshop
-  private final static Eshop eshop = new Eshop("Artikel.txt", "Kunden.txt", "");
+  private final static Eshop eshop = new Eshop("Artikel.txt", "Nutzer.txt");
       
   // get used user interface from Eshop
   private final static UserInterface ui = eshop.createUserInterface();

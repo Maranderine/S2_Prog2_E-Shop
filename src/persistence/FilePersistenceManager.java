@@ -108,6 +108,7 @@ public class FilePersistenceManager implements PersistenceManager {
 			nutzer = (Vector<Benutzer>)objectReader.readObject();
 			}catch(IOException | ClassNotFoundException e){
 				e.printStackTrace();
+				
 			}
 			close();
 			return nutzer;

@@ -16,12 +16,12 @@ public class CUI extends UserInterface {
     // move level to start menu
     LevelMove(startLevel);
     // default mitarbeiter
-    eshop.BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
+    /*eshop.BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
 
     // test user
-    /*eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
+    eshop.BV_kundeHinzufügen("test", "test", "123456", "test", "test");
     eshop.BV_kundeHinzufügen("test2", "test2", "123456", "test", "test");
     eshop.BV_kundeHinzufügen("test3", "test3", "123456", "test", "test");*/
 

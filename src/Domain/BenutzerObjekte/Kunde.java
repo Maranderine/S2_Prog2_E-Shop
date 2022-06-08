@@ -1,7 +1,5 @@
 package Domain.BenutzerObjekte;
 
-import java.io.Serializable;
-
 public class Kunde extends Benutzer{
   private String email;
   private String address = "";

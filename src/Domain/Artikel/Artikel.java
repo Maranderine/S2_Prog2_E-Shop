@@ -49,6 +49,12 @@ public class Artikel {
   public String toString() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;
+    return this.artikelNr + "\t" + this.name + "\t" + this.preis;
+  }
+
+  public String toStringDetailled() {
+    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
+    // this.preis;
     return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
   }
 

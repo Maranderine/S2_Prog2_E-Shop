@@ -15,7 +15,7 @@ public class Rechnung {
   public Rechnung(HashMap<Artikel, Integer> WK_inhalt) {
     WK_inhalt.forEach((artikel, bestand) -> {
       betrag += artikel.getPreis() * bestand;
-      kaufArtikel += artikel.toString() + "\n";
+      kaufArtikel += artikel.toString() + "\t" + bestand + "\n";
     });
     kaufDatum = new Date();
     rechnungsId = "1";
