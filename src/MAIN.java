@@ -1,6 +1,6 @@
 
 import Domain.Eshop;
-import UserInterface.*;
+import UserInterface.UserInterface;
 
 /**
  * Main class was quasi das programm repräsentiert

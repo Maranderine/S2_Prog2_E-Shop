@@ -7,7 +7,6 @@ import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
-import Domain.BenutzerObjekte.Kunde;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Warenkorb.Rechnung;
@@ -30,20 +29,25 @@ public class Eshop {
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
+
   public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox){
 
-   this.artikelDoc = artikelDox;
-   this.mitarbeiterDoc = mitarbeiterDox;
-   this.kundenDoc = kundenDox;
+    this.artikelDoc = artikelDox;
+    this.mitarbeiterDoc = mitarbeiterDox;
+    this.kundenDoc = kundenDox;
 
-    try{
-    BenutzerVw = new Benutzerverwaltung();
-    if(!(kundenDoc.equals(""))){BenutzerVw.load(kundenDoc);}
-    ArtikelVw = new ArtikelVerwaltung();
-    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
-    WarenkorbVw = new WarenkorbVerwaltung();
-    EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-    }catch(IOException e){
+  try {
+      BenutzerVw = new Benutzerverwaltung();
+      if (!(kundenDoc.equals(""))) {
+        BenutzerVw.load(kundenDoc);
+      }
+      ArtikelVw = new ArtikelVerwaltung();
+      if (!(artikelDoc.equals(""))) {
+        ArtikelVw.load(artikelDoc);
+      }
+      WarenkorbVw = new WarenkorbVerwaltung();
+      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
@@ -70,6 +74,7 @@ public class Eshop {
     // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
 
     // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
+
   }
 
   // #region BenutzerVerwaltung
@@ -167,7 +172,7 @@ public class Eshop {
     Rechnung rechnung = new Rechnung(WarenkorbVw.ArtikelKaufen());
     WarenkorbVw.clearAll();
     return rechnung;
-    
+
   }
 
   // #endregion Warenkorb
@@ -347,7 +352,6 @@ public class Eshop {
     return true;
   }
 
-
   /**
    * loggt neues Artikel Ereignis welches von dem Löschen eines Artikels handelt,
    * returnt true wenn ereignis erstellt wurde
@@ -415,7 +419,6 @@ public class Eshop {
       ArtikelVw.save(artikelDoc);
     BenutzerVw.save(kundenDoc);
     } catch (IOException e) {
-
       e.printStackTrace();
     }
   }
