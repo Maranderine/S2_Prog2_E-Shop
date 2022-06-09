@@ -29,7 +29,13 @@ public class SuchOrdnung {
     }
   }
 
-  public void add(Searchable searchable, int relevanz) {
+  /**
+   * füge einen eintrag der ordnung hinzu
+   * 
+   * @param searchable
+   * @param relevanz
+   */
+  protected void add(Searchable searchable, int relevanz) {
     // create new entry
     HashMap<OrdnungIndex, Object> entry = createNewEntry();
     // set values
@@ -94,7 +100,7 @@ public class SuchOrdnung {
    * Sortiere mit custom Comparitor
    * generell gilt für Comparator.compare: hohe werte = tief in der liste
    * 
-   * @param comparator
+   * @param comparator der die ordnung vorgibt
    */
   protected void sort(Comparator<HashMap<OrdnungIndex, Object>> comparator) {
     grid.sort(comparator);
@@ -105,6 +111,7 @@ public class SuchOrdnung {
   public int size() {
     return grid.size();
   }
+
   /** gibt einen iterator über das grid zurück */
   public void iterator() {
     grid.iterator();

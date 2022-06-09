@@ -334,7 +334,7 @@ public class Eshop {
    * @return ereignis log as a string
    */
   public String EV_logDisplay() {
-    return EreignisVw.displayLog();
+    return EreignisVw.displayLog(false);
   }
 
   // neue ereignisse

@@ -42,7 +42,7 @@ public class EreignisArtikelDelete extends EreignisArtikel {
   }
   
   @Override
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     /*
      * "\t" + this.ereignisDesc + "\t" + this.callingBenutzerName + "\t" +
      * this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t" +

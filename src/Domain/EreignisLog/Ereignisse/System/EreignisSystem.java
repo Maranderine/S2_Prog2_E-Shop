@@ -28,7 +28,7 @@ public abstract class EreignisSystem extends Ereignis implements EreignisInterfa
   }
 
   @Override
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
     String str = "";

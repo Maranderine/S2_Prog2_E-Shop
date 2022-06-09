@@ -49,7 +49,7 @@ public class EreignisArtikelCreate extends EreignisArtikel {
   }
 
   @Override
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     String str = "";
     return super.toStringDetailed().replace("##", str);
   }

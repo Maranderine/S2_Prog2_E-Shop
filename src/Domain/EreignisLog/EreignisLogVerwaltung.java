@@ -17,9 +17,8 @@ import Domain.Search.Searcher;
 
 public class EreignisLogVerwaltung extends Searcher {
 
-  //TODO: EVENTS - suche nach aartikel objekt
+  //TODO: EVENTS - suche nach artikel objekt
 
-  
   private int EreignisZaehler;
   private final Eshop meinShop;
   private final Benutzerverwaltung benutzerVW;
@@ -203,8 +202,21 @@ public class EreignisLogVerwaltung extends Searcher {
    * 
    * @return ereignis log string
    */
-  public String displayLog() {
-    return toString();
+  public String displayLog(boolean detailed) {
+    String str = "EREIGNIS LOG:\n";
+    if (this.log.isEmpty()) {
+      // log empty
+      str += "\tKeine Ereignisse\n";
+    } else {
+      // log not empty
+      for (Ereignis ereignis : this.log) {
+        if (detailed)
+        str += ereignis.toStringDetailed() + "\n";
+        else
+        str += ereignis.toString() + "\n";
+      }
+    }
+    return str;
   }
 
   /**
@@ -219,17 +231,6 @@ public class EreignisLogVerwaltung extends Searcher {
 
   @Override
   public String toString() {
-    String str = "EREIGNIS LOG:\n";
-    if (this.log.isEmpty()) {
-      // log empty
-      str += "\tKeine Ereignisse\n";
-    } else {
-      // log not empty
-      for (Ereignis ereignis : this.log) {
-        str += ereignis.toString() + "\n";
-      }
-    }
-
-    return str;
+    return displayLog(false);
   }
 }

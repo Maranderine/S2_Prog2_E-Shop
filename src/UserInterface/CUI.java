@@ -59,8 +59,30 @@ public class CUI extends UserInterface {
 
         switch (string) {
           case "1":// Anmelden
-            LevelMove(MenuLevel.ANMELDUNG);
+            // LevelMove(MenuLevel.ANMELDUNG);
+            // #region Anmelden
+            System.out.println("LOGIN");
+            System.out.print("username > ");
+            String username = GetInput();
+
+            System.out.print("password  > ");
+            String password = GetInput();
+
+            // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
+            // password);
+            switch (eshop.login(this, username, password)) {
+              case NONE:
+                System.out.println(" Benutzername oder Passwort falsch");
+                break;
+              case MITARBEITER:
+                LevelMove(MenuLevel.MITARBEITER_ANSICHT);
+                break;
+              case KUNDE:
+                LevelMove(MenuLevel.KUNDEN_ANSICHT);
+                break;
+            }
             break;
+          // #endregion
           case "2":// Registrieren
             LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
             break;
@@ -70,31 +92,6 @@ public class CUI extends UserInterface {
         }
         break;
       // #endregion MAIN_MENU
-      case ANMELDUNG:// Login menu
-        // #region ANMELDUNG
-        LevelReturn();
-        System.out.println("LOGIN");
-        System.out.print("username > ");
-        String username = GetInput();
-
-        System.out.print("password  > ");
-        String password = GetInput();
-
-        // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
-        // password);
-        switch (eshop.login(this, username, password)) {
-          case NONE:
-            System.out.println(" Benutzername oder Passwort falsch");
-            break;
-          case MITARBEITER:
-            LevelMove(MenuLevel.MITARBEITER_ANSICHT);
-            break;
-          case KUNDE:
-            LevelMove(MenuLevel.KUNDEN_ANSICHT);
-            break;
-        }
-        break;
-      // #endregion ANMELDUNG
       case KUNDEN_REGISTRIEREN:
         // #region KUNDEN_REGISTRIEREN
         System.out.println("__________Mitarbeiter Registrieren_________");
@@ -333,8 +330,13 @@ public class CUI extends UserInterface {
 
         break;
       // #endregion MITARBEITER_EREIGNISLOG
-    }
+      case ARTIKELDETAILANSICHT:
+        //#region
 
+
+        //#endregion
+        break;
+    }
     // true to continue
     return true;
   }
@@ -344,14 +346,14 @@ public class CUI extends UserInterface {
   // menu level enum and value
   enum MenuLevel {
     MAIN_MENU, // start menu
-    ANMELDUNG,
     KUNDEN_REGISTRIEREN,
     KUNDEN_ANSICHT,
     WARENKORB,
     MITARBEITER_ANSICHT,
     MITARBEITER_ARTIKEL,
     MITARBEITER_REGISTRIEREN,
-    MITARBEITER_EREIGNISLOG
+    MITARBEITER_EREIGNISLOG,
+    ARTIKELDETAILANSICHT
   }
 
   /** the start level, displayed on statup */
