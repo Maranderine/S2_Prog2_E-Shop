@@ -1,6 +1,7 @@
 package Domain.BenutzerObjekte;
 
-public class Kunde extends Benutzer {
+
+public class Kunde extends Benutzer{
   private String email;
   private String address = "";
   private int kundenNr;

@@ -1,6 +1,7 @@
 package Domain;
 
 import java.io.IOException;
+import java.util.Map.Entry;
 import java.util.HashMap;
 
 import Domain.Artikel.Artikel;
@@ -21,8 +22,7 @@ import UserInterface.UserInterface;
 public class Eshop {
 
   private String artikelDoc = "";
-  private String mitarbeiterDoc = "";
-  private String kundenDoc = "";
+  private String nutzerDoc = "";
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
@@ -30,24 +30,19 @@ public class Eshop {
   private EreignisLogVerwaltung EreignisVw;
 
 
-  public Eshop(String artikelDox, String kundenDox, String mitarbeiterDox){
+  public Eshop(String artikelDox, String nutzerDox){
 
-    this.artikelDoc = artikelDox;
-    this.mitarbeiterDoc = mitarbeiterDox;
-    this.kundenDoc = kundenDox;
+   this.artikelDoc = artikelDox;
+   this.nutzerDoc = nutzerDox;
 
-  try {
-      BenutzerVw = new Benutzerverwaltung();
-      if (!(kundenDoc.equals(""))) {
-        BenutzerVw.load(kundenDoc);
-      }
-      ArtikelVw = new ArtikelVerwaltung();
-      if (!(artikelDoc.equals(""))) {
-        ArtikelVw.load(artikelDoc);
-      }
-      WarenkorbVw = new WarenkorbVerwaltung();
-      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-    } catch (IOException e) {
+    try{
+    BenutzerVw = new Benutzerverwaltung();
+    if(!(nutzerDoc.equals(""))){BenutzerVw.load(nutzerDoc);}
+    ArtikelVw = new ArtikelVerwaltung();
+    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
+    WarenkorbVw = new WarenkorbVerwaltung();
+    EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
+    }catch(IOException e){
       e.printStackTrace();
     }
 
@@ -169,10 +164,18 @@ public class Eshop {
   }
 
   public Rechnung WV_kaufen() {
-    Rechnung rechnung = new Rechnung(WarenkorbVw.ArtikelKaufen());
+    HashMap<Artikel, Integer> kaufArtikel = WarenkorbVw.ArtikelKaufen();
+    //key = artikel, value = bestand im WK
+    for(Entry<Artikel, Integer> entry : kaufArtikel.entrySet()){
+      if(entry.getKey().getBestand() < entry.getValue()){
+        System.out.println("Ihre angegebene Kaufmenge von Artikel '" + entry.getKey() +
+        "' überschreitet unseren aktuellen Lagerbestand von " + entry.getKey().getBestand());
+        return null;
+      }
+    }
+    kaufArtikel.forEach((artikel, wkBestand)-> {AV_setArtikelBestand(artikel.getName(), artikel.getBestand()-wkBestand);});
     WarenkorbVw.clearAll();
-    return rechnung;
-
+    return new Rechnung(kaufArtikel); 
   }
 
   // #endregion Warenkorb
@@ -352,6 +355,7 @@ public class Eshop {
     return true;
   }
 
+
   /**
    * loggt neues Artikel Ereignis welches von dem Löschen eines Artikels handelt,
    * returnt true wenn ereignis erstellt wurde
@@ -414,11 +418,11 @@ public class Eshop {
 
   // #endregion ////////////////////////////////////////////////
 
-  public void saveData() {
-    try {
-      ArtikelVw.save(artikelDoc);
-    BenutzerVw.save(kundenDoc);
-    } catch (IOException e) {
+  public void saveData(){
+    try{
+    ArtikelVw.save(artikelDoc);
+    BenutzerVw.save(nutzerDoc);
+    }catch(IOException e){
       e.printStackTrace();
     }
   }

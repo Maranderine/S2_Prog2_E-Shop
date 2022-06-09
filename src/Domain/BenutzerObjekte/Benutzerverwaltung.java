@@ -337,18 +337,19 @@ public class Benutzerverwaltung {
     pm.saveNutzer(nutzerDoc, benutzerRegister);
   }
 
-  public void load(String nutzerDoc) {
-    benutzerRegister = pm.loadNutzer(nutzerDoc);
-    int i = 0;
-    // zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler
-    for (Benutzer b : benutzerRegister) {
-      if (b instanceof Kunde) {
-        i++;
-      }
+
+  public void load(String nutzerDoc){
+   benutzerRegister =  pm.loadNutzer(nutzerDoc);
+   int k = 0;
+   int m = 0;
+   //zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler 
+   for(Benutzer b : benutzerRegister){
+     if(b instanceof Kunde){k++;}
+     if(b instanceof Mitarbeiter){m++;}
     }
-    ;
-    Kunde.kundenNrZähler = i;
-    System.out.println("" + Kunde.kundenNrZähler);
-    // #endregion
+   Kunde.kundenNrZähler = k;
+   Mitarbeiter.zähler = m;
+  // #endregion
+
   }
 }

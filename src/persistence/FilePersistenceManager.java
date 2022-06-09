@@ -107,20 +107,21 @@ public class FilePersistenceManager implements PersistenceManager {
    * }
    */
 
-  public Vector<Benutzer> loadNutzer(String kundenDoc) {
-    Vector<Benutzer> nutzer = new Vector<Benutzer>();
-    try {
-      // öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc
-      objectReader = new ObjectInputStream(new FileInputStream(kundenDoc));
-      // Solange noch Objekte in der Datei sind werden diese eingelesen und nach type
-      // cast (Kunde) der Nutzer Liste hinzugefügt
-      nutzer = (Vector<Benutzer>) objectReader.readObject();
-    } catch (IOException | ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    close();
-    return nutzer;
-  }
+
+	public  Vector<Benutzer> loadNutzer(String kundenDoc){
+		Vector<Benutzer> nutzer = new Vector<Benutzer>();
+		try {
+			//öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc
+			objectReader = new ObjectInputStream(new FileInputStream(kundenDoc));
+			//Solange noch  Objekte in der Datei sind werden diese eingelesen und nach type cast (Kunde) der Nutzer Liste hinzugefügt
+			nutzer = (Vector<Benutzer>)objectReader.readObject();
+			}catch(IOException | ClassNotFoundException e){
+				e.printStackTrace();
+				
+			}
+			close();
+			return nutzer;
+	}
 
   public boolean saveNutzer(String kundenDoc, Vector<Benutzer> nutzer) {
     try {
