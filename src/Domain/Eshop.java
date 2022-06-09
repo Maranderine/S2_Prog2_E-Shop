@@ -29,20 +29,23 @@ public class Eshop {
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
+  public Eshop(String artikelDox, String nutzerDox) {
 
-  public Eshop(String artikelDox, String nutzerDox){
+    this.artikelDoc = artikelDox;
+    this.nutzerDoc = nutzerDox;
 
-   this.artikelDoc = artikelDox;
-   this.nutzerDoc = nutzerDox;
-
-    try{
-    BenutzerVw = new Benutzerverwaltung();
-    if(!(nutzerDoc.equals(""))){BenutzerVw.load(nutzerDoc);}
-    ArtikelVw = new ArtikelVerwaltung();
-    if(!(artikelDoc.equals(""))){ArtikelVw.load(artikelDoc);}
-    WarenkorbVw = new WarenkorbVerwaltung();
-    EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-    }catch(IOException e){
+    try {
+      BenutzerVw = new Benutzerverwaltung();
+      if (!(nutzerDoc.equals(""))) {
+        BenutzerVw.load(nutzerDoc);
+      }
+      ArtikelVw = new ArtikelVerwaltung();
+      if (!(artikelDoc.equals(""))) {
+        ArtikelVw.load(artikelDoc);
+      }
+      WarenkorbVw = new WarenkorbVerwaltung();
+      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
@@ -163,19 +166,29 @@ public class Eshop {
     WarenkorbVw.clearAll();
   }
 
-  public Rechnung WV_kaufen() {
+  /**
+   * Kauft alle artikel im Warenkorb.
+   * Aktualisiert bestand für alle
+   * und erstellt entspechende events
+   * 
+   * @param userHash Benutzer Identifikator der die funtion ausführt
+   * @return
+   */
+  public Rechnung WV_kaufen(byte[] userHash) {
     HashMap<Artikel, Integer> kaufArtikel = WarenkorbVw.ArtikelKaufen();
-    //key = artikel, value = bestand im WK
-    for(Entry<Artikel, Integer> entry : kaufArtikel.entrySet()){
-      if(entry.getKey().getBestand() < entry.getValue()){
+    // key = artikel, value = bestand im WK
+    for (Entry<Artikel, Integer> entry : kaufArtikel.entrySet()) {
+      if (entry.getKey().getBestand() < entry.getValue()) {
         System.out.println("Ihre angegebene Kaufmenge von Artikel '" + entry.getKey() +
-        "' überschreitet unseren aktuellen Lagerbestand von " + entry.getKey().getBestand());
+            "' überschreitet unseren aktuellen Lagerbestand von " + entry.getKey().getBestand());
         return null;
       }
     }
-    kaufArtikel.forEach((artikel, wkBestand)-> {AV_setArtikelBestand(artikel.getName(), artikel.getBestand()-wkBestand);});
+    kaufArtikel.forEach((artikel, wkBestand) -> {
+      AV_setArtikel(userHash, artikel.getName(), artikel.getBestand() - wkBestand);
+    });
     WarenkorbVw.clearAll();
-    return new Rechnung(kaufArtikel); 
+    return new Rechnung(kaufArtikel);
   }
 
   // #endregion Warenkorb
@@ -355,7 +368,6 @@ public class Eshop {
     return true;
   }
 
-
   /**
    * loggt neues Artikel Ereignis welches von dem Löschen eines Artikels handelt,
    * returnt true wenn ereignis erstellt wurde
@@ -418,11 +430,11 @@ public class Eshop {
 
   // #endregion ////////////////////////////////////////////////
 
-  public void saveData(){
-    try{
-    ArtikelVw.save(artikelDoc);
-    BenutzerVw.save(nutzerDoc);
-    }catch(IOException e){
+  public void saveData() {
+    try {
+      ArtikelVw.save(artikelDoc);
+      BenutzerVw.save(nutzerDoc);
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

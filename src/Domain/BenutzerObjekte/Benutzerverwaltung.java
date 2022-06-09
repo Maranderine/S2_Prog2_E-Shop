@@ -348,7 +348,7 @@ public class Benutzerverwaltung {
      if(b instanceof Mitarbeiter){m++;}
     }
    Kunde.kundenNrZähler = k;
-   Mitarbeiter.zähler = m;
+   Mitarbeiter.mitarbeiterNrzähler = m;
   // #endregion
 
   }

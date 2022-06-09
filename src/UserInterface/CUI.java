@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
+import Domain.Warenkorb.Rechnung;
 
 public class CUI extends UserInterface {
 
@@ -202,7 +203,8 @@ public class CUI extends UserInterface {
             System.out.print("\t>");
             string = GetInput();
             if (string.equals("y")) {
-              System.out.print(eshop.WV_kaufen());
+              Rechnung rechnung = eshop.WV_kaufen(this.userHash);
+              System.out.print(rechnung);
             }
             break;
           case "0":// Exit
@@ -331,10 +333,9 @@ public class CUI extends UserInterface {
         break;
       // #endregion MITARBEITER_EREIGNISLOG
       case ARTIKELDETAILANSICHT:
-        //#region
+        // #region
 
-
-        //#endregion
+        // #endregion
         break;
     }
     // true to continue

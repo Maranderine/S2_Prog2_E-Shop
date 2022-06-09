@@ -2,7 +2,7 @@ package Domain.BenutzerObjekte;
 
 
 public class Mitarbeiter extends Benutzer{
-  private static int mitarbeiterNrzähler = 1;
+  static int mitarbeiterNrzähler = 1;
 
   private int mitarbeiterNr;
 
