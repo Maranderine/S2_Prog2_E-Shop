@@ -81,7 +81,7 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
   }
 
   @Override
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t##\t" +
     // this.ereignisDatum;
     String str = this.callingBenutzerName + "\t" + this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t"

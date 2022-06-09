@@ -62,7 +62,7 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
    * 
    * @return
    */
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     return toString();
   }
 }

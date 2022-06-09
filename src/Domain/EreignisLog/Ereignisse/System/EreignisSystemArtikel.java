@@ -79,7 +79,7 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
   }
 
   @Override
-  protected String toStringDetailed() {
+  public String toStringDetailed() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
 
