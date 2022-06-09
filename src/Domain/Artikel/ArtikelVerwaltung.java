@@ -1,6 +1,6 @@
 package Domain.Artikel;
+
 import java.io.IOException;
-import java.util.Vector;
 
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
@@ -14,10 +14,10 @@ public class ArtikelVerwaltung {
     lager = new Lager();
   }
 
+  // #region persistenz
   /**
    * @author Maranderine
    */
-  
 	public void load(String datei) throws IOException {
 		 lager.artikelListe = pm.loadArticle(datei);
 	}
@@ -32,8 +32,10 @@ public class ArtikelVerwaltung {
 		pm.saveArticle(datei, lager.artikelListe);
 	}
 
+// #endregion
+ 
   public Lager alleArtikel() {
-    return lager;
+    return this.lager;
   }
 
   /**
@@ -54,11 +56,21 @@ public class ArtikelVerwaltung {
     return artikel;
   }
 
-  public void addArtikel(Artikel artikel){
+  public void addArtikel(Artikel artikel) {
     lager.artikelListe.add(artikel);
     Lager.artikelNrCount++;
   }
-  
+
+  /**
+   * Deletes a artikel from the artikelListe
+   * 
+   * @param name of artikel
+   * @return boolean, true if something was deleted, false if not
+   */
+  public boolean deleteArtikel(Artikel artikel) {
+    return this.lager.artikelListe.remove(artikel);// delete from list
+  }
+
   /**
    * Deletes a artikel from the artikelListe by name
    * 
@@ -69,7 +81,7 @@ public class ArtikelVerwaltung {
     // search for Artikel
     Artikel artikel = findArtikelByName(name);
     if (artikel != null)// if Artikel is found
-      return this.lager.artikelListe.remove(artikel);// delete from list
+      return deleteArtikel(artikel);
 
     return false;// if nothing could be deleted
   }
@@ -83,7 +95,8 @@ public class ArtikelVerwaltung {
   public Artikel findArtikelByName(String name) {
     // iterates through artikelListe
     for (Artikel artikel : this.lager.artikelListe) {
-      if (artikel.getName().equals(name)) return artikel;
+      if (artikel.getName().equals(name))
+        return artikel;
     }
     return null;
   }
@@ -101,16 +114,48 @@ public class ArtikelVerwaltung {
     return null;
   }
 
-  // #region set ///////////////////////////////
+  // #region getter
+
+  public int getArtikelNr(Artikel artikel) {
+    return artikel.getArtikelNr();
+  }
+
+  public String getArtikelName(Artikel artikel) {
+    return artikel.getName();
+  }
+
+  public int getArtikelBestand(Artikel artikel) {
+    return artikel.getBestand();
+  }
+
+  public double getArtikelPreis(Artikel artikel) {
+    return artikel.getPreis();
+  }
+
+  // #endregion
+  // #region setter ///////////////////////////////
   /**
    * sets name of Artikel Object
    * 
    * @param artikel object
    * @param name    of article
    */
+  public boolean setArtikelName(Artikel artikel, String newName) {
+    if (artikel != null) {
+      artikel.setName(newName);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * sets name of Artikel Object by name
+   * 
+   * @param name    name
+   * @param newName neuer name
+   */
   public boolean setArtikelName(String name, String newName) {
-    findArtikelByName(name).setName(newName); 
-    return true;
+    return setArtikelName(findArtikelByName(name), newName);// checks fo null
   }
 
   /**
@@ -119,9 +164,23 @@ public class ArtikelVerwaltung {
    * @param artikel object
    * @param bestand of article
    */
+  public boolean setArtikelBestand(Artikel artikel, int bestand) {
+    if (artikel != null) {
+      artikel.setBestand(bestand);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * sets bestand of Artikel Object by name
+   * 
+   * @param name    String
+   * @param bestand
+   * @return
+   */
   public boolean setArtikelBestand(String name, int bestand) {
-    findArtikelByName(name).setBestand(bestand); 
-    return true;
+    return setArtikelBestand(findArtikelByName(name), bestand);// checks fo null
   }
 
   /**
@@ -129,20 +188,25 @@ public class ArtikelVerwaltung {
    * 
    * @param artikel object
    * @param preis   of article
+   * @return
    */
-  public boolean setArtikelPreis(String name, double preis) {
-    findArtikelByName(name).setPreis(preis);
-    return true;
+  public boolean setArtikelPreis(Artikel artikel, double preis) {
+    if (artikel != null) {
+      artikel.setPreis(preis);
+      return true;
+    }
+    return false;
   }
 
-  // #endregion
-  // #region persistenz ///////////////////////////////
   /**
-   * Läd eine artikel liste aus dem speicher
+   * sets preis of Artikel Object
+   * 
+   * @param name  name
+   * @param preis of article
    */
-  public void loadListe() {
-    // TEMP kreirt nur eine liste
-    lager.artikelListe = new Vector<Artikel>();
+  public boolean setArtikelPreis(String name, double preis) {
+    return setArtikelPreis(findArtikelByName(name), preis);
   }
+
   // #endregion
 }

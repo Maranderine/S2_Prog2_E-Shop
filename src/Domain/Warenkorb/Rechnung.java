@@ -17,8 +17,10 @@ public class Rechnung {
       betrag += artikel.getPreis() * bestand;
       kaufArtikel += artikel.toString() + "\t" + bestand + "\n";
     });
+
     kaufDatum = new Date();
     rechnungsId = "1";
+    
     // RechnungsId nur testweise
   }
 

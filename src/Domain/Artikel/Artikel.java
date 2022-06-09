@@ -2,7 +2,7 @@ package Domain.Artikel;
 
 public class Artikel {
 
-  private int artikelNr;
+  private final int artikelNr;
   private String name;
   private int bestand;
   private double preis;

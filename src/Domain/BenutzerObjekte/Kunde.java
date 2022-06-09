@@ -1,5 +1,6 @@
 package Domain.BenutzerObjekte;
 
+
 public class Kunde extends Benutzer{
   private String email;
   private String address = "";
@@ -18,7 +19,7 @@ public class Kunde extends Benutzer{
    * @param address
    */
   protected Kunde(String name, String username, byte[] password, String email, String address) {
-    super(name, username, password);
+    super(Benutzerverwaltung.BeutzerType.KUNDE, name, username, password);
     this.kundenNr = kundenNrZähler;
     kundenNrZähler++;
     this.email = email;
@@ -46,9 +47,11 @@ public class Kunde extends Benutzer{
     this.email = email;
   }
 
+  @Override
   protected int getKundenNr() {
     return kundenNr;
   }
+
   // #endregion
   // weitere Dienste der Kunden-Objekte
 
@@ -57,4 +60,5 @@ public class Kunde extends Benutzer{
     // parent name + username
     return "Kunde:\t" + super.toString() + "\t" + this.kundenNr;
   }
+
 }
