@@ -7,9 +7,10 @@ import Domain.Artikel.Artikel;
 /**
  * verwaltet den warenkorb
  */
-public class WarenkorbVerwaltung{
+public class WarenkorbVerwaltung {
 
   Warenkorb warenkorb;
+  private static int RechnungZaehler = 1;
 
   public WarenkorbVerwaltung() {
     warenkorb = new Warenkorb();
@@ -63,8 +64,20 @@ public class WarenkorbVerwaltung{
    * @author Maranderine
    */
   public HashMap<Artikel, Integer> ArtikelKaufen() {
-    return  warenkorb.inhalt;
+    return warenkorb.inhalt;
   }
+
+  // #region RechnungZaehler
+
+  private int useZaehler() {
+    return RechnungZaehler++;
+  }
+
+  private void setZaehler(int num) {
+    RechnungZaehler = num;
+  }
+
+  // #endregion
 
   @Override
   public String toString() {

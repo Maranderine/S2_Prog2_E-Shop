@@ -10,6 +10,8 @@ public class Rechnung {
   private String kaufArtikel = "";
   private String rechnungsId;
   private Date kaufDatum;
+
+  private HashMap<Artikel, Integer> inhalt;
   // private inhalt;
 
   public Rechnung(HashMap<Artikel, Integer> WK_inhalt) {
@@ -19,8 +21,9 @@ public class Rechnung {
     });
 
     kaufDatum = new Date();
+    // TODO rechnungs id
     rechnungsId = "1";
-    
+
     // RechnungsId nur testweise
   }
 
@@ -38,16 +41,21 @@ public class Rechnung {
   // dazu(z.B. DataObjects.Artikel & Anzahl)
   protected double getGesamtPreis() {
     return this.betrag = 0;
-  } 
+  }
+
+  // Gibt den Inhalt aus der HashMap-Array zurück
+  public HashMap<Artikel, Integer> getInhalt() {
+    return this.inhalt;
+  }
 
   public String toString() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;
     return "Rechnungs Id: " + this.rechnungsId + "\n" +
-    "Datum: " + this.getKaufDatum() + "\n" + 
-    "________________________" + "\n" + 
-    kaufArtikel + "________________________" + 
-    "\n" + "Gesamtbetrag: " + 
-    this.betrag + "\n";
+        "Datum: " + this.getKaufDatum() + "\n" +
+        "________________________" + "\n" +
+        kaufArtikel + "________________________" +
+        "\n" + "Gesamtbetrag: " +
+        this.betrag + "\n";
   }
 }

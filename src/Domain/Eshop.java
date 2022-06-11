@@ -185,6 +185,7 @@ public class Eshop {
       }
     }
     kaufArtikel.forEach((artikel, wkBestand) -> {
+      // TODO unmege get name und benutzer artikel direkt
       AV_setArtikel(userHash, artikel.getName(), artikel.getBestand() - wkBestand);
     });
     WarenkorbVw.clearAll();
