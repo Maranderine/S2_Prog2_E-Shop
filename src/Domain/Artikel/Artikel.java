@@ -45,19 +45,45 @@ public class Artikel {
     this.preis = preis;
   }
 
+  ///////////// to String /////////////////
+  /**
+   * toString in einer form die nicht ausgegeben werden sollte
+   * aber weiter bearbeiotet werden kann
+   * 
+   * @return
+   */
+  protected String toStringRaw() {
+    return this.artikelNr + "\t" + this.name + "\t##\t" + this.preis;
+  }
+
+  /**
+   * toString in einer form die nicht direkt ausgegeben werden sollte
+   * aber weiter bearbeiotet werden kann
+   * 
+   * @return
+   */
+  protected String toStringDetailledRaw() {
+    return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
+  }
+
   // tostring
+  @Override
   public String toString() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;
-    return this.artikelNr + "\t" + this.name + "\t" + this.preis;
+    return toStringRaw().replace("##", "");
   }
 
   public String toStringDetailled() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;
-    return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
+    return toStringDetailledRaw().replace("##", "");
   }
 
+  /**
+   * gibt alle relevanten daten des objekt in einer speicherbaren form wieder
+   * @return
+   */
   public String toData() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;

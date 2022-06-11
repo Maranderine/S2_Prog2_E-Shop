@@ -13,10 +13,21 @@ class Warenkorb {/* "protected" */
   protected HashMap<Artikel, Integer> inhalt;
 
   /**
-   * Warenkorb Constructor
+   * neuer Warenkorb
    */
   protected Warenkorb() {
     this.inhalt = new HashMap<Artikel, Integer>();
+  }
+
+  /**
+   * exitierender Warenkorb
+   */
+  protected Warenkorb(HashMap<Artikel, Integer> exitierenderWarenkorb) {
+    this.inhalt = exitierenderWarenkorb;
+  }
+
+  protected void clear() {
+    inhalt.clear();
   }
 
   @Override

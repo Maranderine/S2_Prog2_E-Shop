@@ -201,11 +201,20 @@ public class CUI extends UserInterface {
             System.out.println("\ty = ja kaufen");
             System.out.println("\tn = nein zurück");
             System.out.print("\t>");
+
             string = GetInput();
+
             if (string.equals("y")) {
               Rechnung rechnung = eshop.WV_kaufen(this.userHash);
-              System.out.print(rechnung);
+
+              // Artikel falsch text
+              if (rechnung == null) {
+                System.out.println("Kaufen Fehl Geschlagen!");
+              } else {
+                System.out.print(rechnung);
+              }
             }
+
             break;
           case "0":// Exit
             LevelReturn();

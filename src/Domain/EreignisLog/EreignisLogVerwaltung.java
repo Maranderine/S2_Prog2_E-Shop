@@ -17,7 +17,7 @@ import Domain.Search.Searcher;
 
 public class EreignisLogVerwaltung extends Searcher {
 
-  //TODO: EVENTS - suche nach artikel objekt
+  // TODO: EVENTS - suche nach artikel objekt
 
   private int EreignisZaehler;
   private final Eshop meinShop;
@@ -211,9 +211,9 @@ public class EreignisLogVerwaltung extends Searcher {
       // log not empty
       for (Ereignis ereignis : this.log) {
         if (detailed)
-        str += ereignis.toStringDetailed() + "\n";
+          str += ereignis.toStringDetailed() + "\n";
         else
-        str += ereignis.toString() + "\n";
+          str += ereignis.toString() + "\n";
       }
     }
     return str;

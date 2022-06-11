@@ -2,15 +2,19 @@ package Domain.Artikel;
 
 import java.io.IOException;
 
+import Domain.Eshop;
+import Domain.Verwaltung;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
-public class ArtikelVerwaltung {
+public class ArtikelVerwaltung extends Verwaltung {
 
   private Lager lager;
+  private final Eshop eshop;
   private PersistenceManager pm = new FilePersistenceManager();
 
-  public ArtikelVerwaltung() {
+  public ArtikelVerwaltung(Eshop eshop) {
+    this.eshop = eshop;
     lager = new Lager();
   }
 
@@ -18,22 +22,22 @@ public class ArtikelVerwaltung {
   /**
    * @author Maranderine
    */
-	public void load(String datei) throws IOException {
-		 lager.artikelListe = pm.loadArticle(datei);
-	}
+  public void load(String datei) throws IOException {
+    lager.artikelListe = pm.loadArticle(datei);
+  }
 
-	/**
-	 * Methode zum Schreiben der Buchdaten in eine Datei.
-	 *
-	 * @param datei Datei, in die der Bücherbestand geschrieben werden soll
-	 * @throws IOException
-	 */
-	public void save(String datei) throws IOException  {
-		pm.saveArticle(datei, lager.artikelListe);
-	}
+  /**
+   * Methode zum Schreiben der Buchdaten in eine Datei.
+   *
+   * @param datei Datei, in die der Bücherbestand geschrieben werden soll
+   * @throws IOException
+   */
+  public void save(String datei) throws IOException {
+    pm.saveArticle(datei, lager.artikelListe);
+  }
 
-// #endregion
- 
+  // #endregion
+
   public Lager alleArtikel() {
     return this.lager;
   }
@@ -167,6 +171,7 @@ public class ArtikelVerwaltung {
   public boolean setArtikelBestand(Artikel artikel, int bestand) {
     if (artikel != null) {
       artikel.setBestand(bestand);
+      eventCheckBestand(artikel);
       return true;
     }
     return false;
@@ -206,6 +211,16 @@ public class ArtikelVerwaltung {
    */
   public boolean setArtikelPreis(String name, double preis) {
     return setArtikelPreis(findArtikelByName(name), preis);
+  }
+
+  // #endregion
+
+  // #region ereignisse
+
+  private void eventCheckBestand(Artikel artikel) {
+    if (artikel.getBestand() <= 0) {
+      EreignisSystemArtikel("Artikel '" + artikel + "' Bestand ist niedrig!", artikel);
+    }
   }
 
   // #endregion

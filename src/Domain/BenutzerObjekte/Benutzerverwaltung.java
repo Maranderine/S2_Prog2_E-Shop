@@ -8,11 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import Domain.Verwaltung;
 import UserInterface.UserInterface;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
-public class Benutzerverwaltung {
+public class Benutzerverwaltung extends Verwaltung {
 
   // Verwaltung der Nutzer in einer verketteten Liste
 
@@ -21,7 +22,7 @@ public class Benutzerverwaltung {
     KUNDE,
     NONE
   }
-  
+
   private Vector<Benutzer> benutzerRegister;
   private PersistenceManager pm = new FilePersistenceManager();
 
@@ -337,19 +338,22 @@ public class Benutzerverwaltung {
     pm.saveNutzer(nutzerDoc, benutzerRegister);
   }
 
-
-  public void load(String nutzerDoc){
-   benutzerRegister =  pm.loadNutzer(nutzerDoc);
-   int k = 0;
-   int m = 0;
-   //zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler 
-   for(Benutzer b : benutzerRegister){
-     if(b instanceof Kunde){k++;}
-     if(b instanceof Mitarbeiter){m++;}
+  public void load(String nutzerDoc) {
+    benutzerRegister = pm.loadNutzer(nutzerDoc);
+    int k = 0;
+    int m = 0;
+    // zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler
+    for (Benutzer b : benutzerRegister) {
+      if (b instanceof Kunde) {
+        k++;
+      }
+      if (b instanceof Mitarbeiter) {
+        m++;
+      }
     }
-   Kunde.kundenNrZähler = k;
-   Mitarbeiter.mitarbeiterNrzähler = m;
-  // #endregion
+    Kunde.kundenNrZähler = k;
+    Mitarbeiter.mitarbeiterNrzähler = m;
+    // #endregion
 
   }
 }

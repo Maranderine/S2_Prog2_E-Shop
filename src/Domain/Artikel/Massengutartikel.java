@@ -1,20 +1,38 @@
 package Domain.Artikel;
 
 public class Massengutartikel extends Artikel {
-    int minAnzahl;
 
-    public Massengutartikel(int artikelNr, String bezeichnung, int bestand, double einzelpreis, int minAnzahl) {
-        super(artikelNr, bezeichnung, bestand, einzelpreis);
-        this.minAnzahl = minAnzahl;
-    }
+  /** gebündelte anzahl des artikels */
+  int minAnzahl;
 
-    // Gibt die MinAnzahl aus
-    public int getMinAnzahl() {
-        return minAnzahl;
-    }
+  public Massengutartikel(int artikelNr, String bezeichnung, int bestand, double einzelpreis, int minAnzahl) {
+    super(artikelNr, bezeichnung, bestand, einzelpreis);
+    this.minAnzahl = minAnzahl;
+  }
 
-    // Setzt die MinAnzahl als Integer-Wert fest
-    public void setMinAnzahl(int minAnzahl) {
-        this.minAnzahl = minAnzahl;
-    }
+  // Gibt die MinAnzahl aus
+  public int getMinAnzahl() {
+    return minAnzahl;
+  }
+
+  // Setzt die MinAnzahl als Integer-Wert fest
+  public void setMinAnzahl(int minAnzahl) {
+    this.minAnzahl = minAnzahl;
+  }
+
+  ///////////// to String /////////////////
+  @Override
+  public String toString() {
+    return super.toStringRaw().replace("##", Integer.toString(this.minAnzahl));
+  }
+
+  @Override
+  public String toStringDetailled() {
+    return super.toStringDetailledRaw().replace("##", Integer.toString(this.minAnzahl));
+  }
+
+  @Override
+  public String toData() {
+    return super.toData() + ";" + this.minAnzahl;
+  }
 }

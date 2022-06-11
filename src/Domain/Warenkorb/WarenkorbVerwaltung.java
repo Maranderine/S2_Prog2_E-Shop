@@ -1,19 +1,39 @@
 package Domain.Warenkorb;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
+import Domain.Eshop;
+import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 
 /**
  * verwaltet den warenkorb
  */
-public class WarenkorbVerwaltung {
+public class WarenkorbVerwaltung extends Verwaltung {
 
   Warenkorb warenkorb;
-  private static int RechnungZaehler = 1;
+  private int RechnungZaehler;
+  private final Eshop eshop;
 
-  public WarenkorbVerwaltung() {
+  /**
+   * WarenkorbVerwaltung
+   */
+  public WarenkorbVerwaltung(Eshop eshop) {
     warenkorb = new Warenkorb();
+    this.eshop = eshop;
+    RechnungZaehler = 1;
+  }
+
+  /**
+   * WarenkorbVerwaltung und setzt den rechnungZaehler
+   * 
+   * @param rechnungZaehler
+   */
+  public WarenkorbVerwaltung(Eshop eshop, int rechnungZaehler) {
+    warenkorb = new Warenkorb();
+    this.eshop = eshop;
+    RechnungZaehler = rechnungZaehler;
   }
 
   /*
@@ -54,28 +74,147 @@ public class WarenkorbVerwaltung {
   }
 
   /**
-   * cleared den Warenkorb Inhalt
+   * löscht den Warenkorb Inhalt
    */
   public void clearAll() {
-    this.warenkorb.inhalt.clear();
+    Warenkorb warenkorbToDelete = this.warenkorb;
+    warenkorbToDelete.clear();
   }
 
   /**
-   * @author Maranderine
+   * Kauft artikel im Warenkorb: checkt bestand, erstellt Rechnung, leert
+   * Warenkrob
+   * 
+   * @return Rechnung generierte Rechnung
    */
-  public HashMap<Artikel, Integer> ArtikelKaufen() {
-    return warenkorb.inhalt;
+  public Rechnung ArtikelKaufen() {
+    // hard set im moment, ändern in kunden bezogenes parameter
+    Warenkorb warenkorbZuKaufen = warenkorb;
+
+    HashMap<Artikel, ARTIKELFEHLER> fehlerArtikel = checkWarenkorb(warenkorbZuKaufen.inhalt);
+
+    // Ereignis_EreignisSystemArtikel
+
+    // keine fehler
+    if (fehlerArtikel.isEmpty()) {
+      Rechnung rechnung = new Rechnung(warenkorbZuKaufen.inhalt, useRechnungZaehler());
+
+      // warenkorb löschen
+      clearAll();
+      return rechnung;
+    } else {
+      // gib fehler aus
+      System.out.println(fehlerArtikel);
+      return null;
+    }
+
   }
 
-  // #region RechnungZaehler
+  // #region Warenkorb/Artikel check
+  /**
+   * enum mit allen möglichen artikel fahlern
+   */
+  protected enum ARTIKELFEHLER {
+    /** keine artikel fehler */
+    NONE(0, "Keine Fehler"),
+    /** Fehler in der Artikel anzahl */
+    STÜCKZAHL(1, "Gefragte anzahl ist größer als Anzahl im Lager");
 
-  private int useZaehler() {
+    // index des fehlers
+    private int index;
+    /** beschreibung des fehlers */
+    private String beschreibung;
+
+    /**
+     * basis contructor
+     * 
+     * @param num
+     * @param desc
+     */
+    ARTIKELFEHLER(int index, String desc) {
+      this.index = index;
+      beschreibung = desc;
+    }
+
+    // #region generell
+    /** returns assigned index */
+    protected int index() {
+      return index;
+    }
+
+    /** returns assigned index */
+    protected int i() {
+      return index();
+    }
+
+    @Override
+    public String toString() {
+      return beschreibung;
+    }
+
+    // #endregion
+  }
+
+  /**
+   * checkt ob alle artikel im warenkorb kaufbar sind
+   * 
+   * @param artikelListe liste an artikeln und deren anzahl
+   * @return HashMap die problem Artikel und deren problem als enum ARTIKELFEHLER
+   *         eintrag enthält, oder null
+   */
+  public HashMap<Artikel, ARTIKELFEHLER> checkWarenkorb(HashMap<Artikel, Integer> artikelListe) {
+
+    HashMap<Artikel, ARTIKELFEHLER> problemArtikel = new HashMap<Artikel, ARTIKELFEHLER>();
+    ARTIKELFEHLER artikelFehler;
+    Artikel artikel;
+    for (Entry<Artikel, Integer> entry : artikelListe.entrySet()) {
+      // checkt artikel nach fehler
+      artikel = entry.getKey();
+      // suche artikel fehler
+      artikelFehler = checkArtikel(artikel, entry.getValue());
+
+      // artikel hat fehler
+      if (artikelFehler != null) {
+        problemArtikel.put(artikel, artikelFehler);
+      }
+    }
+
+    if (!problemArtikel.isEmpty())
+      return problemArtikel;
+
+    return null;
+  }
+
+  /**
+   * überprüft gegebenen Artikel auf kauf fehler
+   * 
+   * @param artikel    Artikel zu checken
+   * @param kaufanzahl
+   * @return int fehler enum 0 wenn alles okay ist, false wenn ein fehler
+   *         aufgetreten
+   *         ist
+   */
+  public ARTIKELFEHLER checkArtikel(Artikel artikel, int kaufanzahl) {
+    // checkt alle fehler des artikels
+    // check ob stückzahl genug ist
+    if (artikel.getBestand() < kaufanzahl) {
+      return ARTIKELFEHLER.STÜCKZAHL;// gelagerte anzahl weniger als zu kaufende anzahl
+    }
+
+    return ARTIKELFEHLER.NONE;
+  }
+
+  // #endregion
+
+  // #region Rechnung
+
+  private int useRechnungZaehler() {
     return RechnungZaehler++;
   }
 
-  private void setZaehler(int num) {
-    RechnungZaehler = num;
-  }
+  // #endregion
+
+  // #region ereignisse
 
   // #endregion
 

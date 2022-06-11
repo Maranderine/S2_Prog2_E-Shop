@@ -1,7 +1,6 @@
 package Domain;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.HashMap;
 
 import Domain.Artikel.Artikel;
@@ -9,7 +8,6 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
-import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
@@ -39,12 +37,18 @@ public class Eshop {
       if (!(nutzerDoc.equals(""))) {
         BenutzerVw.load(nutzerDoc);
       }
-      ArtikelVw = new ArtikelVerwaltung();
+      ArtikelVw = new ArtikelVerwaltung(this);
       if (!(artikelDoc.equals(""))) {
         ArtikelVw.load(artikelDoc);
       }
-      WarenkorbVw = new WarenkorbVerwaltung();
+      WarenkorbVw = new WarenkorbVerwaltung(this);
       EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
+
+      // give Ereignis verwaltung
+      BenutzerVw.ereignisLogVerwaltung = EreignisVw;
+      ArtikelVw.ereignisLogVerwaltung = EreignisVw;
+      WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -175,21 +179,16 @@ public class Eshop {
    * @return
    */
   public Rechnung WV_kaufen(byte[] userHash) {
-    HashMap<Artikel, Integer> kaufArtikel = WarenkorbVw.ArtikelKaufen();
-    // key = artikel, value = bestand im WK
-    for (Entry<Artikel, Integer> entry : kaufArtikel.entrySet()) {
-      if (entry.getKey().getBestand() < entry.getValue()) {
-        System.out.println("Ihre angegebene Kaufmenge von Artikel '" + entry.getKey() +
-            "' überschreitet unseren aktuellen Lagerbestand von " + entry.getKey().getBestand());
-        return null;
-      }
-    }
-    kaufArtikel.forEach((artikel, wkBestand) -> {
-      // TODO unmege get name und benutzer artikel direkt
-      AV_setArtikel(userHash, artikel.getName(), artikel.getBestand() - wkBestand);
+    // TODO kauf event was alle artikel anzeigt und deren neue bestände, anstadt
+    Rechnung rechnung = WarenkorbVw.ArtikelKaufen();
+    // TODO maybe place holder artikel set code
+    // set artikel bestand
+    rechnung.getInhalt().forEach((artikel, anzahl) -> {
+      AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
     });
-    WarenkorbVw.clearAll();
-    return new Rechnung(kaufArtikel);
+
+    // duzende Artikel.änderungs events
+    return rechnung;
   }
 
   // #endregion Warenkorb
@@ -235,19 +234,52 @@ public class Eshop {
    * set artikel data
    * 
    * @param userHash  userHash
+   * @param artikel   artikel obj
+   * @param neuerName artikel neuer name
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName) {
+
+    if (artikel != null) {
+      String nameAlt = ArtikelVw.getArtikelName(artikel);
+      // set neuer Name
+      boolean bool = ArtikelVw.setArtikelName(artikel, neuerName);
+      // logt neuen und alten Namen
+      EV_EreignisArtikelData(userHash, "Artikel Name änderung", artikel, nameAlt, null, null);
+
+      return bool;
+    }
+    return false;
+  }
+
+  /**
+   * set artikel data
+   * 
+   * @param userHash  userHash
    * @param name      artikel name
    * @param neuerName artikel neuer name
    * @return boolean obs geklappt hat
    */
   public boolean AV_setArtikel(byte[] userHash, String name, String neuerName) {
+    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName);
+  }
 
-    Artikel artikel = ArtikelVw.findArtikelByName(name);
+  /**
+   * set artikel data bestand
+   * 
+   * @param userHash userHash
+   * @param artikel  artikel obj
+   * @param bestand  artikel neuer bestand
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, int bestand) {
+
     if (artikel != null) {
-      String nameAlt = ArtikelVw.getArtikelName(artikel);
-      // set neuer Name
-      boolean bool = ArtikelVw.setArtikelName(name, neuerName);
-      // logt neuen und alten Namen
-      EV_EreignisArtikelData(userHash, "Artikel Name änderung", artikel, nameAlt, null, null);
+      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
+      // set neuer bestand
+      boolean bool = ArtikelVw.setArtikelBestand(artikel, bestand);
+      // logt neuen und alten bestand
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, bestandAlt, null);
 
       return bool;
     }
@@ -263,14 +295,25 @@ public class Eshop {
    * @return boolean obs geklappt hat
    */
   public boolean AV_setArtikel(byte[] userHash, String name, int bestand) {
+    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), bestand);
+  }
 
-    Artikel artikel = ArtikelVw.findArtikelByName(name);
+  /**
+   * set artikel data preis
+   * 
+   * @param userHash userHash
+   * @param artikel  artikel obj
+   * @param preis    artikel neuer preis
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, double preis) {
+
     if (artikel != null) {
-      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
-      // set neuer bestand
-      boolean bool = ArtikelVw.setArtikelBestand(name, bestand);
-      // logt neuen und alten bestand
-      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, bestandAlt, null);
+      double preisAlt = ArtikelVw.getArtikelPreis(artikel);
+      // set neuer preis
+      boolean bool = ArtikelVw.setArtikelPreis(artikel, preis);
+      // logt neuen und alten preis
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
 
       return bool;
     }
@@ -286,16 +329,33 @@ public class Eshop {
    * @return boolean obs geklappt hat
    */
   public boolean AV_setArtikel(byte[] userHash, String name, double preis) {
+    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), preis);
+  }
 
-    Artikel artikel = ArtikelVw.findArtikelByName(name);
+  /**
+   * set artikel data
+   * 
+   * @param userHash  userHash
+   * @param artikel   artikel obj
+   * @param neuerName artikel neuer name
+   * @param bestand   artikel neuer bestand
+   * @param preis     artikel neuer preis
+   * @return boolean obs geklappt hat
+   */
+  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName, int bestand, double preis) {
+
     if (artikel != null) {
+      String nameAlt = ArtikelVw.getArtikelName(artikel);
+      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
       double preisAlt = ArtikelVw.getArtikelPreis(artikel);
-      // set neuer preis
-      boolean bool = ArtikelVw.setArtikelPreis(name, preis);
+      // set neuer Name
+      boolean bool1 = ArtikelVw.setArtikelName(artikel, neuerName);
+      boolean bool2 = ArtikelVw.setArtikelBestand(artikel, bestand);
+      boolean bool3 = ArtikelVw.setArtikelPreis(artikel, preis);
       // logt neuen und alten preis
-      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
+      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, nameAlt, bestandAlt, preisAlt);
 
-      return bool;
+      return (bool1 && bool2 && bool3);
     }
     return false;
   }
@@ -311,22 +371,7 @@ public class Eshop {
    * @return boolean obs geklappt hat
    */
   public boolean AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis) {
-
-    Artikel artikel = ArtikelVw.findArtikelByName(name);
-    if (artikel != null) {
-      String nameAlt = ArtikelVw.getArtikelName(artikel);
-      int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
-      double preisAlt = ArtikelVw.getArtikelPreis(artikel);
-      // set neuer Name
-      boolean bool1 = ArtikelVw.setArtikelName(name, neuerName);
-      boolean bool2 = ArtikelVw.setArtikelBestand(name, bestand);
-      boolean bool3 = ArtikelVw.setArtikelPreis(name, preis);
-      // logt neuen und alten preis
-      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, nameAlt, bestandAlt, preisAlt);
-
-      return (bool1 && bool2 && bool3);
-    }
-    return false;
+    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName, bestand, preis);
   }
 
   /**
@@ -364,7 +409,7 @@ public class Eshop {
    * @return
    */
   private boolean EV_EreignisArtikelCreate(byte[] userHash, String ereignisDesc, Artikel artikel) {
-    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelCreate(userHash, ereignisDesc, artikel);
+    EreignisVw.Ereignis_EreignisArtikelCreate(userHash, ereignisDesc, artikel);
 
     return true;
   }
@@ -379,7 +424,7 @@ public class Eshop {
    * @return
    */
   private boolean EV_EreignisArtikelDelete(byte[] userHash, String ereignisDesc, Artikel artikel) {
-    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelDelete(userHash, ereignisDesc, artikel);
+    EreignisVw.Ereignis_EreignisArtikelDelete(userHash, ereignisDesc, artikel);
 
     return true;
   }
@@ -406,28 +451,11 @@ public class Eshop {
     if (AaltPreis == null)
       AaltPreis = ArtikelVw.getArtikelPreis(artikel);
 
-    Ereignis ereignis = EreignisVw.Ereignis_EreignisArtikelData(userHash, ereignisDesc, artikel, AaltName, AaltBestand,
+    EreignisVw.Ereignis_EreignisArtikelData(userHash, ereignisDesc, artikel, AaltName, AaltBestand,
         AaltPreis);
 
     return true;
   }
-
-  // /**
-  // * loggt neues System Ereignis welches einen Artikel betrifft, returnt true
-  // wenn
-  // * ereignis erstellt wurde
-  // *
-  // * @param ereignisDesc
-  // * @param artikel
-  // * @return
-  // */
-  // private boolean EV_EreignisSystemArtikel(String ereignisDesc, Artikel
-  // artikel) {
-  // Ereignis ereignis = EreignisVw.Ereignis_EreignisSystemArtikel(ereignisDesc,
-  // artikel);
-
-  // return true;
-  // }
 
   // #endregion ////////////////////////////////////////////////
 
