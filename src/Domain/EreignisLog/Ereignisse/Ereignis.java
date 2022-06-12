@@ -8,6 +8,8 @@ import Domain.Search.Searchable;
 
 /** abstrakte grund Ereignis Klasse */
 public abstract class Ereignis extends Searchable implements EreignisInterface_Ereignis, Serializable {
+  // TODO gespeicherte Artikel sinf vielleicht ghost clones?????????
+
   /** Event identifikator */
   private final int ereignisNummer;
   /** Event erklärungs text */
