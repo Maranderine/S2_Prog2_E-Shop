@@ -8,6 +8,7 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
+import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import UserInterface.CUI;
@@ -19,55 +20,31 @@ import UserInterface.UserInterface;
  */
 public class Eshop {
 
-  private String artikelDoc = "";
-  private String nutzerDoc = "";
-
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox, String nutzerDox) {
+  public Eshop(String artikelDox, String benutzerDox, String ereignisDox) {
 
-    this.artikelDoc = artikelDox;
-    this.nutzerDoc = nutzerDox;
+    BenutzerVw = new Benutzerverwaltung(benutzerDox);
+    ArtikelVw = new ArtikelVerwaltung(this, artikelDox);
+    WarenkorbVw = new WarenkorbVerwaltung(this);
+    EreignisVw = new EreignisLogVerwaltung(this, ereignisDox, BenutzerVw, ArtikelVw);
 
-    try {
-      BenutzerVw = new Benutzerverwaltung();
-      if (!(nutzerDoc.equals(""))) {
-        BenutzerVw.load(nutzerDoc);
-      }
-      ArtikelVw = new ArtikelVerwaltung(this);
-      if (!(artikelDoc.equals(""))) {
-        ArtikelVw.load(artikelDoc);
-      }
-      WarenkorbVw = new WarenkorbVerwaltung(this);
-      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-
-      // give Ereignis verwaltung
-      BenutzerVw.ereignisLogVerwaltung = EreignisVw;
-      ArtikelVw.ereignisLogVerwaltung = EreignisVw;
-      WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    // create default admin mitarbeiter
-    BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
+    // give Ereignis verwaltung
+    BenutzerVw.ereignisLogVerwaltung = EreignisVw;
+    ArtikelVw.ereignisLogVerwaltung = EreignisVw;
+    WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
 
-    // test user
-    BV_kundeHinzufügen("test", "test", "123456", "test", "test");
+    // BV_mitarbeiterHinzufügen("Admin", "Admin", "12345");
+
+    // Admin 12345
+    // test 12345
 
     // Artikel
-    /*
-     * eshop.AV_addArtikel("Banane", 150, 1.99);
-     * eshop.AV_addArtikel("Melone", 999999, 5.00);
-     * eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
-     * eshop.AV_addArtikel("Apfel", 5, 1.77);
-     */
 
     // LevelMove(MenuLevel.WARENKORB);
     // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
@@ -201,6 +178,13 @@ public class Eshop {
   }
 
   /**
+   * @author Maranderine
+   */
+  public SuchOrdnung AV_sucheArtikel(String searchTerm) {
+    return ArtikelVw.suchArtikel(searchTerm);
+  }
+
+  /**
    * Add Artikel to artikelListe
    * 
    * @param name
@@ -230,6 +214,7 @@ public class Eshop {
     return false;
   }
 
+  // #region set artikel
   /**
    * set artikel data
    * 
@@ -374,6 +359,8 @@ public class Eshop {
     return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName, bestand, preis);
   }
 
+  // #endregion
+
   /**
    * find Artikel by name in artikelListe
    * 
@@ -461,8 +448,9 @@ public class Eshop {
 
   public void saveData() {
     try {
-      ArtikelVw.save(artikelDoc);
-      BenutzerVw.save(nutzerDoc);
+      BenutzerVw.save();
+      ArtikelVw.save();
+      EreignisVw.save();
     } catch (IOException e) {
       e.printStackTrace();
     }

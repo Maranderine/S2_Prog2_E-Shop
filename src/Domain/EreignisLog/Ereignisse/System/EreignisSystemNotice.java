@@ -33,9 +33,9 @@ public class EreignisSystemNotice extends EreignisSystem {
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
-    return super.toStringDetailed().replace("##", "");
+    return super.toStringDetailled().replace("##", "");
   }
 }

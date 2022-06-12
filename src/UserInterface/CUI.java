@@ -44,6 +44,7 @@ public class CUI extends UserInterface {
     int num;
     String string;
     Artikel artikel;
+    Artikel artikelDetailAnsicht;
 
     // print top
     System.out.println("/////////////////////////////////////////////");
@@ -95,7 +96,7 @@ public class CUI extends UserInterface {
       // #endregion MAIN_MENU
       case KUNDEN_REGISTRIEREN:
         // #region KUNDEN_REGISTRIEREN
-        System.out.println("__________Mitarbeiter Registrieren_________");
+        System.out.println("__________Kunde Registrieren_________");
         System.out.println("\tName:");
         System.out.print("\t>");
         String name = GetInput();
@@ -112,7 +113,6 @@ public class CUI extends UserInterface {
         System.out.print("\t>");
         String passwort = GetInput();
         eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-
         LevelReturn();
 
         break;
@@ -122,25 +122,30 @@ public class CUI extends UserInterface {
         System.out.println("____________KUNDE____________");
         System.out.println("1 = alle Artikel ausgeben");
         System.out.println("2 = Artikel suchen");
-        System.out.println("3 = Artikel dem Warenkorb hinzufügen");
-        System.out.println("4 = Warenkorb");
+        System.out.println("3 = Artikel ispizieren");
+        System.out.println("4 = Artikel dem Warenkorb hinzufügen");
+        System.out.println("5 = Warenkorb");
         System.out.println("0 = Logout");
 
         string = GetInput();
 
         switch (string) {
 
-          case "1":// Artikel ausgeben
+          case "1":// Alle Artikel ausgeben
             System.out.println(eshop.AV_alleArtikel());
             break;
-
           case "2":// artikel suchen
+            System.out.print("Suchen nach  > ");
+            String searchTerm = GetInput();
+            System.out.println(eshop.AV_sucheArtikel(searchTerm));
+            break;
+          case "3":// artikel ispizieren
             System.out.print("Artikel Name  > ");
             String titel = GetInput();
-            System.out.println(eshop.AV_findArtikelByName(titel));
+            System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
             break;
 
-          case "3":// artikel in den Warenkorb
+          case "4":// artikel in den Warenkorb
             System.out.print("Artikel Name  > ");
             artikel = eshop.AV_findArtikelByName(GetInput());
             System.out.print("Anzahl  > ");
@@ -148,7 +153,7 @@ public class CUI extends UserInterface {
             eshop.WV_setArtikel(artikel, num);
             break;
 
-          case "4":// Warenkorb
+          case "5":// Warenkorb
             LevelMove(MenuLevel.WARENKORB);
             break;
 
@@ -251,7 +256,8 @@ public class CUI extends UserInterface {
       case MITARBEITER_ARTIKEL:
         // #region MITARBEITER_ARTIKEL
         System.out.println("Artikel Verwalten");
-        System.out.println("1 = alle Artikel ausgeben");
+        System.out.println(eshop.AV_alleArtikel());
+        System.out.println("1 = Artikel Detail Ansicht");
         System.out.println("2 = Artikel löschen");
         System.out.println("3 = Artikel hinzufügen");
         System.out.println("4 = Artikel Bestand ändern");
@@ -261,7 +267,11 @@ public class CUI extends UserInterface {
 
         switch (string) {
           case "1":
-            System.out.println(eshop.AV_alleArtikel());
+            System.out.println("artikel name > ");
+            artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
+            if (artikelDetailAnsicht != null) {
+              LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
+            }
             break;
           case "2":
             System.out.println("zu löschender Artikel > ");
@@ -313,26 +323,33 @@ public class CUI extends UserInterface {
         System.out.print(eshop.EV_logDisplay());
         System.out.println("------------------------------------");
         System.out.println("1 = ");
-        System.out.println("2 = ");
+        System.out.println("2 = Detail ansicht");
         System.out.println("3 = ");
         System.out.println("0 = Exit");
 
         string = GetInput();
 
         switch (string) {
-          case "1":
+          case "1"://
             // #region
             // #endregion
             break;
-          case "2":
+          case "2":// Detail ansicht
+            // #region
+            System.out.println("artikel name > ");
+            artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
+
+            System.out.println("\nArtikel konnte nicht gefunden werden\n");
+            LevelReturn();
+            LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
+
+            // #endregion
+            break;
+          case "3"://
             // #region
             // #endregion
             break;
-          case "3":
-            // #region
-            // #endregion
-            break;
-          case "0":
+          case "0":// Exit
             // #region
             LevelReturn();
             // #endregion
@@ -343,6 +360,21 @@ public class CUI extends UserInterface {
       // #endregion MITARBEITER_EREIGNISLOG
       case ARTIKELDETAILANSICHT:
         // #region
+
+        System.out.println("____________Artikel Detaille ansicht____________");
+        System.out.print(artikelDetailAnsicht.toStringDetailled());
+        System.out.println("------------------------------------");
+        System.out.println("0 = Exit");
+
+        string = GetInput();
+
+        switch (string) {
+          case "0":// Exit
+            // #region
+            LevelReturn();
+            // #endregion
+            break;
+        }
 
         // #endregion
         break;

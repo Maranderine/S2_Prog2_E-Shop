@@ -3,11 +3,15 @@ package Domain.Artikel;
 public class Massengutartikel extends Artikel {
 
   /** gebündelte anzahl des artikels */
-  int minAnzahl;
+  private int minAnzahl;
 
   public Massengutartikel(int artikelNr, String bezeichnung, int bestand, double einzelpreis, int minAnzahl) {
     super(artikelNr, bezeichnung, bestand, einzelpreis);
     this.minAnzahl = minAnzahl;
+
+    // adding search terms
+    String[] searchTerms = { "mass", "massen"};
+    SearchTermAdd(searchTerms);
   }
 
   // Gibt die MinAnzahl aus

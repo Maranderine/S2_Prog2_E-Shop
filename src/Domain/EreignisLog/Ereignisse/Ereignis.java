@@ -1,12 +1,13 @@
 package Domain.EreignisLog.Ereignisse;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import Domain.EreignisLog.Interfaces.EreignisInterface_Ereignis;
 import Domain.Search.Searchable;
 
 /** abstrakte grund Ereignis Klasse */
-public abstract class Ereignis extends Searchable implements EreignisInterface_Ereignis {
+public abstract class Ereignis extends Searchable implements EreignisInterface_Ereignis, Serializable {
   /** Event identifikator */
   private final int ereignisNummer;
   /** Event erklärungs text */
@@ -30,8 +31,6 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
     String[] searchTerms = { "Event", Integer.toString(this.ereignisNummer), this.ereignisDesc,
         this.ereignisDatum.toString() };
     SearchTermAdd(searchTerms);
-
-    System.out.println("EVENT CREATED");
   }
 
   // #region implementierung
@@ -57,12 +56,8 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
     return this.ereignisNummer + "\t" + this.ereignisDesc + "\t##\t" + this.ereignisDatum;
   }
 
-  /**
-   * Detailed toString, giving all data, except objects
-   * 
-   * @return
-   */
-  public String toStringDetailed() {
+  @Override
+  public String toStringDetailled() {
     return toString();
   }
 }

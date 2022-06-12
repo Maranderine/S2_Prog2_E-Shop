@@ -42,7 +42,7 @@ public class EreignisArtikelDelete extends EreignisArtikel {
   }
   
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     /*
      * "\t" + this.ereignisDesc + "\t" + this.callingBenutzerName + "\t" +
      * this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t" +
@@ -50,6 +50,6 @@ public class EreignisArtikelDelete extends EreignisArtikel {
      * + "\t" + this.ereignisDatum;
      */
     String str = "";
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

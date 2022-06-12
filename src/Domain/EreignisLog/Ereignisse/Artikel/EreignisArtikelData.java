@@ -85,8 +85,8 @@ public class EreignisArtikelData extends EreignisArtikel implements EreignisInte
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     String str = "";
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

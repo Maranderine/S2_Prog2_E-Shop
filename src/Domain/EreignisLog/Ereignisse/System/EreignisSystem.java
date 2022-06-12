@@ -49,10 +49,10 @@ public abstract class EreignisSystem extends Ereignis implements EreignisInterfa
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
     String str = simpleName;
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

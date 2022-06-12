@@ -91,7 +91,7 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" +
     // this.callingBenutzerName
     // +
@@ -102,6 +102,6 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
     // this.ereignisDatum;
 
     String str = this.artikelName + "\t" + this.artikelNummer + this.artikelPreis + "\t##\t" + this.artikelBestand;
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

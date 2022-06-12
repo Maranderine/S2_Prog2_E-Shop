@@ -82,11 +82,11 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
 
     String str = this.artikelName + "\t" + this.artikelNummer + this.artikelPreis + this.artikelBestand;
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

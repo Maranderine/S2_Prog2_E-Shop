@@ -1,27 +1,25 @@
 package Domain.BenutzerObjekte;
 
-
-public class Kunde extends Benutzer{
+public class Kunde extends Benutzer {
   private String email;
   private String address = "";
   private int kundenNr;
-  protected static int kundenNrZähler = 1;
   // private String plz = "";
   // private String wohnort = "";
 
   /**
    * 
-   * @param name     name des kunden
-   * @param username benutzername für login
-   * @param password passwort zum einloggen
+   * @param KundenNummer
+   * @param name         name des kunden
+   * @param username     benutzername für login
+   * @param password     passwort zum einloggen
    * @param kundenNr
    * @param email
    * @param address
    */
-  protected Kunde(String name, String username, byte[] password, String email, String address) {
+  protected Kunde(int KundenNummer, String name, String username, byte[] password, String email, String address) {
     super(Benutzerverwaltung.BeutzerType.KUNDE, name, username, password);
-    this.kundenNr = kundenNrZähler;
-    kundenNrZähler++;
+    this.kundenNr = KundenNummer;
     this.email = email;
     this.address = address;
     // this.warenkorb = new Warenkorb; //erstmal rausgenommen Warenkorb wird in der

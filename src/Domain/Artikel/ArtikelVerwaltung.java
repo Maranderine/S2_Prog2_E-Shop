@@ -1,9 +1,12 @@
 package Domain.Artikel;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Verwaltung;
+import Domain.Search.SuchOrdnung;
+import Exceptions.artikelNichtGefundenException;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
@@ -11,32 +14,22 @@ public class ArtikelVerwaltung extends Verwaltung {
 
   private Lager lager;
   private final Eshop eshop;
-  private PersistenceManager pm = new FilePersistenceManager();
+  private PersistenceManager persistenceManager = new FilePersistenceManager();
+  private String artikelDox;
 
-  public ArtikelVerwaltung(Eshop eshop) {
+  public ArtikelVerwaltung(Eshop eshop, String artikelDox) {
     this.eshop = eshop;
-    lager = new Lager();
-  }
+    this.artikelDox = artikelDox;
 
-  // #region persistenz
-  /**
-   * @author Maranderine
-   */
-  public void load(String datei) throws IOException {
-    lager.artikelListe = pm.loadArticle(datei);
-  }
+    try {
+      lager = new Lager(load(artikelDox));
+    } catch (IOException e) {
+      lager = new Lager();
+      e.printStackTrace();
+      System.out.println("Could not load BenutzerVerwaltung");
+    }
 
-  /**
-   * Methode zum Schreiben der Buchdaten in eine Datei.
-   *
-   * @param datei Datei, in die der Bücherbestand geschrieben werden soll
-   * @throws IOException
-   */
-  public void save(String datei) throws IOException {
-    pm.saveArticle(datei, lager.artikelListe);
   }
-
-  // #endregion
 
   public Lager alleArtikel() {
     return this.lager;
@@ -83,7 +76,14 @@ public class ArtikelVerwaltung extends Verwaltung {
    */
   public boolean deleteArtikel(String name) {
     // search for Artikel
-    Artikel artikel = findArtikelByName(name);
+    Artikel artikel;
+    try {
+      artikel = findArtikelByName(name);
+    } catch (artikelNichtGefundenException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     if (artikel != null)// if Artikel is found
       return deleteArtikel(artikel);
 
@@ -95,27 +95,29 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param name of artikel
    * @return Artikel type object or null
+   * @throws artikelNichtGefundenException
    */
-  public Artikel findArtikelByName(String name) {
+  public Artikel findArtikelByName(String name) throws artikelNichtGefundenException {
     // iterates through artikelListe
     for (Artikel artikel : this.lager.artikelListe) {
       if (artikel.getName().equals(name))
         return artikel;
     }
-    return null;
+    throw new artikelNichtGefundenException();
   }
 
   /**
    * gets Artikel Object from artikelListe by index
    * 
    * @param index of the Artikel to return
-   * @return Artikel type Object or null
+   * @return Artikel type Object
+   * @throws artikelNichtGefundenException
    */
-  public Artikel getArtikel(int index) {
+  public Artikel getArtikel(int index) throws artikelNichtGefundenException {
     if (index < lager.artikelListe.size())
       return lager.artikelListe.get(index);
 
-    return null;
+    throw new artikelNichtGefundenException();
   }
 
   // #region getter
@@ -214,7 +216,47 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   // #endregion
+  // #region suchen
 
+  public SuchOrdnung suchArtikel(String suchBegriffe) {
+    return SearchCompileOrdnung(this.lager.artikelListe, suchBegriffe);
+  }
+
+  // #endregion
+  // #region persistenz
+  /**
+   * 
+   * @param datei
+   * @return Vector<Artikel>
+   * @throws IOException
+   */
+  private Vector<Artikel> load(String datei) throws IOException {
+    // @SuppressWarnings("unchecked")
+    Vector<Artikel> vec = (Vector<Artikel>) persistenceManager.loadArticle(datei);
+
+    return vec;
+  }
+
+  /**
+   * Speichert daaten
+   *
+   * @param datei Datei
+   * @throws IOException
+   */
+  private boolean save(String datei) throws IOException {
+    return persistenceManager.saveArticle(datei, lager.artikelListe);
+  }
+
+  /**
+   * Speichert daaten
+   * 
+   * @throws IOException
+   */
+  public boolean save() throws IOException {
+    return save(artikelDox);
+  }
+
+  // #endregion
   // #region ereignisse
 
   private void eventCheckBestand(Artikel artikel) {

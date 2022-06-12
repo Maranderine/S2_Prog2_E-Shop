@@ -1,5 +1,6 @@
 package Domain.BenutzerObjekte;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,22 +25,36 @@ public class Benutzerverwaltung extends Verwaltung {
   }
 
   private Vector<Benutzer> benutzerRegister;
-  private PersistenceManager pm = new FilePersistenceManager();
+  private PersistenceManager persistenceManager = new FilePersistenceManager();
+  private int kundenNrZähler;
+  private int mitarbeiterNrzähler;
+  private String benutzerDoc;
 
-  public Benutzerverwaltung() {
-    benutzerRegister = new Vector<Benutzer>();
+  public Benutzerverwaltung(String benutzerDox) {
+    this.benutzerDoc = benutzerDox;
+
+    // loading register
+
+    try {
+      benutzerRegister = load(this.benutzerDoc);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      benutzerRegister = new Vector<Benutzer>();
+      System.out.println("Could not load BenutzerVerwaltung");
+    }
   }
 
   public void registrieren(String name, String username, String password, String email, String adress) {
-    Benutzer einNutzer = new Kunde(name, username, encryptString(password), email, adress);
+    Benutzer einNutzer = new Kunde(useKundenNrZähler(), name, username, encryptString(password), email, adress);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     this.benutzerRegister.add(einNutzer);
-    System.out.println("" + Kunde.kundenNrZähler);
+    System.out.println("" + kundenNrZähler);
   }
 
   public void registrieren(String name, String username, String password) {
-    Benutzer einNutzer = new Mitarbeiter(name, username, encryptString(password));
+    Benutzer einNutzer = new Mitarbeiter(useMitarbeiterNrzähler(), name, username, encryptString(password));
 
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
@@ -130,6 +145,24 @@ public class Benutzerverwaltung extends Verwaltung {
   // #endregion
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // #region zähler
+  private int useKundenNrZähler() {
+    return kundenNrZähler++;
+  }
+
+  private void setKundenNrZähler(int kundenNrZähler) {
+    this.kundenNrZähler = kundenNrZähler;
+  }
+
+  private int useMitarbeiterNrzähler() {
+    return mitarbeiterNrzähler++;
+  }
+
+  private void setMitarbeiterNrzähler(int mitarbeiterNrzähler) {
+    this.mitarbeiterNrzähler = mitarbeiterNrzähler;
+  }
+
+  // #endregion
   // #region security
   /**
    * encrypted einen sting to SHA-1
@@ -200,7 +233,7 @@ public class Benutzerverwaltung extends Verwaltung {
   }
 
   // #endregion//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // #region active user management
+  // #region user management
 
   private Map<byte[], Benutzer> ActiverNutzerListe = new HashMap<byte[], Benutzer>();
 
@@ -255,7 +288,8 @@ public class Benutzerverwaltung extends Verwaltung {
     resetUserHash(callingUI);
   }
 
-  // active user management
+  // #endregion
+  // #region active user management
   /**
    * add user to active user list
    * 
@@ -295,65 +329,80 @@ public class Benutzerverwaltung extends Verwaltung {
     return ActiverNutzerListe.get(userHash);
   }
 
+  // #endregion
+  // #region persistenz
   /*
    * public void schreibeDaten(String kundenDatei, String mitarbeiterDatei) throws
    * IOException {
    * // PersistenzManager für Schreibvorgänge in Kunde.txt öffnen
-   * pm.openForWriting(kundenDatei);
+   * persistenceManager.openForWriting(kundenDatei);
    * //Liste durch iterieren, wenn nutzer = Kunde --> in Kunden Datei speichern
    * for (Benutzer kunde : this.benutzerRegister){
-   * if(kunde instanceof Kunde) {pm.speichereKunde(kunde);}
+   * if(kunde instanceof Kunde) {persistenceManager.speichereKunde(kunde);}
    * //Persistenz schließen
-   * pm.close();
+   * persistenceManager.close();
    * // PersistenzManager für Schreibvorgänge in Mitarbeiter.txt öffnen
-   * pm.openForWriting(mitarbeiterDatei);
+   * persistenceManager.openForWriting(mitarbeiterDatei);
    * //Liste durch iterieren,
    * for (Benutzer mitarbeiter : this.benutzerRegister){
-   * if(mitarbeiter instanceof Kunde) {pm.speichereMitarbeiter(mitarbeiter);}
+   * if(mitarbeiter instanceof Kunde)
+   * {persistenceManager.speichereMitarbeiter(mitarbeiter);}
    * 
    * }
-   * pm.close();
+   * persistenceManager.close();
    * }
    * 
    * public void liesDaten(String kundenDatei, String MitarbeiterDatei) throws
    * IOException {
    * // PersistenzManager für Lesevorgänge öffnen
-   * pm.openForReading(kundenDatei);
+   * persistenceManager.openForReading(kundenDatei);
    * Kunde kunde;
-   * while ((kunde = pm.ladeKunde()) != null) {
+   * while ((kunde = persistenceManager.ladeKunde()) != null) {
    * benutzerRegister.add(kunde);
    * }
    * // Persistenz-Schnittstelle wieder schließen
-   * pm.close();
+   * persistenceManager.close();
    * 
-   * pm.openForReading(String MitarbeiterDatei);
+   * persistenceManager.openForReading(String MitarbeiterDatei);
    * Mitarbeiter mitarbeiter;
-   * while ((mitarbeiter = pm.ladeMitarbeiter()) != null) {
+   * while ((mitarbeiter = persistenceManager.ladeMitarbeiter()) != null) {
    * benutzerRegister.add(mitarbeiter);
    * }
    * }
    */
 
-  public void save(String nutzerDoc) {
-    pm.saveNutzer(nutzerDoc, benutzerRegister);
+  private void save(String benutzerDoc) throws IOException {
+    persistenceManager.saveObjekt(benutzerDoc, benutzerRegister);
   }
 
-  public void load(String nutzerDoc) {
-    benutzerRegister = pm.loadNutzer(nutzerDoc);
-    int k = 0;
-    int m = 0;
-    // zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler
-    for (Benutzer b : benutzerRegister) {
-      if (b instanceof Kunde) {
-        k++;
-      }
-      if (b instanceof Mitarbeiter) {
-        m++;
-      }
-    }
-    Kunde.kundenNrZähler = k;
-    Mitarbeiter.mitarbeiterNrzähler = m;
-    // #endregion
-
+  public void save() throws IOException {
+    save(benutzerDoc);
   }
+
+  private Vector<Benutzer> load(String benutzerDoc) throws IOException {
+
+    if (!benutzerDoc.equals("")) {
+
+      @SuppressWarnings("unchecked")
+      Vector<Benutzer> vec = (Vector<Benutzer>) persistenceManager.loadObjekt(benutzerDoc);
+
+      int k = 0;
+      int m = 0;
+      // zählt Kunden im vektor und setzt statisches Attribut kundenNrzähler
+      for (Benutzer b : vec) {
+        if (b instanceof Kunde) {
+          k++;
+        }
+        if (b instanceof Mitarbeiter) {
+          m++;
+        }
+      }
+      setKundenNrZähler(k);
+      setMitarbeiterNrzähler(m);
+      return vec;
+    } else
+      return null;
+  }
+
+  // #endregion
 }
