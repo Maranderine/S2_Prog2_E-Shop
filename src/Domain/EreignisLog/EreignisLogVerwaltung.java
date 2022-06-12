@@ -4,6 +4,7 @@ package Domain.EreignisLog;
 import java.util.Vector;
 
 import Domain.Eshop;
+import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.BenutzerObjekte.Benutzer;
@@ -13,9 +14,9 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelCreate;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
-import Domain.Search.Searcher;
+import Domain.EreignisLog.Ereignisse.System.EreignisSystemNotice;
 
-public class EreignisLogVerwaltung extends Searcher {
+public class EreignisLogVerwaltung extends Verwaltung {
 
   // TODO: EVENTS - suche nach artikel objekt
 
@@ -169,14 +170,17 @@ public class EreignisLogVerwaltung extends Searcher {
    * Erstellt neues EreignisSystemArtikel Ereignis, fügt es allen listen hinzu und
    * gibt es zurück.
    * 
-   * @param ereignisDesc
+   * @param verwaltung   calling vrwaltung
+   * @param ereignisDesc ereignis beschreibung
    * @param artikel
    * @return
    */
-  public Ereignis Ereignis_EreignisSystemArtikel(String ereignisDesc, Artikel artikel) {
+  public Ereignis Ereignis_EreignisSystemArtikel(Verwaltung verwaltung, String ereignisDesc, Artikel artikel) {
 
     // neues ereignis
     Ereignis ereignis = new EreignisSystemArtikel(
+        // calling vrwaltung
+        verwaltung,
         // ereignis
         useZaehler(),
         ereignisDesc,
@@ -186,6 +190,28 @@ public class EreignisLogVerwaltung extends Searcher {
         this.artikelVW.getArtikelName(artikel),
         this.artikelVW.getArtikelBestand(artikel),
         this.artikelVW.getArtikelPreis(artikel));
+
+    addToLog(ereignis);
+    return ereignis;
+  }
+
+  /**
+   * Erstellt neues EreignisSystemNotice Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param verwaltung   calling vrwaltung
+   * @param ereignisDesc ereignis beschreibung
+   * @return
+   */
+  public Ereignis Ereignis_EreignisSystemNotice(Verwaltung verwaltung, String ereignisDesc) {
+
+    // neues ereignis
+    Ereignis ereignis = new EreignisSystemNotice(
+        // calling vrwaltung
+        verwaltung,
+        // ereignis
+        useZaehler(),
+        ereignisDesc);
 
     addToLog(ereignis);
     return ereignis;

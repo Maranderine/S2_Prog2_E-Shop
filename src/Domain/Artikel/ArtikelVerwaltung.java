@@ -219,7 +219,7 @@ public class ArtikelVerwaltung extends Verwaltung {
 
   private void eventCheckBestand(Artikel artikel) {
     if (artikel.getBestand() <= 0) {
-      EreignisSystemArtikel("Artikel '" + artikel + "' Bestand ist niedrig!", artikel);
+      EreignisSystemArtikel(this, "Artikel '" + artikel + "' Bestand ist niedrig!", artikel);
     }
   }
 
