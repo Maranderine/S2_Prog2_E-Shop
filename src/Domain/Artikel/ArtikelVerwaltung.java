@@ -6,7 +6,10 @@ import java.util.Vector;
 import Domain.Eshop;
 import Domain.Verwaltung;
 import Domain.Search.SuchOrdnung;
-import Exceptions.artikelNichtGefundenException;
+import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
+import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
@@ -42,15 +45,24 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param bestand
    * @param einzelpreis
    * @return
+   * @throws ExceptionArtikelExistiertBereits
    */
-  public Artikel addArtikel(String name, int bestand, double einzelpreis) {
-    Artikel artikel = findArtikelByName(name);
-    if (artikel == null) {
+  public Artikel addArtikel(String name, int bestand, double einzelpreis) throws ExceptionArtikelExistiertBereits {
+
+    Artikel artikel;
+
+    try {
+      // guck ob artikel existiert | wenn nciht kommt iene exception
+      artikel = findArtikelByName(name);
+      // Artikel existiert und wir erstellen eine neue exception
+      throw new ExceptionArtikelExistiertBereits(artikel);
+    } catch (ExceptionArtikelNichtGefunden e) {
+      // Artikel existiert nicht also machen wir einene neuen
       artikel = new Artikel(Lager.artikelNrCount, name, bestand, einzelpreis);
       lager.artikelListe.add(artikel);
       Lager.artikelNrCount++;
+      return artikel;
     }
-    return artikel;
   }
 
   public void addArtikel(Artikel artikel) {
@@ -61,11 +73,12 @@ public class ArtikelVerwaltung extends Verwaltung {
   /**
    * Deletes a artikel from the artikelListe
    * 
-   * @param name of artikel
+   * @param artikel obj
    * @return boolean, true if something was deleted, false if not
+   * @throws ExceptionArtikelNichtGefunden
    */
   public boolean deleteArtikel(Artikel artikel) {
-    return this.lager.artikelListe.remove(artikel);// delete from list
+    return this.lager.artikelListe.remove(artikel);
   }
 
   /**
@@ -74,36 +87,44 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param name of artikel
    * @return boolean, true if something was deleted, false if not
    */
-  public boolean deleteArtikel(String name) {
-    // search for Artikel
-    Artikel artikel;
-    try {
-      artikel = findArtikelByName(name);
-    } catch (artikelNichtGefundenException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  public boolean deleteArtikel(String name) throws ExceptionArtikelNichtGefunden {
 
-    if (artikel != null)// if Artikel is found
-      return deleteArtikel(artikel);
+    Artikel artikel = findArtikelByName(name);
+    deleteArtikel(artikel);
 
-    return false;// if nothing could be deleted
+    return true;// if nothing could be deleted
   }
 
   /**
    * find Artikel by name in artikelListe
    * 
    * @param name of artikel
-   * @return Artikel type object or null
-   * @throws artikelNichtGefundenException
+   * @return Artikel type object
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public Artikel findArtikelByName(String name) throws artikelNichtGefundenException {
+  public Artikel findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
     // iterates through artikelListe
     for (Artikel artikel : this.lager.artikelListe) {
       if (artikel.getName().equals(name))
         return artikel;
     }
-    throw new artikelNichtGefundenException();
+    throw new ExceptionArtikelNichtGefunden();
+  }
+
+  /**
+   * checkt ob der artikel existiert
+   * 
+   * @param name of artikel
+   * @return bool ob er existiert
+   * @throws ExceptionArtikelNichtGefunden
+   */
+  public boolean ArtikelExists(String name) {
+    // iterates through artikelListe
+    for (Artikel artikel : this.lager.artikelListe) {
+      if (artikel.getName().equals(name))
+        return true;
+    }
+    return false;
   }
 
   /**
@@ -111,13 +132,13 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param index of the Artikel to return
    * @return Artikel type Object
-   * @throws artikelNichtGefundenException
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public Artikel getArtikel(int index) throws artikelNichtGefundenException {
+  public Artikel getArtikel(int index) throws ExceptionArtikelNichtGefunden {
     if (index < lager.artikelListe.size())
       return lager.artikelListe.get(index);
 
-    throw new artikelNichtGefundenException();
+    throw new ExceptionArtikelNichtGefunden();
   }
 
   // #region getter
@@ -145,13 +166,15 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param artikel object
    * @param name    of article
+   * @throws ExceptionArtikelNameExistiertBereits
    */
-  public boolean setArtikelName(Artikel artikel, String newName) {
-    if (artikel != null) {
+  public void setArtikelName(Artikel artikel, String newName) throws ExceptionArtikelNameExistiertBereits {
+    try {
+      checkForName(newName);
       artikel.setName(newName);
-      return true;
+    } catch (ExceptionArtikelNameExistiertBereits e) {
+      throw e;
     }
-    return false;
   }
 
   /**
@@ -159,9 +182,12 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param name    name
    * @param newName neuer name
+   * @throws ExceptionArtikelNichtGefunden
+   * @throws ExceptionArtikelNameExistiertBereits
    */
-  public boolean setArtikelName(String name, String newName) {
-    return setArtikelName(findArtikelByName(name), newName);// checks fo null
+  public void setArtikelName(String name, String newName)
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNichtGefunden {
+    setArtikelName(findArtikelByName(name), newName);// checks fo null
   }
 
   /**
@@ -169,14 +195,11 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param artikel object
    * @param bestand of article
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean setArtikelBestand(Artikel artikel, int bestand) {
-    if (artikel != null) {
-      artikel.setBestand(bestand);
-      eventCheckBestand(artikel);
-      return true;
-    }
-    return false;
+  public void setArtikelBestand(Artikel artikel, int bestand) throws ExceptionArtikelUngültigerBestand {
+    artikel.setBestand(bestand);
+    eventCheckBestand(artikel);
   }
 
   /**
@@ -185,9 +208,12 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param name    String
    * @param bestand
    * @return
+   * @throws ExceptionArtikelNichtGefunden
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean setArtikelBestand(String name, int bestand) {
-    return setArtikelBestand(findArtikelByName(name), bestand);// checks fo null
+  public void setArtikelBestand(String name, int bestand)
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
+    setArtikelBestand(findArtikelByName(name), bestand);// checks fo null
   }
 
   /**
@@ -195,14 +221,10 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param artikel object
    * @param preis   of article
-   * @return
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean setArtikelPreis(Artikel artikel, double preis) {
-    if (artikel != null) {
-      artikel.setPreis(preis);
-      return true;
-    }
-    return false;
+  public void setArtikelPreis(Artikel artikel, double preis) {
+    artikel.setPreis(preis);
   }
 
   /**
@@ -210,9 +232,13 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param name  name
    * @param preis of article
+   * @throws ExceptionArtikelUngültigerBestand
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public boolean setArtikelPreis(String name, double preis) {
-    return setArtikelPreis(findArtikelByName(name), preis);
+  public void setArtikelPreis(String name, double preis)
+      throws ExceptionArtikelUngültigerBestand, ExceptionArtikelNichtGefunden {
+
+    setArtikelPreis(findArtikelByName(name), preis);
   }
 
   // #endregion
@@ -258,11 +284,46 @@ public class ArtikelVerwaltung extends Verwaltung {
 
   // #endregion
   // #region ereignisse
-
-  private void eventCheckBestand(Artikel artikel) {
+  /**
+   * internaql check für bestands probleme
+   * 
+   * @param artikel
+   * @throws ExceptionArtikelUngültigerBestand
+   */
+  private void eventCheckBestand(Artikel artikel) throws ExceptionArtikelUngültigerBestand {
     if (artikel.getBestand() <= 0) {
       EreignisSystemArtikel(this, "Artikel '" + artikel + "' Bestand ist niedrig!", artikel);
+      if (artikel.getBestand() < 0) {
+        throw new ExceptionArtikelUngültigerBestand(artikel);
+      }
     }
+  }
+
+  /**
+   * 
+   * @param artikel
+   * @param num
+   * @return true wenn bestand da ist, egal ob die exception trowd oder nicht
+   * @throws ExceptionArtikelUngültigerBestand
+   */
+  public boolean eventCheckBestand(Artikel artikel, int num) {
+    try {
+      eventCheckBestand(artikel);
+      return (artikel.getBestand() >= num);
+    } catch (ExceptionArtikelUngültigerBestand e) {
+      return false;
+    }
+  }
+
+  private void checkForName(String name) throws ExceptionArtikelNameExistiertBereits {
+    Artikel artikel;
+    try {
+      artikel = findArtikelByName(name);
+    } catch (ExceptionArtikelNichtGefunden e) {
+      // dont print stack
+      return;
+    }
+    throw new ExceptionArtikelNameExistiertBereits(artikel);
   }
 
   // #endregion

@@ -8,6 +8,8 @@ import java.util.Stack;
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
 import Domain.Warenkorb.Rechnung;
+import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
+import Exceptions.Input.ExceptionInputFeldIstLeer;
 
 public class CUI extends UserInterface {
 
@@ -24,16 +26,49 @@ public class CUI extends UserInterface {
   /**
    * gets an input as a string
    * 
+   * @param loopnum         number of loops to try, 1 to run one time, X<=0 for
+   *                        infinite loops
+   * @param inputEinleitung string gezeigt vor input nahme oder null
+   * @param exitPhrase      to exit the input loop oder null
    * @return input
    * @throws IOException
    */
-  private String GetInput() {
-    try {
-      return this.inputStream.readLine();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  private String GetInput(int loopNummer, String inputEinleitung, String exitPhrase) {
+
+    String input;
+
+    do {
+      // display intro
+      if (inputEinleitung != null)
+        System.out.print(inputEinleitung);
+      // get input
+      try {
+        input = this.inputStream.readLine();
+      } catch (IOException e) {
+        e.printStackTrace();
+        return null;
+      }
+
+      if (!exitPhrase.equals(null))
+        if (input.equals(exitPhrase)) {
+          return null;
+        }
+
+      try {
+        if (input.isBlank())
+          throw new ExceptionInputFeldIstLeer();
+        else {
+          return input;
+        }
+
+        String.format
+
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+
+    } while (--loopNummer != 0);
+
     return null;
   }
   // #endregion
@@ -43,7 +78,9 @@ public class CUI extends UserInterface {
 
     int num;
     String string;
-    Artikel artikel;
+    String string2;
+    String string3;
+    Artikel artikel = null;
     Artikel artikelDetailAnsicht;
 
     // print top
@@ -57,7 +94,7 @@ public class CUI extends UserInterface {
         System.out.println("2 - Registrieren");
         System.out.println("0 = Exit");
 
-        string = GetInput();
+        string = GetInput(1, null, null);
 
         switch (string) {
           case "1":// Anmelden
@@ -65,10 +102,10 @@ public class CUI extends UserInterface {
             // #region Anmelden
             System.out.println("LOGIN");
             System.out.print("username > ");
-            String username = GetInput();
+            String username = GetInput(1, null, null);
 
             System.out.print("password  > ");
-            String password = GetInput();
+            String password = GetInput(1, null, null);
 
             // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
             // password);
@@ -142,12 +179,22 @@ public class CUI extends UserInterface {
           case "3":// artikel ispizieren
             System.out.print("Artikel Name  > ");
             String titel = GetInput();
-            System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
+            try {
+              System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
+            } catch (ExceptionArtikelNichtGefunden e) {
+              // TODO runcatch
+              System.out.println(e);
+            }
             break;
 
           case "4":// artikel in den Warenkorb
             System.out.print("Artikel Name  > ");
-            artikel = eshop.AV_findArtikelByName(GetInput());
+            try {
+              artikel = eshop.AV_findArtikelByName(GetInput());
+            } catch (ExceptionArtikelNichtGefunden e) {
+              // TODO runcatch
+              System.out.println(e);
+            }
             System.out.print("Anzahl  > ");
             num = Integer.parseInt(GetInput());
             eshop.WV_setArtikel(artikel, num);
