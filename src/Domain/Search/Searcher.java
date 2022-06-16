@@ -1,8 +1,8 @@
 package Domain.Search;
 
+import java.util.AbstractList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 import Domain.Search.SuchOrdnung.OrdnungIndex;
 
@@ -27,7 +27,7 @@ public abstract class Searcher {
    * @param Suchbegriff singulärer suchbegriff
    * @return
    */
-  protected SuchOrdnung SearchCompileOrdnung(List<Searchable> list, String suchString) {
+  protected SuchOrdnung SearchCompileOrdnung(AbstractList<? extends Searchable> list, String suchString) {
     SuchOrdnung ordnung = new SuchOrdnung();
     int relevanz;
     // geht gegeben liste durch
@@ -51,7 +51,7 @@ public abstract class Searcher {
    * @param Suchbegriff singulärer suchbegriff
    * @return
    */
-  protected SuchOrdnung SearchCompileOrdnungSorted(List<Searchable> list, String suchString) {
+  protected SuchOrdnung SearchCompileOrdnungSorted(AbstractList<? extends Searchable> list, String suchString) {
     SuchOrdnung ordnung = SearchCompileOrdnung(list, suchString);
     sortOrdnung(ordnung);
     return ordnung;

@@ -118,4 +118,40 @@ public class SuchOrdnung {
   }
   // #endregion
 
+  /**
+   * stellt die Objecte mit ihrer toString oder toStringDetailled methoden da
+   * 
+   * @param detailled     boolean ob die einträge in detaaillierter form
+   *                      dargestellte werden soll
+   * @param leereNachicht nachicht die angezeigt wird wenn die liste leer ist
+   * @return
+   */
+  public String display(boolean detailled, String leereNachicht) {
+    String str = "";
+
+    if (this.grid.isEmpty()) {
+      // empty
+      str += "\t" + leereNachicht + "\n";
+    } else {
+      if (detailled) {
+        for (HashMap<OrdnungIndex, Object> hashMap : grid) {
+          str += getEntry_searchable(hashMap).toStringDetailled();
+        }
+      } else {
+        for (HashMap<OrdnungIndex, Object> hashMap : grid) {
+          str += getEntry_searchable(hashMap).toString();
+        }
+      }
+    }
+
+    return str;
+  }
+
+  @Override
+  public String toString() {
+
+    String str = display(false, "Ordnung ist leer!");
+
+    return str;
+  }
 }

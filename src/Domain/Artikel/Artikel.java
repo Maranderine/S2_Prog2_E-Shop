@@ -1,6 +1,10 @@
 package Domain.Artikel;
 
-public class Artikel {
+import java.io.Serializable;
+
+import Domain.Search.Searchable;
+
+public class Artikel extends Searchable implements Serializable{
 
   private final int artikelNr;
   private String name;
@@ -13,6 +17,12 @@ public class Artikel {
     this.bestand = bestand;
     this.preis = einzelpreis;
 
+    // adding search terms
+    /*
+     * artik-el/-le
+     */
+    String[] searchTerms = { "artik", this.name, Integer.toString(this.artikelNr) };
+    SearchTermAdd(searchTerms);
   }
 
   // getter
@@ -34,6 +44,8 @@ public class Artikel {
 
   // setter
   protected void setName(String name) {
+    SearchTermReplace(this.name, name);
+
     this.name = name;
   }
 
@@ -82,6 +94,7 @@ public class Artikel {
 
   /**
    * gibt alle relevanten daten des objekt in einer speicherbaren form wieder
+   * 
    * @return
    */
   public String toData() {

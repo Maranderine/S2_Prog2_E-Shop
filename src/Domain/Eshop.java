@@ -8,8 +8,15 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
+import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
+import Exceptions.Artikel.ExceptionArtikelCollection;
+import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
+import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
+import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
 
@@ -19,55 +26,31 @@ import UserInterface.UserInterface;
  */
 public class Eshop {
 
-  private String artikelDoc = "";
-  private String nutzerDoc = "";
-
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox, String nutzerDox) {
+  public Eshop(String artikelDox, String benutzerDox, String ereignisDox) {
 
-    this.artikelDoc = artikelDox;
-    this.nutzerDoc = nutzerDox;
+    BenutzerVw = new Benutzerverwaltung(benutzerDox);
+    ArtikelVw = new ArtikelVerwaltung(this, artikelDox);
+    WarenkorbVw = new WarenkorbVerwaltung(this, ArtikelVw);
+    EreignisVw = new EreignisLogVerwaltung(this, ereignisDox, BenutzerVw, ArtikelVw);
 
-    try {
-      BenutzerVw = new Benutzerverwaltung();
-      if (!(nutzerDoc.equals(""))) {
-        BenutzerVw.load(nutzerDoc);
-      }
-      ArtikelVw = new ArtikelVerwaltung(this);
-      if (!(artikelDoc.equals(""))) {
-        ArtikelVw.load(artikelDoc);
-      }
-      WarenkorbVw = new WarenkorbVerwaltung(this);
-      EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
-
-      // give Ereignis verwaltung
-      BenutzerVw.ereignisLogVerwaltung = EreignisVw;
-      ArtikelVw.ereignisLogVerwaltung = EreignisVw;
-      WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    // create default admin mitarbeiter
-    BV_mitarbeiterHinzufügen("Admin", "Admin", "123456");
+    // give Ereignis verwaltung
+    BenutzerVw.ereignisLogVerwaltung = EreignisVw;
+    ArtikelVw.ereignisLogVerwaltung = EreignisVw;
+    WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
 
-    // test user
-    BV_kundeHinzufügen("test", "test", "123456", "test", "test");
+    // BV_mitarbeiterHinzufügen("Admin", "Admin", "12345");
+
+    // Admin 12345
+    // test 12345
 
     // Artikel
-    /*
-     * eshop.AV_addArtikel("Banane", 150, 1.99);
-     * eshop.AV_addArtikel("Melone", 999999, 5.00);
-     * eshop.AV_addArtikel("Seltener Fisch", 1, 99999);
-     * eshop.AV_addArtikel("Apfel", 5, 1.77);
-     */
 
     // LevelMove(MenuLevel.WARENKORB);
     // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
@@ -176,15 +159,24 @@ public class Eshop {
    * und erstellt entspechende events
    * 
    * @param userHash Benutzer Identifikator der die funtion ausführt
-   * @return
+   * @return rechnung
+   * @throws ExceptionArtikelCollection
    */
-  public Rechnung WV_kaufen(byte[] userHash) {
+  public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
     // TODO kauf event was alle artikel anzeigt und deren neue bestände, anstadt
+
     Rechnung rechnung = WarenkorbVw.ArtikelKaufen();
-    // TODO maybe place holder artikel set code
-    // set artikel bestand
+
+    // setz neuen Bestand
     rechnung.getInhalt().forEach((artikel, anzahl) -> {
-      AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
+
+      try {
+        AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
+      } catch (ExceptionArtikelUngültigerBestand e) {
+        // TODO falscher bestand gesetzt, was machen?
+        e.printStackTrace();
+      }
+
     });
 
     // duzende Artikel.änderungs events
@@ -201,13 +193,22 @@ public class Eshop {
   }
 
   /**
+   * @author Maranderine
+   */
+  public SuchOrdnung AV_sucheArtikel(String searchTerm) {
+    return ArtikelVw.suchArtikel(searchTerm);
+  }
+
+  /**
    * Add Artikel to artikelListe
    * 
    * @param name
    * @param bestand
    * @param einzelpreis
+   * @throws ExceptionArtikelExistiertBereits
    */
-  public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis) {
+  public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis)
+      throws ExceptionArtikelExistiertBereits {
 
     Artikel artikel = ArtikelVw.addArtikel(name, bestand, einzelpreis);
     // ereignis loggen
@@ -218,38 +219,31 @@ public class Eshop {
     return artikel;
   }
 
-  public boolean AV_deleteArtikel(byte[] userHash, String name) {
+  public boolean AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelNichtGefunden {
 
     Artikel artikel = ArtikelVw.findArtikelByName(name);
-    if (artikel != null) {
-      // TODO: EVENT - basiert und fehlschlag
-      EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
 
-      return ArtikelVw.deleteArtikel(artikel);
-    }
-    return false;
+    // TODO: EVENT - basiert und fehlschlag
+    EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
+    return ArtikelVw.deleteArtikel(artikel);
   }
 
+  // #region set artikel
   /**
    * set artikel data
    * 
    * @param userHash  userHash
    * @param artikel   artikel obj
    * @param neuerName artikel neuer name
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNameExistiertBereits
    */
-  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName) {
-
-    if (artikel != null) {
-      String nameAlt = ArtikelVw.getArtikelName(artikel);
-      // set neuer Name
-      boolean bool = ArtikelVw.setArtikelName(artikel, neuerName);
-      // logt neuen und alten Namen
-      EV_EreignisArtikelData(userHash, "Artikel Name änderung", artikel, nameAlt, null, null);
-
-      return bool;
-    }
-    return false;
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
+      throws ExceptionArtikelNameExistiertBereits {
+    String nameAlt = ArtikelVw.getArtikelName(artikel);
+    // set neuer Name
+    ArtikelVw.setArtikelName(artikel, neuerName);
+    // logt neuen und alten Namen
+    EV_EreignisArtikelData(userHash, "Artikel Name änderung", artikel, nameAlt, null, null);
   }
 
   /**
@@ -258,10 +252,12 @@ public class Eshop {
    * @param userHash  userHash
    * @param name      artikel name
    * @param neuerName artikel neuer name
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNichtGefunden
+   * @throws ExceptionArtikelNameExistiertBereits
    */
-  public boolean AV_setArtikel(byte[] userHash, String name, String neuerName) {
-    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName);
+  public void AV_setArtikel(byte[] userHash, String name, String neuerName)
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelNameExistiertBereits {
+    AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName);
   }
 
   /**
@@ -270,20 +266,17 @@ public class Eshop {
    * @param userHash userHash
    * @param artikel  artikel obj
    * @param bestand  artikel neuer bestand
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, int bestand) {
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, int bestand) throws ExceptionArtikelUngültigerBestand {
 
     if (artikel != null) {
       int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
       // set neuer bestand
-      boolean bool = ArtikelVw.setArtikelBestand(artikel, bestand);
+      ArtikelVw.setArtikelBestand(artikel, bestand);
       // logt neuen und alten bestand
       EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, bestandAlt, null);
-
-      return bool;
     }
-    return false;
   }
 
   /**
@@ -292,10 +285,12 @@ public class Eshop {
    * @param userHash userHash
    * @param name     artikel name
    * @param bestand  artikel neuer bestand
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNichtGefunden
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean AV_setArtikel(byte[] userHash, String name, int bestand) {
-    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), bestand);
+  public void AV_setArtikel(byte[] userHash, String name, int bestand)
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
+    AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), bestand);
   }
 
   /**
@@ -304,20 +299,16 @@ public class Eshop {
    * @param userHash userHash
    * @param artikel  artikel obj
    * @param preis    artikel neuer preis
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, double preis) {
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, double preis)
+      throws ExceptionArtikelNichtGefunden {
 
-    if (artikel != null) {
-      double preisAlt = ArtikelVw.getArtikelPreis(artikel);
-      // set neuer preis
-      boolean bool = ArtikelVw.setArtikelPreis(artikel, preis);
-      // logt neuen und alten preis
-      EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
-
-      return bool;
-    }
-    return false;
+    double preisAlt = ArtikelVw.getArtikelPreis(artikel);
+    // set neuer preis
+    ArtikelVw.setArtikelPreis(artikel, preis);
+    // logt neuen und alten preis
+    EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
   }
 
   /**
@@ -326,10 +317,11 @@ public class Eshop {
    * @param userHash userHash
    * @param name     artikel name
    * @param preis    artikel neuer preis
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public boolean AV_setArtikel(byte[] userHash, String name, double preis) {
-    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), preis);
+  public void AV_setArtikel(byte[] userHash, String name, double preis)
+      throws ExceptionArtikelNichtGefunden {
+    AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), preis);
   }
 
   /**
@@ -340,24 +332,28 @@ public class Eshop {
    * @param neuerName artikel neuer name
    * @param bestand   artikel neuer bestand
    * @param preis     artikel neuer preis
-   * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelUngültigerBestand
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public boolean AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName, int bestand, double preis) {
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName, int bestand, double preis)
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
 
     if (artikel != null) {
       String nameAlt = ArtikelVw.getArtikelName(artikel);
       int bestandAlt = ArtikelVw.getArtikelBestand(artikel);
       double preisAlt = ArtikelVw.getArtikelPreis(artikel);
       // set neuer Name
-      boolean bool1 = ArtikelVw.setArtikelName(artikel, neuerName);
-      boolean bool2 = ArtikelVw.setArtikelBestand(artikel, bestand);
-      boolean bool3 = ArtikelVw.setArtikelPreis(artikel, preis);
+      try {
+        ArtikelVw.setArtikelName(artikel, neuerName);
+        ArtikelVw.setArtikelBestand(artikel, bestand);
+        ArtikelVw.setArtikelPreis(artikel, preis);
+      } catch (Exception e) {
+
+      }
+
       // logt neuen und alten preis
       EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, nameAlt, bestandAlt, preisAlt);
-
-      return (bool1 && bool2 && bool3);
     }
-    return false;
   }
 
   /**
@@ -369,18 +365,24 @@ public class Eshop {
    * @param bestand   artikel neuer bestand
    * @param preis     artikel neuer preis
    * @return boolean obs geklappt hat
+   * @throws ExceptionArtikelNichtGefunden
+   * @throws ExceptionArtikelUngültigerBestand
    */
-  public boolean AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis) {
-    return AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName, bestand, preis);
+  public void AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis)
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
+    AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName, bestand, preis);
   }
+
+  // #endregion
 
   /**
    * find Artikel by name in artikelListe
    * 
    * @param name of artikel
    * @return Artikel type object or null
+   * @throws ExceptionArtikelNichtGefunden
    */
-  public Artikel AV_findArtikelByName(String name) {
+  public Artikel AV_findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
     return ArtikelVw.findArtikelByName(name);
   }
 
@@ -461,8 +463,9 @@ public class Eshop {
 
   public void saveData() {
     try {
-      ArtikelVw.save(artikelDoc);
-      BenutzerVw.save(nutzerDoc);
+      BenutzerVw.save();
+      ArtikelVw.save();
+      EreignisVw.save();
     } catch (IOException e) {
       e.printStackTrace();
     }

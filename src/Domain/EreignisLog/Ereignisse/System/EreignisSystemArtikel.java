@@ -1,5 +1,6 @@
 package Domain.EreignisLog.Ereignisse.System;
 
+import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikel;
 
@@ -20,6 +21,7 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
   /**
    * Ereignis Klasse für System erstellte Ereignisse in bezug auf Artikel
    * 
+   * @param verwaltung     Verwaltung die das event erstellt
    * @param ereignisNummer event identifikator
    * @param ereignisDesc   event erklärungs text
    * @param artikel        Artikel Object reference
@@ -28,9 +30,10 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
    * @param artikelBestand Artikel Bestabnd nummer
    * @param artikelPreis   Artikel Preis nummer
    */
-  public EreignisSystemArtikel(int ereignisNummer, String ereignisDesc, Artikel artikel, int artikelNummer,
+  public EreignisSystemArtikel(Verwaltung verwaltung, int ereignisNummer, String ereignisDesc, Artikel artikel,
+      int artikelNummer,
       String artikelName, int artikelBestand, double artikelPreis) {
-    super(ereignisNummer, ereignisDesc);
+    super(verwaltung, ereignisNummer, ereignisDesc);
     this.artikel = artikel;
     this.artikelNummer = artikelNummer;
     this.artikelName = artikelName;
@@ -74,16 +77,16 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
 
-    String str = this.artikelName + "\t##\t" + this.artikelBestand;
+    String str = this.artikelName + this.artikelBestand;
     return super.toString().replace("##", str);
   }
 
   @Override
-  public String toStringDetailed() {
+  public String toStringDetailled() {
     // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
     // this.ereignisDatum;
 
     String str = this.artikelName + "\t" + this.artikelNummer + this.artikelPreis + this.artikelBestand;
-    return super.toStringDetailed().replace("##", str);
+    return super.toStringDetailled().replace("##", str);
   }
 }

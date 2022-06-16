@@ -1,15 +1,19 @@
 package Domain.BenutzerObjekte;
 
-
-public class Mitarbeiter extends Benutzer{
-  static int mitarbeiterNrzähler = 1;
+public class Mitarbeiter extends Benutzer {
 
   private int mitarbeiterNr;
 
-  protected Mitarbeiter(String name, String username, byte[] password) {
+  /**
+   * 
+   * @param MitarbeiterNummer
+   * @param name
+   * @param username
+   * @param password
+   */
+  protected Mitarbeiter(int MitarbeiterNummer, String name, String username, byte[] password) {
     super(Benutzerverwaltung.BeutzerType.MITARBEITER, name, username, password);
-    this.mitarbeiterNr = mitarbeiterNrzähler;
-    mitarbeiterNrzähler++;
+    this.mitarbeiterNr = MitarbeiterNummer;
   }
 
   // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
@@ -18,7 +22,6 @@ public class Mitarbeiter extends Benutzer{
   protected int getKundenNr() {
     return mitarbeiterNr;
   }
-  
 
   @Override
   public String toString() {

@@ -16,12 +16,15 @@ public class Rechnung {
   /** copie des gekaufeten warenkorbs !Objekte sind nicht eingefrohren! */
   private HashMap<Artikel, Integer> inhalt;
 
-  @SuppressWarnings("unchecked") // type safety ist gegeben... *seuftz*
-  protected Rechnung(HashMap<Artikel, Integer> AartikelListe, int id) {
+  // type safety ist gegeben... *seuftz*
+  protected Rechnung(HashMap<Artikel, Integer> ArtikelListe, int id) {
 
-    this.inhalt = (HashMap<Artikel, Integer>) AartikelListe.clone();
+    @SuppressWarnings("unchecked")
+    HashMap<Artikel, Integer> inhalt = (HashMap<Artikel, Integer>) ArtikelListe.clone();
+    this.inhalt = inhalt;
+
     // geht durch die map, addiert betrag, erstellt ausgebe string
-    AartikelListe.forEach((artikel, bestand) -> {
+    ArtikelListe.forEach((artikel, bestand) -> {
       betrag += artikel.getPreis() * bestand;
       ausgabeString += artikel.toString() + "\t" + bestand + "\n";
     });

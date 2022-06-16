@@ -11,11 +11,15 @@ public class Lager {
     this.artikelListe = new Vector<Artikel>();
   }
 
+  public Lager(Vector<Artikel> vec) {
+    this.artikelListe = vec;
+  }
+
   public String toString() {
     String str = "Artikelnr\tName\tBestand\tPreis\n";
     if (!artikelListe.isEmpty())
       for (Artikel artikel : artikelListe) {
-        str += "\t" + artikel.toStringDetailled() + "\n";
+        str += artikel.toStringDetailled() + "\n";
       }
     else
       str += "Keine Artikel";

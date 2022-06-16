@@ -1,9 +1,11 @@
 
 package Domain.EreignisLog;
 
+import java.io.IOException;
 import java.util.Vector;
 
 import Domain.Eshop;
+import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.BenutzerObjekte.Benutzer;
@@ -13,9 +15,11 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelCreate;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
-import Domain.Search.Searcher;
+import Domain.EreignisLog.Ereignisse.System.EreignisSystemNotice;
+import persistence.FilePersistenceManager;
+import persistence.PersistenceManager;
 
-public class EreignisLogVerwaltung extends Searcher {
+public class EreignisLogVerwaltung extends Verwaltung {
 
   // TODO: EVENTS - suche nach artikel objekt
 
@@ -23,22 +27,33 @@ public class EreignisLogVerwaltung extends Searcher {
   private final Eshop meinShop;
   private final Benutzerverwaltung benutzerVW;
   private final ArtikelVerwaltung artikelVW;
-
-  private Vector<Ereignis> log = new Vector<Ereignis>();
+  private PersistenceManager persistenceManager = new FilePersistenceManager();
+  private Vector<Ereignis> log;
+  private String ereignisDox;
 
   /**
    * EreignisLogVerwaltung
    * 
    * @param eshop Eshop
    */
-  public EreignisLogVerwaltung(Eshop eshop, Benutzerverwaltung benutzerVW, ArtikelVerwaltung artikelVW) {
+  public EreignisLogVerwaltung(Eshop eshop, String ereignisDox, Benutzerverwaltung benutzerVW,
+      ArtikelVerwaltung artikelVW) {
+    this.ereignisDox = ereignisDox;
     // get verwaltungen von eshop
     this.meinShop = eshop;
     this.benutzerVW = benutzerVW;
     this.artikelVW = artikelVW;
 
-    // TODO get ereignis Zähler: load oder 1
-    this.EreignisZaehler = 1;
+    // loading events
+    try {
+      log = load(this.ereignisDox);
+    } catch (IOException e) {
+      e.printStackTrace();
+      log = new Vector<Ereignis>();
+      setZaehler(1);
+      System.out.println("Could not load BenutzerVerwaltung");
+    }
+
   }
 
   // #region neues ereignis//////////////////////////////////////////////////////
@@ -169,14 +184,17 @@ public class EreignisLogVerwaltung extends Searcher {
    * Erstellt neues EreignisSystemArtikel Ereignis, fügt es allen listen hinzu und
    * gibt es zurück.
    * 
-   * @param ereignisDesc
+   * @param verwaltung   calling vrwaltung
+   * @param ereignisDesc ereignis beschreibung
    * @param artikel
    * @return
    */
-  public Ereignis Ereignis_EreignisSystemArtikel(String ereignisDesc, Artikel artikel) {
+  public Ereignis Ereignis_EreignisSystemArtikel(Verwaltung verwaltung, String ereignisDesc, Artikel artikel) {
 
     // neues ereignis
     Ereignis ereignis = new EreignisSystemArtikel(
+        // calling vrwaltung
+        verwaltung,
         // ereignis
         useZaehler(),
         ereignisDesc,
@@ -191,6 +209,28 @@ public class EreignisLogVerwaltung extends Searcher {
     return ereignis;
   }
 
+  /**
+   * Erstellt neues EreignisSystemNotice Ereignis, fügt es allen listen hinzu und
+   * gibt es zurück.
+   * 
+   * @param verwaltung   calling vrwaltung
+   * @param ereignisDesc ereignis beschreibung
+   * @return
+   */
+  public Ereignis Ereignis_EreignisSystemNotice(Verwaltung verwaltung, String ereignisDesc) {
+
+    // neues ereignis
+    Ereignis ereignis = new EreignisSystemNotice(
+        // calling vrwaltung
+        verwaltung,
+        // ereignis
+        useZaehler(),
+        ereignisDesc);
+
+    addToLog(ereignis);
+    return ereignis;
+  }
+
   // #endregion///////////////////////////////////////////////////////////
 
   private void addToLog(Ereignis ereignis) {
@@ -200,20 +240,25 @@ public class EreignisLogVerwaltung extends Searcher {
   /**
    * displayd den gesamten Ereignis Log
    * 
+   * @param detailled booleaan ob die daten in detaillierter form dargestellt
+   *                  werden sollen
    * @return ereignis log string
    */
-  public String displayLog(boolean detailed) {
+  public String displayLog(boolean detailled) {
     String str = "EREIGNIS LOG:\n";
     if (this.log.isEmpty()) {
       // log empty
       str += "\tKeine Ereignisse\n";
     } else {
       // log not empty
-      for (Ereignis ereignis : this.log) {
-        if (detailed)
-          str += ereignis.toStringDetailed() + "\n";
-        else
+      if (detailled) {
+        for (Ereignis ereignis : this.log) {
+          str += ereignis.toStringDetailled() + "\n";
+        }
+      } else {
+        for (Ereignis ereignis : this.log) {
           str += ereignis.toString() + "\n";
+        }
       }
     }
     return str;
@@ -228,6 +273,65 @@ public class EreignisLogVerwaltung extends Searcher {
     // returns original value and increases by one
     return this.EreignisZaehler++;
   }
+
+  /**
+   * set zähler
+   * 
+   * @param num
+   * @return
+   */
+  private void setZaehler(int num) {
+    // returns original value and increases by one
+    this.EreignisZaehler = num;
+  }
+
+  // #region persistenz
+
+  /**
+   * läd
+   * 
+   * @param datei
+   * @return Vector<Ereignis>
+   * @throws IOException
+   */
+  private Vector<Ereignis> load(String datei) throws IOException {
+    @SuppressWarnings("unchecked")
+    Vector<Ereignis> vec = (Vector<Ereignis>) persistenceManager.loadObjekt(datei);
+
+    // get largest event number and set to current number
+    int largestNum = 1;
+    int num;
+    for (Ereignis ereignis : vec) {
+      num = ereignis.getEreignisNummer();
+      if (num > largestNum)
+        largestNum = num;
+    }
+
+    setZaehler(largestNum + 1);
+    return vec;
+  }
+
+  /**
+   * Speichert daten
+   *
+   * @param datei Datei
+   * @throws IOException
+   */
+  private boolean save(String datei) throws IOException {
+    return persistenceManager.saveObjekt(datei, log);
+  }
+
+  /**
+   * saves
+   * 
+   * @return
+   * @throws IOException
+   */
+  public boolean save() throws IOException {
+    return save(ereignisDox);
+  }
+
+  // #endregion
 
   @Override
   public String toString() {

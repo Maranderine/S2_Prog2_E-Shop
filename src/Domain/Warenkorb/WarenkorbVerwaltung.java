@@ -6,6 +6,9 @@ import java.util.Map.Entry;
 import Domain.Eshop;
 import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
+import Domain.Artikel.ArtikelVerwaltung;
+import Exceptions.Artikel.ExceptionArtikelCollection;
+import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 
 /**
  * verwaltet den warenkorb
@@ -15,25 +18,16 @@ public class WarenkorbVerwaltung extends Verwaltung {
   Warenkorb warenkorb;
   private int RechnungZaehler;
   private final Eshop eshop;
+  private ArtikelVerwaltung artikelVW;
 
   /**
    * WarenkorbVerwaltung
    */
-  public WarenkorbVerwaltung(Eshop eshop) {
+  public WarenkorbVerwaltung(Eshop eshop, ArtikelVerwaltung ArtikelVW) {
+    artikelVW = ArtikelVW;
     warenkorb = new Warenkorb();
     this.eshop = eshop;
     RechnungZaehler = 1;
-  }
-
-  /**
-   * WarenkorbVerwaltung und setzt den rechnungZaehler
-   * 
-   * @param rechnungZaehler
-   */
-  public WarenkorbVerwaltung(Eshop eshop, int rechnungZaehler) {
-    warenkorb = new Warenkorb();
-    this.eshop = eshop;
-    RechnungZaehler = rechnungZaehler;
   }
 
   /*
@@ -62,7 +56,7 @@ public class WarenkorbVerwaltung extends Verwaltung {
   /**
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    */
-  public void setArtikel(Artikel artikel, Integer integer) {
+  public void setArtikel(Artikel artikel, Integer integer)  {
     this.warenkorb.inhalt.put(artikel, integer);
   }
 
@@ -86,122 +80,39 @@ public class WarenkorbVerwaltung extends Verwaltung {
    * Warenkrob
    * 
    * @return Rechnung generierte Rechnung
+   * @throws ExceptionCollection
    */
-  public Rechnung ArtikelKaufen() {
+  public Rechnung ArtikelKaufen() throws ExceptionArtikelCollection {
     // hard set im moment, ändern in kunden bezogenes parameter
     Warenkorb warenkorbZuKaufen = warenkorb;
 
-    HashMap<Artikel, ARTIKELFEHLER> fehlerArtikel = checkWarenkorb(warenkorbZuKaufen.inhalt);
-
-    // Ereignis_EreignisSystemArtikel
+    checkWarenkorb(warenkorbZuKaufen.inhalt);
 
     // keine fehler
-    if (fehlerArtikel.isEmpty()) {
-      Rechnung rechnung = new Rechnung(warenkorbZuKaufen.inhalt, useRechnungZaehler());
+    Rechnung rechnung = new Rechnung(warenkorbZuKaufen.inhalt, useRechnungZaehler());
+    // warenkorb löschen
+    clearAll();
 
-      // warenkorb löschen
-      clearAll();
-      return rechnung;
-    } else {
-      // gib fehler aus
-      System.out.println(fehlerArtikel);
-      return null;
-    }
-
-  }
-
-  // #region Warenkorb/Artikel check
-  /**
-   * enum mit allen möglichen artikel fahlern
-   */
-  protected enum ARTIKELFEHLER {
-    /** keine artikel fehler */
-    NONE(0, "Keine Fehler"),
-    /** Fehler in der Artikel anzahl */
-    STÜCKZAHL(1, "Gefragte anzahl ist größer als Anzahl im Lager");
-
-    // index des fehlers
-    private int index;
-    /** beschreibung des fehlers */
-    private String beschreibung;
-
-    /**
-     * basis contructor
-     * 
-     * @param num
-     * @param desc
-     */
-    ARTIKELFEHLER(int index, String desc) {
-      this.index = index;
-      beschreibung = desc;
-    }
-
-    // #region generell
-    /** returns assigned index */
-    protected int index() {
-      return index;
-    }
-
-    /** returns assigned index */
-    protected int i() {
-      return index();
-    }
-
-    @Override
-    public String toString() {
-      return beschreibung;
-    }
-
-    // #endregion
+    return rechnung;
   }
 
   /**
    * checkt ob alle artikel im warenkorb kaufbar sind
    * 
    * @param artikelListe liste an artikeln und deren anzahl
-   * @return HashMap die problem Artikel und deren problem als enum ARTIKELFEHLER
-   *         eintrag enthält, oder null
+   * @throws ExceptionArtikelCollection
    */
-  public HashMap<Artikel, ARTIKELFEHLER> checkWarenkorb(HashMap<Artikel, Integer> artikelListe) {
+  public void checkWarenkorb(HashMap<Artikel, Integer> artikelListe) throws ExceptionArtikelCollection {
+    ExceptionArtikelCollection collection = new ExceptionArtikelCollection("Probleme im Warenkorb");
 
-    HashMap<Artikel, ARTIKELFEHLER> problemArtikel = new HashMap<Artikel, ARTIKELFEHLER>();
-    ARTIKELFEHLER artikelFehler;
-    Artikel artikel;
     for (Entry<Artikel, Integer> entry : artikelListe.entrySet()) {
-      // checkt artikel nach fehler
-      artikel = entry.getKey();
       // suche artikel fehler
-      artikelFehler = checkArtikel(artikel, entry.getValue());
-
-      // artikel hat fehler
-      if (artikelFehler != null) {
-        problemArtikel.put(artikel, artikelFehler);
-      }
+      Artikel artikel = entry.getKey();
+      if (!artikelVW.eventCheckBestand(artikel, entry.getValue()))
+        collection.add(new ExceptionArtikelNichtGenugBestand(artikel));
     }
-
-    if (!problemArtikel.isEmpty())
-      return problemArtikel;
-
-    return null;
-  }
-
-  /**
-   * überprüft gegebenen Artikel auf kauf fehler
-   * 
-   * @param artikel    Artikel zu checken
-   * @param kaufanzahl
-   * @return int fehler enum 0 wenn alles okay ist, false wenn ein fehler
-   *         aufgetreten
-   *         ist
-   */
-  public ARTIKELFEHLER checkArtikel(Artikel artikel, int kaufanzahl) {
-    // checkt alle fehler des artikels
-    // check ob stückzahl genug ist
-    if (artikel.getBestand() < kaufanzahl) {
-      return ARTIKELFEHLER.STÜCKZAHL;// gelagerte anzahl weniger als zu kaufende anzahl
-    }
-
-    return ARTIKELFEHLER.NONE;
+    if (!collection.isEmpty())
+      throw collection;
   }
 
   // #endregion
@@ -211,10 +122,6 @@ public class WarenkorbVerwaltung extends Verwaltung {
   private int useRechnungZaehler() {
     return RechnungZaehler++;
   }
-
-  // #endregion
-
-  // #region ereignisse
 
   // #endregion
 

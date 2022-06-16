@@ -28,7 +28,7 @@ public abstract class Searchable {
       entrie = iter.next();
       lower = entrie.toLowerCase();
       if (!entrie.equals(lower)) {
-        SearchTermChange(entrie, lower);
+        SearchTermReplace(entrie, lower);
       }
     }
   }
@@ -125,12 +125,21 @@ public abstract class Searchable {
   /**
    * replaces the old term with the new one
    * 
-   * @param target
-   * @param newTerm
+   * @param oldTerm to be replaced
+   * @param newTerm to to replace the old one
    */
-  protected void SearchTermChange(String target, String newTerm) {
-    SearchTermRemove(target);
+  protected void SearchTermReplace(String oldTerm, String newTerm) {
+    SearchTermRemove(oldTerm);
     SearchTermAdd(newTerm);
   }
 
+  @Override
+  public abstract String toString();
+
+  /**
+   * detailled toString, giving all data, except objects
+   * 
+   * @return
+   */
+  public abstract String toStringDetailled();
 }
