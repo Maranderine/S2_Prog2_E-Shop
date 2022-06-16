@@ -173,7 +173,7 @@ public class Eshop {
       try {
         AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
       } catch (ExceptionArtikelUngültigerBestand e) {
-        // TODO Auto-generated catch block
+        // TODO falscher bestand gesetzt, was machen?
         e.printStackTrace();
       }
 

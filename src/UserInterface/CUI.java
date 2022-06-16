@@ -1,15 +1,14 @@
 package UserInterface;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Stack;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
 import Domain.Warenkorb.Rechnung;
+import Exceptions.Artikel.ExceptionArtikelCollection;
+import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
-import Exceptions.Input.ExceptionInputFeldIstLeer;
+import Exceptions.Input.ExceptionInputFalsch;
 
 public class CUI extends UserInterface {
 
@@ -19,69 +18,18 @@ public class CUI extends UserInterface {
     LevelMove(startLevel);
   }
 
-  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
-  private BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-
-  // #region input
-  /**
-   * gets an input as a string
-   * 
-   * @param loopnum         number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null
-   * @param exitPhrase      to exit the input loop oder null
-   * @return input
-   * @throws IOException
-   */
-  private String GetInput(int loopNummer, String inputEinleitung, String exitPhrase) {
-
-    String input;
-
-    do {
-      // display intro
-      if (inputEinleitung != null)
-        System.out.print(inputEinleitung);
-      // get input
-      try {
-        input = this.inputStream.readLine();
-      } catch (IOException e) {
-        e.printStackTrace();
-        return null;
-      }
-
-      if (!exitPhrase.equals(null))
-        if (input.equals(exitPhrase)) {
-          return null;
-        }
-
-      try {
-        if (input.isBlank())
-          throw new ExceptionInputFeldIstLeer();
-        else {
-          return input;
-        }
-
-        String.format
-
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
-
-    } while (--loopNummer != 0);
-
-    return null;
-  }
-  // #endregion
-
   /** Display and process of the CUI menu */
+  @SuppressWarnings("unused")
   public boolean run() {
+    // TODO TEST
+    regexChecker();
 
     int num;
     String string;
     String string2;
     String string3;
     Artikel artikel = null;
-    Artikel artikelDetailAnsicht;
+    Artikel artikelDetailAnsicht = null;
 
     // print top
     System.out.println("/////////////////////////////////////////////");
@@ -94,64 +42,73 @@ public class CUI extends UserInterface {
         System.out.println("2 - Registrieren");
         System.out.println("0 = Exit");
 
-        string = GetInput(1, null, null);
+        try {
+          string = GetInput(1, "\t> ", null);
 
-        switch (string) {
-          case "1":// Anmelden
-            // LevelMove(MenuLevel.ANMELDUNG);
-            // #region Anmelden
-            System.out.println("LOGIN");
-            System.out.print("username > ");
-            String username = GetInput(1, null, null);
+          switch (string) {
+            case "1":// Anmelden
+              // #region Anmelden
+              System.out.println("LOGIN");
+              System.out.print("username > ");
+              String username = GetInput(1, null, null);
 
-            System.out.print("password  > ");
-            String password = GetInput(1, null, null);
+              System.out.print("password  > ");
+              String password = GetInput(1, null, null);
 
-            // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
-            // password);
-            switch (eshop.login(this, username, password)) {
-              case NONE:
-                System.out.println(" Benutzername oder Passwort falsch");
-                break;
-              case MITARBEITER:
-                LevelMove(MenuLevel.MITARBEITER_ANSICHT);
-                break;
-              case KUNDE:
-                LevelMove(MenuLevel.KUNDEN_ANSICHT);
-                break;
-            }
-            break;
-          // #endregion
-          case "2":// Registrieren
-            LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
-            break;
-          case "0":// Exit
-            eshop.saveData();
-            return false;
+              // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
+              // password);
+              switch (eshop.login(this, username, password)) {
+                case NONE:
+                  System.out.println(" Benutzername oder Passwort falsch");
+                  break;
+                case MITARBEITER:
+                  LevelMove(MenuLevel.MITARBEITER_ANSICHT);
+                  break;
+                case KUNDE:
+                  LevelMove(MenuLevel.KUNDEN_ANSICHT);
+                  break;
+              }
+              break;
+            // #endregion
+            case "2":// Registrieren
+              LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
+              break;
+            case "0":// Exit
+              eshop.saveData();
+              return false;
+          }
+
+        } catch (ExceptionInputFalsch e) {
+          // Exception
+          System.out.println(e);
         }
+
         break;
       // #endregion MAIN_MENU
       case KUNDEN_REGISTRIEREN:
         // #region KUNDEN_REGISTRIEREN
-        System.out.println("__________Kunde Registrieren_________");
-        System.out.println("\tName:");
-        System.out.print("\t>");
-        String name = GetInput();
-        System.out.println("\temail:");
-        System.out.print("\t>");
-        String email = GetInput();
-        System.out.println("\taddresse:");
-        System.out.print("\t>");
-        String address = GetInput();
-        System.out.println("\tusername:");
-        System.out.print("\t>");
-        String un = GetInput();
-        System.out.println("\tpasswort:");
-        System.out.print("\t>");
-        String passwort = GetInput();
-        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-        LevelReturn();
+        try {
+          System.out.println("__________Kunde Registrieren_________");
+          System.out.println("\tName:");
+          System.out.print("\t>");
+          String name;
 
+          name = GetInput(1, "\t>", null);
+
+          System.out.println("\tEmail:");
+          String email = GetInput(1, "\t>", null);
+          System.out.println("\tAddresse:");
+          String address = GetInput(1, "\t>", null);
+          System.out.println("\tUser Name:");
+          String un = GetInput(1, "\t>", null);
+          System.out.println("\tPasswort:");
+          String passwort = GetInput(1, "\t>", null);
+          eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
+
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
+        }
+        LevelReturn();
         break;
       // #endregion KUNDEN_REGISTRIEREN
       case KUNDEN_ANSICHT:
@@ -164,50 +121,55 @@ public class CUI extends UserInterface {
         System.out.println("5 = Warenkorb");
         System.out.println("0 = Logout");
 
-        string = GetInput();
+        try {
+          string = GetInput(1, null, null);
 
-        switch (string) {
+          switch (string) {
 
-          case "1":// Alle Artikel ausgeben
-            System.out.println(eshop.AV_alleArtikel());
-            break;
-          case "2":// artikel suchen
-            System.out.print("Suchen nach  > ");
-            String searchTerm = GetInput();
-            System.out.println(eshop.AV_sucheArtikel(searchTerm));
-            break;
-          case "3":// artikel ispizieren
-            System.out.print("Artikel Name  > ");
-            String titel = GetInput();
-            try {
-              System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
-            } catch (ExceptionArtikelNichtGefunden e) {
-              // TODO runcatch
-              System.out.println(e);
-            }
-            break;
+            case "1":// Alle Artikel ausgeben
+              System.out.println(eshop.AV_alleArtikel());
+              break;
+            case "2":// artikel suchen
+              System.out.print("Suchen nach  > ");
+              String searchTerm = GetInput(1, null, null);
+              System.out.println(eshop.AV_sucheArtikel(searchTerm));
+              break;
+            case "3":// artikel ispizieren
+              System.out.print("Artikel Name  > ");
+              String titel = GetInput(1, null, null);
+              try {
+                System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
+              } catch (ExceptionArtikelNichtGefunden e) {
+                // TODO runcatch
+                System.out.println(e);
+              }
+              break;
 
-          case "4":// artikel in den Warenkorb
-            System.out.print("Artikel Name  > ");
-            try {
-              artikel = eshop.AV_findArtikelByName(GetInput());
-            } catch (ExceptionArtikelNichtGefunden e) {
-              // TODO runcatch
-              System.out.println(e);
-            }
-            System.out.print("Anzahl  > ");
-            num = Integer.parseInt(GetInput());
-            eshop.WV_setArtikel(artikel, num);
-            break;
+            case "4":// artikel in den Warenkorb
+              System.out.print("Artikel Name  > ");
+              try {
+                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+              } catch (ExceptionArtikelNichtGefunden e) {
+                // TODO runcatch
+                System.out.println(e);
+              }
+              System.out.print("Anzahl  > ");
+              num = Integer.parseInt(GetInput(1, null, null));
+              eshop.WV_setArtikel(artikel, num);
+              break;
 
-          case "5":// Warenkorb
-            LevelMove(MenuLevel.WARENKORB);
-            break;
+            case "5":// Warenkorb
+              LevelMove(MenuLevel.WARENKORB);
+              break;
 
-          case "0":// Exit
-            Logout();
-            break;
+            case "0":// Exit
+              Logout();
+              break;
+          }
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
         }
+
         break;
       // #endregion KUNDEN_ANSICHT
       case WARENKORB:
@@ -222,55 +184,71 @@ public class CUI extends UserInterface {
         System.out.println("\t0 = Exit");
         System.out.print("\t>");
 
-        string = GetInput();
-        switch (string) {
-          case "1":// ändern
-            System.out.println("------Artikel anzahl ändern------");
-            System.out.println("\tInput Artikel Name");
-            System.out.print("\t>");
-            artikel = eshop.AV_findArtikelByName(GetInput());
-            System.out.println("\tInput Artikel anzahl");
-            System.out.print("\t>");
-            num = Integer.parseInt(GetInput());
+        try {
+          string = GetInput(1, null, null);
 
-            eshop.WV_setArtikel(artikel, num);
-
-            break;
-          case "2":// löschen
-            System.out.println("------Einzelnden Artikel löschen------");
-            System.out.println("\tInput Artikel Name");
-            System.out.print("\t>");
-            artikel = eshop.AV_findArtikelByName(GetInput());
-
-            eshop.WV_removeArtikel(artikel);
-            break;
-          case "3":// Alle löschen
-            eshop.WV_clearAll();
-            break;
-          case "4":// KAUFEN
-            System.out.println("------ KAUF BESTÄTIGUNG ------");
-            System.out.println("\tKaufbestätigung:");
-            System.out.println("\ty = ja kaufen");
-            System.out.println("\tn = nein zurück");
-            System.out.print("\t>");
-
-            string = GetInput();
-
-            if (string.equals("y")) {
-              Rechnung rechnung = eshop.WV_kaufen(this.userHash);
-
-              // Artikel falsch text
-              if (rechnung == null) {
-                System.out.println("Kaufen Fehl Geschlagen!");
-              } else {
-                System.out.print(rechnung);
+          switch (string) {
+            case "1":// ändern
+              System.out.println("------Artikel anzahl ändern------");
+              System.out.println("\tInput Artikel Name");
+              System.out.print("\t>");
+              try {
+                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+              } catch (ExceptionArtikelNichtGefunden e) {
+                // TODO runcatch
+                System.out.println(e);
               }
-            }
+              System.out.println("\tInput Artikel anzahl");
+              System.out.print("\t>");
+              num = Integer.parseInt(GetInput(1, null, null));
 
-            break;
-          case "0":// Exit
-            LevelReturn();
-            break;
+              eshop.WV_setArtikel(artikel, num);
+
+              break;
+            case "2":// löschen
+              System.out.println("------Einzelnden Artikel löschen------");
+              System.out.println("\tInput Artikel Name");
+              System.out.print("\t>");
+              try {
+                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+              } catch (ExceptionArtikelNichtGefunden e1) {
+                // TODO runcatch
+                System.out.println(e1);
+              }
+
+              eshop.WV_removeArtikel(artikel);
+              break;
+            case "3":// Alle löschen
+              eshop.WV_clearAll();
+              break;
+            case "4":// KAUFEN
+              System.out.println("------ KAUF BESTÄTIGUNG ------");
+              System.out.println("\tKaufbestätigung:");
+              System.out.println("\ty = ja kaufen");
+              System.out.println("\tn = nein zurück");
+              System.out.print("\t>");
+
+              string = GetInput(1, null, null);
+
+              if (string.equals("y")) {
+                Rechnung rechnung;
+                try {
+                  rechnung = eshop.WV_kaufen(this.userHash);
+                  System.out.print(rechnung);
+                } catch (ExceptionArtikelCollection e) {
+                  // TODO runcatch
+                  System.out.println("Kaufen Fehl Geschlagen!");
+                  System.out.println(e);
+                }
+              }
+
+              break;
+            case "0":// Exit
+              LevelReturn();
+              break;
+          }
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
         }
         break;
       // #endregion
@@ -282,21 +260,25 @@ public class CUI extends UserInterface {
         System.out.println("3 = Ereignis Log");
         System.out.println("0 = Logout");
 
-        string = GetInput();
+        try {
+          string = GetInput(1, null, null);
 
-        switch (string) {
-          case "1":// artikel Verwalten
-            LevelMove(MenuLevel.MITARBEITER_ARTIKEL);
-            break;
-          case "2":// Mitarbeiter hinzufügen
-            LevelMove(MenuLevel.MITARBEITER_REGISTRIEREN);
-            break;
-          case "3":// Mitarbeiter hinzufügen
-            LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
-            break;
-          case "0":// logout
-            Logout();
-            break;
+          switch (string) {
+            case "1":// artikel Verwalten
+              LevelMove(MenuLevel.MITARBEITER_ARTIKEL);
+              break;
+            case "2":// Mitarbeiter hinzufügen
+              LevelMove(MenuLevel.MITARBEITER_REGISTRIEREN);
+              break;
+            case "3":// Mitarbeiter hinzufügen
+              LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
+              break;
+            case "0":// logout
+              Logout();
+              break;
+          }
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
         }
         break;
       // #endregion MITARBEITER_ANSICHT
@@ -310,55 +292,78 @@ public class CUI extends UserInterface {
         System.out.println("4 = Artikel Bestand ändern");
         System.out.println("0 = Exit");
 
-        string = GetInput();
+        try {
+          string = GetInput(1, null, null);
 
-        switch (string) {
-          case "1":
-            System.out.println("artikel name > ");
-            artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
-            if (artikelDetailAnsicht != null) {
-              LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
-            }
-            break;
-          case "2":
-            System.out.println("zu löschender Artikel > ");
-            string = GetInput();
-            eshop.AV_deleteArtikel(this.userHash, string);
-            break;
-          case "3":
-            System.out.println("neuer Artikel name > ");
-            String artikelName = GetInput();
-            System.out.println("bestand > ");
-            int bestand = Integer.parseInt(GetInput());
-            System.out.println("Preis > ");
-            double preis = Double.parseDouble(GetInput());
-            // TODO CUI Artikel: was wenn falsche eingabe
-            Artikel art = eshop.AV_addArtikel(this.userHash, artikelName, bestand, preis);
-            if (art != null)
-              System.out.println("Erfolgreich erstellt!");
-            else
-              System.out.println("Etwas ist schief gelaufen.");
-            break;
-          case "0":
-            LevelReturn();
-            break;
+          switch (string) {
+            case "1":// detail ansicht artikel
+              System.out.println("artikel name > ");
+              try {
+                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
+              } catch (ExceptionArtikelNichtGefunden e1) {
+                // TODO runcatch
+                System.out.println(e1);
+              }
+              break;
+            case "2":
+              System.out.println("zu löschender Artikel > ");
+              string = GetInput(1, null, null);
+              try {
+                eshop.AV_deleteArtikel(this.userHash, string);
+              } catch (ExceptionArtikelNichtGefunden e1) {
+                // TODO runcatch
+                System.out.println(e1);
+              }
+              break;
+            case "3":
+              System.out.println("neuer Artikel name > ");
+              String artikelName = GetInput(1, null, null);
+              System.out.println("bestand > ");
+              int bestand = Integer.parseInt(GetInput(1, null, null));
+              System.out.println("Preis > ");
+              double preis = Double.parseDouble(GetInput(1, null, null));
+
+              Artikel art;
+              try {
+                eshop.AV_addArtikel(this.userHash, artikelName, bestand, preis);
+                System.out.println("Erfolgreich erstellt!");
+              } catch (ExceptionArtikelExistiertBereits e) {
+                System.out.println("Etwas ist schief gelaufen.");
+                // TODO runcatch
+                System.out.println(e);
+              }
+
+              break;
+            case "0":
+              LevelReturn();
+              break;
+          }
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
         }
         break;
       // #endregion MITARBEITER_ARTIKEL
       case MITARBEITER_REGISTRIEREN:
         // #region MITARBEITER_REGISTRIEREN
-        System.out.println("__________Mitarbeiter Registrieren_________");
-        System.out.println("\tName:");
-        System.out.print("\t>");
-        String nam = GetInput();
-        System.out.println("\tusername:");
-        System.out.print("\t>");
-        String user = GetInput();
-        System.out.println("\tpasswort:");
-        System.out.print("\t>");
-        String pass = GetInput();
-        eshop.BV_mitarbeiterHinzufügen(nam, user, pass);
+        try {
+          System.out.println("__________Mitarbeiter Registrieren_________");
+          System.out.println("\tName:");
+          System.out.print("\t>");
+          String nam;
 
+          nam = GetInput(1, null, null);
+
+          System.out.println("\tusername:");
+          System.out.print("\t>");
+          String user = GetInput(1, null, null);
+          System.out.println("\tpasswort:");
+          System.out.print("\t>");
+          String pass = GetInput(1, null, null);
+          eshop.BV_mitarbeiterHinzufügen(nam, user, pass);
+        } catch (ExceptionInputFalsch e) {
+          System.out.println(e);
+        }
         LevelReturn();
 
         break;
@@ -374,33 +379,39 @@ public class CUI extends UserInterface {
         System.out.println("3 = ");
         System.out.println("0 = Exit");
 
-        string = GetInput();
+        try {
+          string = GetInput(1, null, null);
 
-        switch (string) {
-          case "1"://
-            // #region
-            // #endregion
-            break;
-          case "2":// Detail ansicht
-            // #region
-            System.out.println("artikel name > ");
-            artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
-
-            System.out.println("\nArtikel konnte nicht gefunden werden\n");
-            LevelReturn();
-            LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
-
-            // #endregion
-            break;
-          case "3"://
-            // #region
-            // #endregion
-            break;
-          case "0":// Exit
-            // #region
-            LevelReturn();
-            // #endregion
-            break;
+          switch (string) {
+            case "1"://
+              // #region
+              // #endregion
+              break;
+            case "2":// Detail ansicht
+              // #region
+              System.out.println("artikel name > ");
+              try {
+                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
+              } catch (ExceptionArtikelNichtGefunden e) {
+                // TODO runcatch
+                System.out.println(e);
+              }
+              // #endregion
+              break;
+            case "3"://
+              // #region
+              // #endregion
+              break;
+            case "0":// Exit
+              // #region
+              LevelReturn();
+              // #endregion
+              break;
+          }
+        } catch (ExceptionInputFalsch e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
         }
 
         break;
@@ -408,23 +419,29 @@ public class CUI extends UserInterface {
       case ARTIKELDETAILANSICHT:
         // #region
 
-        System.out.println("____________Artikel Detaille ansicht____________");
-        System.out.print(artikelDetailAnsicht.toStringDetailled());
-        System.out.println("------------------------------------");
-        System.out.println("0 = Exit");
+        if (artikelDetailAnsicht != null) {
+          // THIS IS NOT DEAD CODE >:(
+          System.out.println("____________Artikel Detaille ansicht____________");
+          System.out.print(artikelDetailAnsicht.toStringDetailled());
+          System.out.println("------------------------------------");
+          System.out.println("0 = Exit");
 
-        string = GetInput();
+          try {
+            string = GetInput(1, null, null);
+            switch (string) {
+              case "0":// Exit
+                // #region
+                LevelReturn();
+                // #endregion
+                break;
+            }
 
-        switch (string) {
-          case "0":// Exit
-            // #region
-            LevelReturn();
-            // #endregion
-            break;
+          } catch (ExceptionInputFalsch e) {
+            System.out.println(e);
+          }
         }
-
-        // #endregion
         break;
+      // #endregion
     }
     // true to continue
     return true;
