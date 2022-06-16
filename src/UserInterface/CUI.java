@@ -50,10 +50,10 @@ public class CUI extends UserInterface {
               // #region Anmelden
               System.out.println("LOGIN");
               System.out.print("username > ");
-              String username = GetInput(1, null, null);
+              String username = GetInput();
 
               System.out.print("password  > ");
-              String password = GetInput(1, null, null);
+              String password = GetInput();
 
               // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
               // password);
@@ -122,7 +122,7 @@ public class CUI extends UserInterface {
         System.out.println("0 = Logout");
 
         try {
-          string = GetInput(1, null, null);
+          string = GetInput();
 
           switch (string) {
 
@@ -131,12 +131,12 @@ public class CUI extends UserInterface {
               break;
             case "2":// artikel suchen
               System.out.print("Suchen nach  > ");
-              String searchTerm = GetInput(1, null, null);
+              String searchTerm = GetInput();
               System.out.println(eshop.AV_sucheArtikel(searchTerm));
               break;
             case "3":// artikel ispizieren
               System.out.print("Artikel Name  > ");
-              String titel = GetInput(1, null, null);
+              String titel = GetInput();
               try {
                 System.out.println(eshop.AV_findArtikelByName(titel).toStringDetailled());
               } catch (ExceptionArtikelNichtGefunden e) {
@@ -148,13 +148,13 @@ public class CUI extends UserInterface {
             case "4":// artikel in den Warenkorb
               System.out.print("Artikel Name  > ");
               try {
-                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                artikel = eshop.AV_findArtikelByName(GetInput());
               } catch (ExceptionArtikelNichtGefunden e) {
                 // TODO runcatch
                 System.out.println(e);
               }
               System.out.print("Anzahl  > ");
-              num = Integer.parseInt(GetInput(1, null, null));
+              num = Integer.parseInt(GetInput());
               eshop.WV_setArtikel(artikel, num);
               break;
 
@@ -185,7 +185,7 @@ public class CUI extends UserInterface {
         System.out.print("\t>");
 
         try {
-          string = GetInput(1, null, null);
+          string = GetInput();
 
           switch (string) {
             case "1":// ändern
@@ -193,14 +193,14 @@ public class CUI extends UserInterface {
               System.out.println("\tInput Artikel Name");
               System.out.print("\t>");
               try {
-                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                artikel = eshop.AV_findArtikelByName(GetInput());
               } catch (ExceptionArtikelNichtGefunden e) {
                 // TODO runcatch
                 System.out.println(e);
               }
               System.out.println("\tInput Artikel anzahl");
               System.out.print("\t>");
-              num = Integer.parseInt(GetInput(1, null, null));
+              num = Integer.parseInt(GetInput());
 
               eshop.WV_setArtikel(artikel, num);
 
@@ -210,7 +210,7 @@ public class CUI extends UserInterface {
               System.out.println("\tInput Artikel Name");
               System.out.print("\t>");
               try {
-                artikel = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                artikel = eshop.AV_findArtikelByName(GetInput());
               } catch (ExceptionArtikelNichtGefunden e1) {
                 // TODO runcatch
                 System.out.println(e1);
@@ -228,7 +228,7 @@ public class CUI extends UserInterface {
               System.out.println("\tn = nein zurück");
               System.out.print("\t>");
 
-              string = GetInput(1, null, null);
+              string = GetInput();
 
               if (string.equals("y")) {
                 Rechnung rechnung;
@@ -261,7 +261,7 @@ public class CUI extends UserInterface {
         System.out.println("0 = Logout");
 
         try {
-          string = GetInput(1, null, null);
+          string = GetInput();
 
           switch (string) {
             case "1":// artikel Verwalten
@@ -293,13 +293,13 @@ public class CUI extends UserInterface {
         System.out.println("0 = Exit");
 
         try {
-          string = GetInput(1, null, null);
+          string = GetInput();
 
           switch (string) {
             case "1":// detail ansicht artikel
               System.out.println("artikel name > ");
               try {
-                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
                 LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
               } catch (ExceptionArtikelNichtGefunden e1) {
                 // TODO runcatch
@@ -308,7 +308,7 @@ public class CUI extends UserInterface {
               break;
             case "2":
               System.out.println("zu löschender Artikel > ");
-              string = GetInput(1, null, null);
+              string = GetInput();
               try {
                 eshop.AV_deleteArtikel(this.userHash, string);
               } catch (ExceptionArtikelNichtGefunden e1) {
@@ -318,11 +318,11 @@ public class CUI extends UserInterface {
               break;
             case "3":
               System.out.println("neuer Artikel name > ");
-              String artikelName = GetInput(1, null, null);
+              String artikelName = GetInput();
               System.out.println("bestand > ");
-              int bestand = Integer.parseInt(GetInput(1, null, null));
+              int bestand = Integer.parseInt(GetInput());
               System.out.println("Preis > ");
-              double preis = Double.parseDouble(GetInput(1, null, null));
+              double preis = Double.parseDouble(GetInput());
 
               Artikel art;
               try {
@@ -352,14 +352,14 @@ public class CUI extends UserInterface {
           System.out.print("\t>");
           String nam;
 
-          nam = GetInput(1, null, null);
+          nam = GetInput();
 
           System.out.println("\tusername:");
           System.out.print("\t>");
-          String user = GetInput(1, null, null);
+          String user = GetInput();
           System.out.println("\tpasswort:");
           System.out.print("\t>");
-          String pass = GetInput(1, null, null);
+          String pass = GetInput();
           eshop.BV_mitarbeiterHinzufügen(nam, user, pass);
         } catch (ExceptionInputFalsch e) {
           System.out.println(e);
@@ -380,7 +380,7 @@ public class CUI extends UserInterface {
         System.out.println("0 = Exit");
 
         try {
-          string = GetInput(1, null, null);
+          string = GetInput();
 
           switch (string) {
             case "1"://
@@ -391,7 +391,7 @@ public class CUI extends UserInterface {
               // #region
               System.out.println("artikel name > ");
               try {
-                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput(1, null, null));
+                artikelDetailAnsicht = eshop.AV_findArtikelByName(GetInput());
                 LevelMove(MenuLevel.ARTIKELDETAILANSICHT);
               } catch (ExceptionArtikelNichtGefunden e) {
                 // TODO runcatch
@@ -427,7 +427,7 @@ public class CUI extends UserInterface {
           System.out.println("0 = Exit");
 
           try {
-            string = GetInput(1, null, null);
+            string = GetInput();
             switch (string) {
               case "0":// Exit
                 // #region

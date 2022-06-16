@@ -171,7 +171,7 @@ public abstract class UserInterface {
   }
 
   /**
-   * ohne pattern matching und input erklärung
+   * einfach nur input nehmen, ohne pattern matching und input erklärung
    * 
    * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
    *                        infinite loops
@@ -184,6 +184,17 @@ public abstract class UserInterface {
     return GetInput(loopNummer, inputEinleitung, exitPhrase, null, "");
   }
 
+  /**
+   * einfach nur input nehmen
+   * 
+   * @return
+   * @throws ExceptionInputFalsch
+   */
+  protected String GetInput() throws ExceptionInputFalsch {
+    return GetInput(1, null, null, null, "");
+  }
+
+  // premade pattern matching
   /**
    * erlaubt usernamen eingabe.
    * 1ne beliebig lange grupierungen an Buchstaben mit umlauten, zahlen, und Binde
