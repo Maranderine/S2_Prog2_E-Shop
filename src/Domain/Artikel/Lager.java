@@ -16,7 +16,7 @@ public class Lager {
   }
 
   public String toString() {
-    String str = "Artikelnr\tName\tBestand\tPreis\n";
+    String str = "Artikelnr | Name | Bestand | Preis";
     if (!artikelListe.isEmpty())
       for (Artikel artikel : artikelListe) {
         str += artikel.toStringDetailled() + "\n";

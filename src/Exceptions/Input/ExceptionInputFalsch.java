@@ -14,18 +14,19 @@ public class ExceptionInputFalsch extends Exception {
    *                   AUSGABE TEXT
    */
   public ExceptionInputFalsch(String message, String definition) {
-    super(message);
+    super(message + definition);
     this.definition = definition;
   }
 
   /**
    * vordefinierte message "Eingabe kann nicht angenommen werden.\n"
    * 
-   * @param definition ausgaben erklärung welche eingaben erlaubt sind. IST NUR
+   * @param definition ausgaben erklärung welche eingaben erlaubt sind oder null.
+   *                   IST NUR
    *                   AUSGABE TEXT
    */
   public ExceptionInputFalsch(String definition) {
-    super("Eingabe kann nicht angenommen werden.\n");
+    super("--Ungültige Eingabe." + (definition != null ? " Info:\n--" + definition : ""));
     this.definition = definition;
   }
 

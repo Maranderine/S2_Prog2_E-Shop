@@ -244,6 +244,11 @@ public class ArtikelVerwaltung extends Verwaltung {
   // #endregion
   // #region suchen
 
+  /**
+   * 
+   * @param suchBegriffe
+   * @return SuchOrdnung
+   */
   public SuchOrdnung suchArtikel(String suchBegriffe) {
     return SearchCompileOrdnung(this.lager.artikelListe, suchBegriffe);
   }

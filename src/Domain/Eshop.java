@@ -193,7 +193,9 @@ public class Eshop {
   }
 
   /**
-   * @author Maranderine
+   * 
+   * @param searchTerm
+   * @return SuchOrdnung
    */
   public SuchOrdnung AV_sucheArtikel(String searchTerm) {
     return ArtikelVw.suchArtikel(searchTerm);
