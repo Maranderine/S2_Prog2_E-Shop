@@ -71,7 +71,7 @@ public class Benutzerverwaltung extends Verwaltung {
    * suche nutzer bei namen
    * 
    * @param username
-   * @return
+   * @return Benutzer objekt
    */
   public Benutzer sucheBenutzer(String username) {
     for (Benutzer benutzer : benutzerRegister) {
