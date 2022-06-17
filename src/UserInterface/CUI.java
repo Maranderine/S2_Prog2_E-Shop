@@ -22,7 +22,7 @@ public class CUI extends UserInterface {
   @SuppressWarnings("unused")
   public boolean run() {
     // TODO TEST
-    regexChecker();
+    // regexChecker();
 
     int num;
     String string;
