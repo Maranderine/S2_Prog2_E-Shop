@@ -74,7 +74,7 @@ public class Artikel extends Searchable implements Serializable{
    * 
    * @return
    */
-  protected String toStringDetailledRaw() {
+  protected String toStringDetailedRaw() {
     return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
   }
 
@@ -86,10 +86,10 @@ public class Artikel extends Searchable implements Serializable{
     return toStringRaw().replace("##", "");
   }
 
-  public String toStringDetailled() {
+  public String toStringDetailed() {
     // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
     // this.preis;
-    return toStringDetailledRaw().replace("##", "");
+    return toStringDetailedRaw().replace("##", "");
   }
 
   /**

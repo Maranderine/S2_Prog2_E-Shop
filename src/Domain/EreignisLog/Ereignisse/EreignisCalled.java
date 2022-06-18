@@ -74,19 +74,19 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
 
   @Override
   public String toString() {
-    // return this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "\t##\t" +
+    // return this.ereignisNummer + " " + this.ereignisDesc + " " + " ## " +
     // this.ereignisDatum;
-    String str = this.callingBenutzerName + "\t##";
+    String str = this.callingBenutzerName + " ##";
     return super.toString().replace("##", str);
   }
 
   @Override
-  public String toStringDetailled() {
-    // this.ereignisNummer + "\t" + this.ereignisDesc + "\t##\t" +
+  public String toStringDetailed() {
+    // this.ereignisNummer + " " + this.ereignisDesc + " ## " +
     // this.ereignisDatum;
-    String str = this.callingBenutzerName + "\t" + this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t"
-        + "\t##";
-    return super.toStringDetailled().replace("##", str);
+    String str = this.callingBenutzerName + " " + this.callingBenutzerNummer + " " + this.callingBenutzerType + " "
+        + " ##";
+    return super.toStringDetailed().replace("##", str);
   }
 
 }

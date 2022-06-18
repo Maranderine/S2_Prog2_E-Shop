@@ -332,4 +332,16 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   // #endregion
+
+  @Override
+  public String toString() {
+    // TODO Auto-generated method stub
+    return toString(false);
+  }
+
+  public String toString(boolean detailed) {
+    // TODO Auto-generated method stub
+    return this.lager.toString(detailed);
+  }
+
 }

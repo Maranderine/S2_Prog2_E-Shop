@@ -26,7 +26,7 @@ public class ExceptionInputFalsch extends Exception {
    *                   AUSGABE TEXT
    */
   public ExceptionInputFalsch(String definition) {
-    super("--Ungültige Eingabe." + (definition != null ? " Info:\n--" + definition : ""));
+    super("\n--Ungültige Eingabe." + (definition != null ? " Info:\n--" + definition : "") + "\n");
     this.definition = definition;
   }
 

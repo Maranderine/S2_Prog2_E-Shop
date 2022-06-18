@@ -15,13 +15,26 @@ public class Lager {
     this.artikelListe = vec;
   }
 
+  @Override
   public String toString() {
-    String str = "Artikelnr | Name | Bestand | Preis";
-    if (!artikelListe.isEmpty())
-      for (Artikel artikel : artikelListe) {
-        str += artikel.toStringDetailled() + "\n";
+    return toString(false);
+  }
+
+  public String toString(boolean detailed) {
+    String str = "";
+    if (!artikelListe.isEmpty()) {
+      if (detailed) {
+        str += "Artikelnr | Name | Bestand | Preis\n";
+        for (Artikel artikel : artikelListe) {
+          str += artikel.toStringDetailed() + "\n";
+        }
+      } else {
+        str += "Artikelnr | Name | Preis\n";
+        for (Artikel artikel : artikelListe) {
+          str += artikel.toString() + "\n";
+        }
       }
-    else
+    } else
       str += "Keine Artikel";
 
     return str;

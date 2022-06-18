@@ -30,6 +30,16 @@ public abstract class UserInterface {
    */
   public abstract boolean run();
 
+  /**
+   * displays Exception message without stacktrace in
+   * redefined format
+   * 
+   * @param e
+   */
+  protected void runCatch(Exception e) {
+    System.out.print(e.getMessage() + "\n\n");
+  }
+
   // #region input
 
   /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
@@ -172,20 +182,23 @@ public abstract class UserInterface {
    *                        exitPhrase
    * @param pattern         regex pattern oder null
    * @param wrongInputText  text der erklärt welche inputs erlaubt sind
+   * @param linePre         before every printed line of text
    * @return String eingegebener input
    * @throws ExceptionInputFalsch
    * @throws ExceptionInputExit
    */
   protected String GetInput(int loopNummer, String inputEinleitung, String exitPhrase, Pattern pattern,
-      String wrongInputText) throws ExceptionInputFalsch, ExceptionInputExit {
+      String wrongInputText, String linePre) throws ExceptionInputFalsch, ExceptionInputExit {
     String input;
+    if (linePre == null)
+      linePre = "";
     if (exitPhrase != null)
-      System.out.println("Zurück input: " + exitPhrase);
+      System.out.println(linePre + "Zurück input: " + exitPhrase);
 
     do {
       // display intro
       if (inputEinleitung != null)
-        System.out.print(inputEinleitung);
+        System.out.print(linePre + inputEinleitung);
       // get input
       try {
         input = inputStream.readLine();
@@ -215,12 +228,31 @@ public abstract class UserInterface {
             return input;// no pattern return input
         }
       } catch (Exception e) {
-        System.out.println(e.getMessage());
+        System.out.println(linePre + e.getMessage());
       }
 
     } while (--loopNummer != 0);
 
     throw new ExceptionInputFalsch(wrongInputText);
+  }
+
+  /**
+   * einfach nur input nehmen, ohne pattern matching und input erklärung
+   * 
+   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
+   *                        infinite loops
+   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
+   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
+   *                        wird vorher einmal ausgegeben: "Zurück input: " +
+   *                        exitPhrase
+   * @return String eingegebener input
+   * @throws ExceptionInputFalsch
+   * @throws ExceptionInputExit
+   */
+  protected String GetInput(int loopNummer, String inputEinleitung, String exitPhrase, Pattern pattern,
+      String wrongInputText)
+      throws ExceptionInputFalsch, ExceptionInputExit {
+    return GetInput(loopNummer, inputEinleitung, exitPhrase, pattern, wrongInputText, "");
   }
 
   /**
@@ -268,7 +300,7 @@ public abstract class UserInterface {
    */
   protected String GetInputText(int loopNummer, String inputEinleitung, String exitPhrase)
       throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternEchtNamen,
+    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternText,
         "Keine zeichen ausser: -_");
   }
 
@@ -346,12 +378,15 @@ public abstract class UserInterface {
    *                        exitPhrase
    * @return String eingegebener input
    * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
    */
-  protected String GetInputNavigation(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternNum,
-        "Eine der in der Navigation angegebenen Nummern.");
+  protected String GetInputNavigation(String inputEinleitung)
+      throws ExceptionInputFalsch {
+    try {
+      return GetInput(0, inputEinleitung, null, PatternNum,
+          "Eine der in der Navigation angegebenen Nummern.");
+    } catch (ExceptionInputExit e) {
+      return "";
+    }
   }
 
   /**
@@ -429,15 +464,16 @@ public abstract class UserInterface {
    * @throws ExceptionInputFalsch
    * @throws ExceptionInputExit
    */
-  protected String GetInputAdresse(int loopNummer, String exitPhrase)
+  protected String GetInputAdresse(int loopNummer, String erstEinleitung, String exitPhrase, String linePre)
       throws ExceptionInputFalsch, ExceptionInputExit {
     String str = "";
-    str += GetInput(loopNummer, "Format: \"StraßenName 11\" | Straße: > ", exitPhrase, PatternAdresseStraße,
-        "Nur eingaben mit dem gewollten format werden erkannt.");
-    str += GetInput(loopNummer, "Format: \"99999 Ortsname\" | Ort: > ", exitPhrase, PatternAdresseOrt,
-        "Nur eingaben mit dem gewollten format werden erkannt.");
-    str += GetInput(loopNummer, "Format: \"Deutschland\" | Land: > ", exitPhrase, PatternAdresseLand,
-        "Nur eingaben mit dem gewollten format werden erkannt.");
+    System.out.println(erstEinleitung);
+    str += GetInput(loopNummer, "Straße - Format: \"StraßenName 11\"\n\t > ", exitPhrase,
+        PatternAdresseStraße, "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
+    str += GetInput(loopNummer, "Ort - Format: \"99999 Ortsname\"\n\t > ", exitPhrase, PatternAdresseOrt,
+        "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
+    str += GetInput(loopNummer, "Land - Format: \"Deutschland\"\"\n\t > ", exitPhrase, PatternAdresseLand,
+        "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
 
     return str;
   }

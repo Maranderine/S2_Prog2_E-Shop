@@ -25,7 +25,7 @@ public abstract class Searcher {
    * 
    * @param list        liste mir Objekten die durchsucht weren sollen
    * @param Suchbegriff singulärer suchbegriff
-   * @return
+   * @return SuchOrdnung
    */
   protected SuchOrdnung SearchCompileOrdnung(AbstractList<? extends Searchable> list, String suchString) {
     SuchOrdnung ordnung = new SuchOrdnung();
@@ -67,7 +67,7 @@ public abstract class Searcher {
   }
 
   /**
-   * Sortiert gegebene ordnung mit der standart ordnung nach relevanz-
+   * Sortiert gegebene ordnung
    * 
    * @param ordnung    SuchOrdnung objekt
    * @param comparator

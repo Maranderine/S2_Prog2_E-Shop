@@ -83,25 +83,25 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
 
   @Override
   public String toString() {
-    // return this.ereignisNummer + "\t" + this.ereignisDesc + "\t" +
+    // return this.ereignisNummer + " " + this.ereignisDesc + " " +
     // this.callingBenutzerName
-    // + "\t" + "##" + "\t" + this.ereignisDatum;
-    String str = this.artikelName + "\t##\t" + this.artikelBestand;
+    // + " " + "##" + " " + this.ereignisDatum;
+    String str = this.artikelName + " ## " + this.artikelBestand;
     return super.toString().replace("##", str);
   }
 
   @Override
-  public String toStringDetailled() {
-    // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" +
+  public String toStringDetailed() {
+    // this.ereignisNummer + " " + this.ereignisDesc + " " +
     // this.callingBenutzerName
     // +
-    // "\t"
-    // + this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t" + "##"
+    // " "
+    // + this.callingBenutzerNummer + " " + this.callingBenutzerType + " " + "##"
     // +
-    // "\t" +
+    // " " +
     // this.ereignisDatum;
 
-    String str = this.artikelName + "\t" + this.artikelNummer + this.artikelPreis + "\t##\t" + this.artikelBestand;
-    return super.toStringDetailled().replace("##", str);
+    String str = this.artikelName + " " + this.artikelNummer + this.artikelPreis + " ## " + this.artikelBestand;
+    return super.toStringDetailed().replace("##", str);
   }
 }

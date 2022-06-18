@@ -8,6 +8,7 @@ import Domain.Artikel.ArtikelVerwaltung;
 import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
+import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
@@ -17,6 +18,7 @@ import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
+import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
 
@@ -192,6 +194,10 @@ public class Eshop {
     return ArtikelVw.alleArtikel();
   }
 
+  public String AV_alleArtikelAusgeben(boolean detailed) {
+    return AV_alleArtikel().toString(detailed);
+  }
+
   /**
    * 
    * @param searchTerm
@@ -303,8 +309,7 @@ public class Eshop {
    * @param preis    artikel neuer preis
    * @throws ExceptionArtikelNichtGefunden
    */
-  public void AV_setArtikel(byte[] userHash, Artikel artikel, double preis)
-      throws ExceptionArtikelNichtGefunden {
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, double preis) {
 
     double preisAlt = ArtikelVw.getArtikelPreis(artikel);
     // set neuer preis
@@ -400,7 +405,15 @@ public class Eshop {
     return EreignisVw.displayLog(false);
   }
 
-  // neue ereignisse
+  public String EV_ereignisDisplay(boolean detailed, int ereignisNummer) throws ExceptionEreignisNichtGefunden {
+    return EreignisVw.displayEreignis(detailed, ereignisNummer);
+  }
+
+  public Ereignis EV_getEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
+    return EreignisVw.findEreignis(ereignisNummer);
+  }
+
+  // #region neue ereignisse /////////////////////////////////////////
 
   /**
    * loggt neues Artikel Ereignis welches von dem Erstellen eines Artikels
@@ -461,6 +474,7 @@ public class Eshop {
     return true;
   }
 
+  // #endregion ////////////////////////////////////////////////
   // #endregion ////////////////////////////////////////////////
 
   public void saveData() {

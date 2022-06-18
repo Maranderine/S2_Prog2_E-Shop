@@ -12,8 +12,8 @@ public class EreignisArtikelDelete extends EreignisArtikel {
   /**
    * Ereignis Klasse für Artikel wurde entfernt
    * 
-   * @param ereignisNummer    event identifikator
-   * @param ereignisDesc      event erklärungs text
+   * @param ereignisNummer event identifikator
+   * @param ereignisDesc   event erklärungs text
    * @param CUser          calling user object
    * @param CUserNumber    calling user nummer
    * @param CUserType      calling user typ
@@ -40,16 +40,16 @@ public class EreignisArtikelDelete extends EreignisArtikel {
     String str = "";
     return super.toString().replace("##", str);
   }
-  
+
   @Override
-  public String toStringDetailled() {
+  public String toStringDetailed() {
     /*
-     * "\t" + this.ereignisDesc + "\t" + this.callingBenutzerName + "\t" +
-     * this.callingBenutzerNummer + "\t" + this.callingBenutzerType + "\t" +
-     * this.artikelName + "\t" + this.artikelNummer + "\t##\t" + this.artikelBestand
-     * + "\t" + this.ereignisDatum;
+     * " " + this.ereignisDesc + " " + this.callingBenutzerName + " " +
+     * this.callingBenutzerNummer + " " + this.callingBenutzerType + " " +
+     * this.artikelName + " " + this.artikelNummer + " ## " + this.artikelBestand
+     * + " " + this.ereignisDatum;
      */
     String str = "";
-    return super.toStringDetailled().replace("##", str);
+    return super.toStringDetailed().replace("##", str);
   }
 }
