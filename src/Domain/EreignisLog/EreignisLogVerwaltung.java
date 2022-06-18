@@ -16,6 +16,7 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemNotice;
+import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
@@ -237,23 +238,31 @@ public class EreignisLogVerwaltung extends Verwaltung {
     log.add(ereignis);
   }
 
+  public Ereignis findEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
+    for (Ereignis ereignis : this.log)
+      if (ereignis.getEreignisNummer() == ereignisNummer)
+        return ereignis;
+    throw new ExceptionEreignisNichtGefunden();
+  }
+
+  // #region display
   /**
    * displayd den gesamten Ereignis Log
    * 
-   * @param detailled booleaan ob die daten in detaillierter form dargestellt
-   *                  werden sollen
+   * @param detailed booleaan ob die daten in detaillierter form dargestellt
+   *                 werden sollen
    * @return ereignis log string
    */
-  public String displayLog(boolean detailled) {
+  public String displayLog(boolean detailed) {
     String str = "EREIGNIS LOG:\n";
     if (this.log.isEmpty()) {
       // log empty
       str += "\tKeine Ereignisse\n";
     } else {
       // log not empty
-      if (detailled) {
+      if (detailed) {
         for (Ereignis ereignis : this.log) {
-          str += ereignis.toStringDetailled() + "\n";
+          str += ereignis.toStringDetailed() + "\n";
         }
       } else {
         for (Ereignis ereignis : this.log) {
@@ -263,6 +272,25 @@ public class EreignisLogVerwaltung extends Verwaltung {
     }
     return str;
   }
+
+  /**
+   * display ein ereignis
+   * 
+   * @param detailed       booleaan ob die daten in detaillierter form dargestellt
+   *                       werden sollen
+   * @param ereignisNummer numer des ereignissses
+   * @return
+   * @throws ExceptionEreignisNichtGefunden
+   */
+  public String displayEreignis(boolean detailed, int ereignisNummer) throws ExceptionEreignisNichtGefunden {
+    Ereignis ereignis = findEreignis(ereignisNummer);
+    if (detailed)
+      return ereignis.toStringDetailed();
+    else
+      return ereignis.toString();
+  }
+
+  // #endregion
 
   /**
    * return and increment Ereigniszaehler

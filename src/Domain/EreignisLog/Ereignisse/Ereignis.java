@@ -55,11 +55,11 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
 
   @Override
   public String toString() {
-    return this.ereignisNummer + "\t" + this.ereignisDesc + "\t##\t" + this.ereignisDatum;
+    return this.ereignisNummer + " " + this.ereignisDesc + " ## " + this.ereignisDatum;
   }
 
   @Override
-  public String toStringDetailled() {
+  public String toStringDetailed() {
     return toString();
   }
 }

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 /**
- * Maanagement Klasse für eine geordnete liste mit Searchaable objekten
+ * Management Klasse für eine geordnete liste mit Searchaable objekten
  */
 public class SuchOrdnung {
 
@@ -119,23 +119,23 @@ public class SuchOrdnung {
   // #endregion
 
   /**
-   * stellt die Objecte mit ihrer toString oder toStringDetailled methoden da
+   * stellt die Objecte mit ihrer toString oder toStringDetailed methoden da
    * 
-   * @param detailled     boolean ob die einträge in detaaillierter form
+   * @param detailed     boolean ob die einträge in detaaillierter form
    *                      dargestellte werden soll
    * @param leereNachicht nachicht die angezeigt wird wenn die liste leer ist
    * @return
    */
-  public String display(boolean detailled, String leereNachicht) {
+  public String display(boolean detailed, String leereNachicht) {
     String str = "";
 
     if (this.grid.isEmpty()) {
       // empty
       str += "\t" + leereNachicht + "\n";
     } else {
-      if (detailled) {
+      if (detailed) {
         for (HashMap<OrdnungIndex, Object> hashMap : grid) {
-          str += getEntry_searchable(hashMap).toStringDetailled();
+          str += getEntry_searchable(hashMap).toStringDetailed();
         }
       } else {
         for (HashMap<OrdnungIndex, Object> hashMap : grid) {

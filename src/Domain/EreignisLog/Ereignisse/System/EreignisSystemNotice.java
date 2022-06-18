@@ -27,15 +27,15 @@ public class EreignisSystemNotice extends EreignisSystem {
 
   @Override
   public String toString() {
-    // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
+    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
     // this.ereignisDatum;
     return super.toString().replace("##", "");
   }
 
   @Override
-  public String toStringDetailled() {
-    // this.ereignisNummer + "\t" + this.ereignisDesc + "\t" + "##" + "\t" +
+  public String toStringDetailed() {
+    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
     // this.ereignisDatum;
-    return super.toStringDetailled().replace("##", "");
+    return super.toStringDetailed().replace("##", "");
   }
 }

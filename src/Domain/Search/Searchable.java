@@ -71,7 +71,7 @@ public abstract class Searchable {
     int val = 0;
     termstring = termstring.toLowerCase();
     for (String string : this.searchTerms) {
-      if (termstring.contains(string))
+      if (termstring.contains(string) || string.contains(termstring))
         val++;
     }
     return val;
@@ -137,9 +137,9 @@ public abstract class Searchable {
   public abstract String toString();
 
   /**
-   * detailled toString, giving all data, except objects
+   * detailed toString, giving all data, except objects
    * 
    * @return
    */
-  public abstract String toStringDetailled();
+  public abstract String toStringDetailed();
 }

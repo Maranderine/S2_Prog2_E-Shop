@@ -10,7 +10,7 @@ public class Massengutartikel extends Artikel {
     this.minAnzahl = minAnzahl;
 
     // adding search terms
-    String[] searchTerms = { "mass", "massen"};
+    String[] searchTerms = { "mass", "massen" };
     SearchTermAdd(searchTerms);
   }
 
@@ -31,8 +31,8 @@ public class Massengutartikel extends Artikel {
   }
 
   @Override
-  public String toStringDetailled() {
-    return super.toStringDetailledRaw().replace("##", Integer.toString(this.minAnzahl));
+  public String toStringDetailed() {
+    return super.toStringDetailedRaw().replace("##", Integer.toString(this.minAnzahl));
   }
 
   @Override
