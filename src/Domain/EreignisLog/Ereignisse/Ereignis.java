@@ -30,7 +30,7 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
     this.ereignisDatum = new Date();
 
     // search terms
-    String[] searchTerms = { "Event", Integer.toString(this.ereignisNummer), this.ereignisDesc,
+    String[] searchTerms = { "event", Integer.toString(this.ereignisNummer), this.ereignisDesc,
         this.ereignisDatum.toString() };
     SearchTermAdd(searchTerms);
   }
@@ -55,11 +55,14 @@ public abstract class Ereignis extends Searchable implements EreignisInterface_E
 
   @Override
   public String toString() {
-    return this.ereignisNummer + " " + this.ereignisDesc + " ## " + this.ereignisDatum;
+    return this.ereignisDatum + "|" + this.ereignisNummer + "| '" + this.ereignisDesc + "'##";
   }
 
   @Override
   public String toStringDetailed() {
-    return toString();
+    return "Event--" +
+        "\nNr: " + this.ereignisNummer +
+        "\nDate: " + this.ereignisDatum +
+        "\nDesc: '" + this.ereignisDesc + "'##";
   }
 }

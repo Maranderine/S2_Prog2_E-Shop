@@ -27,6 +27,7 @@ public class WarenkorbVerwaltung extends Verwaltung {
     artikelVW = ArtikelVW;
     warenkorb = new Warenkorb();
     this.eshop = eshop;
+    // TODO load rechnungs zähler
     RechnungZaehler = 1;
   }
 
@@ -56,7 +57,7 @@ public class WarenkorbVerwaltung extends Verwaltung {
   /**
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    */
-  public void setArtikel(Artikel artikel, Integer integer)  {
+  public void setArtikel(Artikel artikel, Integer integer) {
     this.warenkorb.inhalt.put(artikel, integer);
   }
 

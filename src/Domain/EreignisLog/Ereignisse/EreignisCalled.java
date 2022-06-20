@@ -43,7 +43,7 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
     this.callingBenutzerName = CUserName;
 
     // search terms
-    String[] searchTerms = { "Called", Integer.toString(this.callingBenutzerNummer),
+    String[] searchTerms = { "called", "user", "benutzer", Integer.toString(this.callingBenutzerNummer),
         this.callingBenutzerType.toString(),
         this.callingBenutzerName };
     SearchTermAdd(searchTerms);
@@ -74,18 +74,22 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
 
   @Override
   public String toString() {
-    // return this.ereignisNummer + " " + this.ereignisDesc + " " + " ## " +
+    // return this.ereignisNummer + " " + this.ereignisDesc + "##" +
     // this.ereignisDatum;
-    String str = this.callingBenutzerName + " ##";
+    String str = " " + this.callingBenutzerName + "##";
     return super.toString().replace("##", str);
   }
 
   @Override
   public String toStringDetailed() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " ## " +
-    // this.ereignisDatum;
-    String str = this.callingBenutzerName + " " + this.callingBenutzerNummer + " " + this.callingBenutzerType + " "
-        + " ##";
+    // "Event--" +
+    // "\nNr: " + this.ereignisNummer +
+    // "\nDate: " + this.ereignisDatum +
+    // "\nDesc: '" + this.ereignisDesc + "'##";
+    String str = "\n\nCalling User--" +
+        "\nUser: " + this.callingBenutzerName +
+        "\nNummer: " + this.callingBenutzerNummer +
+        "\nType: " + this.callingBenutzerType + "##";
     return super.toStringDetailed().replace("##", str);
   }
 

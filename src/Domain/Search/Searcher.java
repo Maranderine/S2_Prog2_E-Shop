@@ -18,6 +18,32 @@ public abstract class Searcher {
   }
 
   /**
+   * string formatting to be done before using the string
+   * searchable equivalent to searchableStringFormat
+   * 
+   * @param string
+   * @return String formaatted
+   */
+  private String searcherStringFormat(String string) {
+    return string.toLowerCase();
+  }
+
+  /**
+   * 
+   * @param searchable obj
+   * @param termArr    string array
+   * @return relevanz Hohe relevanz hoch (niedriger index) in der liste.
+   */
+  private int evalRelevanz(Searchable searchable, String[] termArr) {
+    int relevanz = 0;
+    for (String string : termArr) {
+      relevanz += searchable.SearchTermContains(string);
+    }
+
+    return relevanz;
+  }
+
+  /**
    * Erstellt eine neue ordnung die alle Objecte enthält,
    * die eine oder mehrere übeinstimmungen mit dem such string haben
    * Einträge in der ordnung sind markiert mit ihrer relevanz zum such String
@@ -28,13 +54,17 @@ public abstract class Searcher {
    * @return SuchOrdnung
    */
   protected SuchOrdnung SearchCompileOrdnung(AbstractList<? extends Searchable> list, String suchString) {
+
     SuchOrdnung ordnung = new SuchOrdnung();
+    String[] suchStringList = searcherStringFormat(suchString.trim()).split(" ");
     int relevanz;
-    // geht gegeben liste durch
+    // geht liste mit Objekten durch
     for (Searchable searchable : list) {
-      // wenn suchbegriff gefunden wurdde
-      relevanz = searchable.SearchTermContains(suchString);
-      if (relevanz != 0) {
+
+      // geht liste an such strings durch
+      relevanz = evalRelevanz(searchable, suchStringList);
+      // Hohe relevanz hoch (niedriger index) in der liste.
+      if (relevanz > 0) {
         ordnung.add(searchable, relevanz);
       }
     }

@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import Domain.Verwaltung;
+import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
+import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
+import Exceptions.Benutzer.ExceptionKundeNichtGefunden;
+import Exceptions.Benutzer.ExceptionMitarbeiterNichtGefunden;
 import UserInterface.UserInterface;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
@@ -21,7 +25,12 @@ public class Benutzerverwaltung extends Verwaltung {
   public enum BeutzerType {
     MITARBEITER,
     KUNDE,
-    NONE
+    NONE;
+
+    @Override
+    public String toString() {
+      return name();
+    }
   }
 
   private Vector<Benutzer> benutzerRegister;
@@ -45,15 +54,17 @@ public class Benutzerverwaltung extends Verwaltung {
     }
   }
 
-  public void registrieren(String name, String username, String password, String email, String adress) {
+  public void registrieren(String name, String username, String password, String email, String adress)
+      throws ExceptionBenutzerNameUngültig {
+    checkName(username);
     Benutzer einNutzer = new Kunde(useKundenNrZähler(), name, username, encryptString(password), email, adress);
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
     // übernimmt Vector:
     this.benutzerRegister.add(einNutzer);
-    System.out.println("" + kundenNrZähler);
   }
 
-  public void registrieren(String name, String username, String password) {
+  public void registrieren(String name, String username, String password) throws ExceptionBenutzerNameUngültig {
+    checkName(username);
     Benutzer einNutzer = new Mitarbeiter(useMitarbeiterNrzähler(), name, username, encryptString(password));
 
     // throw new NutzerExistiertBereitsException(einNutzer, " - in 'einfuegen()'");
@@ -61,7 +72,7 @@ public class Benutzerverwaltung extends Verwaltung {
     this.benutzerRegister.add(einNutzer);
   }
 
-  void loeschen(String username) {
+  void loeschen(String username) throws ExceptionBenutzerNichtGefunden {
     Benutzer benutzer = this.sucheBenutzer(username);
     // übernimmt Vector:
     benutzerRegister.remove(benutzer);
@@ -72,17 +83,25 @@ public class Benutzerverwaltung extends Verwaltung {
    * 
    * @param username
    * @return Benutzer objekt
+   * @throws ExceptionBenutzerNichtGefunden
    */
-  public Benutzer sucheBenutzer(String username) {
+  public Benutzer sucheBenutzer(String username) throws ExceptionBenutzerNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getUsername().equals(username)) {
         return benutzer;
       }
     }
-    return null;
+    throw new ExceptionBenutzerNichtGefunden();
   }
 
-  public Benutzer sucheKunde(int userNumber) {
+  /**
+   * find by name
+   * 
+   * @param userNumber
+   * @return
+   * @throws ExceptionKundeNichtGefunden
+   */
+  public Benutzer sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
@@ -91,10 +110,18 @@ public class Benutzerverwaltung extends Verwaltung {
       }
 
     }
-    return null;
+    throw new ExceptionKundeNichtGefunden();
   }
 
-  public Benutzer sucheMitarbeiter(int userNumber) {
+  /**
+   * 
+   * ind by name
+   * 
+   * @param userNumber
+   * @return
+   * @throws ExceptionMitarbeiterNichtGefunden
+   */
+  public Benutzer sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
@@ -102,7 +129,27 @@ public class Benutzerverwaltung extends Verwaltung {
         }
       }
     }
-    return null;
+    throw new ExceptionMitarbeiterNichtGefunden();
+  }
+
+  /**
+   * chgeckt ob name gültig ist
+   * 
+   * @return true wenn alles okay
+   */
+  public boolean checkName(String string) throws ExceptionBenutzerNameUngültig {
+    // TODO do regex pattern checking
+    // pattern.matcher(input).matches()
+    if (string.equals(null))
+      throw new ExceptionBenutzerNameUngültig();
+
+    try {
+      sucheBenutzer(string);
+      throw new ExceptionBenutzerNameUngültig();
+    } catch (ExceptionBenutzerNichtGefunden e) {
+      return true;
+    }
+
   }
 
   // #region get user data
@@ -245,31 +292,35 @@ public class Benutzerverwaltung extends Verwaltung {
    * @param username
    * @param passw
    * @return
+   * @throws ExceptionBenutzerNichtGefunden
    */
   public BeutzerType login(UserInterface callingUI, String username, String passw) {
-    Benutzer benutzer = this.sucheBenutzer(username);
-    // no user found or not matching password
-    if (benutzer == null || !(Arrays.equals(benutzer.getPassword(), encryptString(passw)))) {
-      return BeutzerType.NONE;
-    } else {
-      //////////// if user is found ///////////
+    Benutzer benutzer;
+    try {
+      benutzer = this.sucheBenutzer(username);
+      if (benutzer != null && (Arrays.equals(benutzer.getPassword(), encryptString(passw)))) {
+        //////////// if user is found ///////////
 
-      // generate user identifier
-      byte[] userHash = generateUserHash(benutzer);
-      // give it to the UserInterface used
-      setUserHash(callingUI, userHash);
-      // add user to list of active users
-      addAtiverBenutzer(userHash, benutzer);
+        // generate user identifier
+        byte[] userHash = generateUserHash(benutzer);
+        // give it to the UserInterface used
+        setUserHash(callingUI, userHash);
+        // add user to list of active users
+        addAtiverBenutzer(userHash, benutzer);
 
-      // return type of user
-      if (benutzer instanceof Mitarbeiter) {
-        return BeutzerType.MITARBEITER;
+        // return type of user
+        if (benutzer instanceof Mitarbeiter) {
+          return BeutzerType.MITARBEITER;
+        }
+        if (benutzer instanceof Kunde) {
+          return BeutzerType.KUNDE;
+        }
       }
-      if (benutzer instanceof Kunde) {
-        return BeutzerType.KUNDE;
-      }
+
+    } catch (ExceptionBenutzerNichtGefunden e) {
+
     }
-    return null;
+    return BeutzerType.NONE;
   }
 
   /**

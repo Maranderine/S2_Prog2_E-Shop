@@ -1,93 +1,99 @@
 package Domain.Search;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
- * abstract class for searchable objects
+ * abstract class for searchable objects.
+ * Alle search terms müssen lowecase sein!!!
  */
 public abstract class Searchable {
 
-  protected HashSet<String> searchTerms;
+  /**
+   * such begriffe.
+   * Alle search terms müssen lowecase sein!!!
+   */
+  protected Vector<String> searchTerms;
 
+  /**
+   * Searchable.
+   * Alle search terms müssen lowecase sein!!!
+   */
   public Searchable() {
-    this.searchTerms = new HashSet<>();
+    this.searchTerms = new Vector<String>();
   }
 
-  public Searchable(HashSet<String> searchTerms) {
-    this.searchTerms = searchTerms;
+  /**
+   * Searchable.
+   * Alle search terms müssen lowecase sein!!!
+   * 
+   * @param searchTerms
+   */
+  public Searchable(List<String> searchTerms) {
+    this.searchTerms = (Vector<String>) searchTerms;
 
     // look through the given set and replace all non lower case entries with
     // lowercase
-    String entrie;
-    String lower;
-    Iterator<String> iter = this.searchTerms.iterator();
+    String formatted;
 
-    while (iter.hasNext()) {
-      entrie = iter.next();
-      lower = entrie.toLowerCase();
-      if (!entrie.equals(lower)) {
-        SearchTermReplace(entrie, lower);
+    for (String string : searchTerms) {
+
+      formatted = searchableStringFormat(string);
+      if (!string.equals(formatted)) {
+        SearchTermReplace(string, formatted);
       }
     }
   }
 
+  /**
+   * Searchable.
+   * Alle search terms müssen lowecase sein!!!
+   * 
+   * @param stringArr
+   */
   public Searchable(String[] stringArr) {
     SearchTermAdd(stringArr);
   }
 
+  /**
+   * Searchable.
+   * Alle search terms müssen lowecase sein!!!
+   * 
+   * @param string
+   */
   public Searchable(String string) {
     SearchTermAdd(string);
   }
 
   /**
-   * Looks if Event contains the term.
-   * term must be exact.
-   * faster
-   * Ignores character case
+   * string formatting to be done before using the string
+   * searchable equivalent to searchableStringFormat
    * 
-   * @param term to look for
-   * @return
+   * @return String formaatted
    */
-  protected boolean SearchTermCheck(String term) {
-    term = term.toLowerCase();
-    for (String string : this.searchTerms) {
-      if (string.contains(term))
-        return true;
-    }
-    return false;
+  private String searchableStringFormat(String string) {
+    return string.toLowerCase();
   }
 
   /**
-   * look how many search terms of the obj are contained in the termstring.
-   * Ignores character case.
-   * For one term only use SearchTermCheck
-   * 
-   * @param termstring to check for occurences
-   * @return int value of how many terms were found, or 0
-   */
-  protected int SearchTermContains(String termstring) {
-    int val = 0;
-    termstring = termstring.toLowerCase();
-    for (String string : this.searchTerms) {
-      if (termstring.contains(string) || string.contains(termstring))
-        val++;
-    }
-    return val;
-  }
-
-  /**
-   * adds string to search term set
+   * adds string to search term set.
+   * Alle search terms müssen lowecase sein!!!
    * 
    * @param string
    */
   protected void SearchTermAdd(String string) {
-    this.searchTerms.add(string.toLowerCase());
+    this.searchTerms.add(searchableStringFormat(string));
   }
 
+  /**
+   * add all search terms.
+   * Alle search terms müssen lowecase sein!!!
+   * 
+   * @param stringArr
+   */
   protected void SearchTermAdd(String[] stringArr) {
-    this.searchTerms = new HashSet<String>();
+    this.searchTerms = new Vector<String>();
     for (String string : stringArr) {
       SearchTermAdd(string);
     }
@@ -123,7 +129,8 @@ public abstract class Searchable {
   }
 
   /**
-   * replaces the old term with the new one
+   * replaces the old term with the new one.
+   * Alle search terms müssen lowecase sein!!!
    * 
    * @param oldTerm to be replaced
    * @param newTerm to to replace the old one
@@ -132,6 +139,27 @@ public abstract class Searchable {
     SearchTermRemove(oldTerm);
     SearchTermAdd(newTerm);
   }
+
+  // #region searching
+  /**
+   * look how many search terms of the obj are contained in the termstring.
+   * Ignores character case.
+   * For one term only use SearchTermCheck
+   * 
+   * @param termstring to check for occurences
+   * @return int value of how many terms were found, or 0
+   */
+  protected int SearchTermContains(String termstring) {
+    termstring = searchableStringFormat(termstring);
+    int val = 0;
+    for (String string : this.searchTerms) {
+      if (string.contains(termstring))
+        val++;
+    }
+    return val;
+  }
+
+  // #endregion
 
   @Override
   public abstract String toString();

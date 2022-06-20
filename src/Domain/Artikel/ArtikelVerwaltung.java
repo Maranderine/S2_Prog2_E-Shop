@@ -2,12 +2,14 @@ package Domain.Artikel;
 
 import java.io.IOException;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import Domain.Eshop;
 import Domain.Verwaltung;
 import Domain.Search.SuchOrdnung;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import persistence.FilePersistenceManager;
@@ -39,16 +41,40 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   /**
-   * Add Artikel to artikelListe
+   * erstellt nur den Artikel
    * 
+   * @param artikelNummer
    * @param name
    * @param bestand
    * @param einzelpreis
+   * @param packungsInhalt
+   * @return
+   */
+  private Artikel createArtikel(int artikelNummer, String name, int bestand, double einzelpreis, int packungsInhalt) {
+    Artikel artikel;
+    if (packungsInhalt > 1)
+      artikel = new Massengutartikel(artikelNummer, name, bestand, einzelpreis, packungsInhalt);
+    else
+      artikel = new Artikel(artikelNummer, name, bestand, einzelpreis);
+    return artikel;
+  }
+
+  /**
+   * Erstelle artikel mit nummer und füge es dem lager hinzu
+   * 
+   * @param lager
+   * @param artikelNummer
+   * @param name
+   * @param bestand
+   * @param einzelpreis
+   * @param packungsInhalt
    * @return
    * @throws ExceptionArtikelExistiertBereits
    */
-  public Artikel addArtikel(String name, int bestand, double einzelpreis) throws ExceptionArtikelExistiertBereits {
-
+  private Artikel addArtikel(Lager lager, int artikelNummer, String name, int bestand, double einzelpreis,
+      int packungsInhalt)
+      throws ExceptionArtikelExistiertBereits {
+    Lager lagerToUse = this.lager;
     Artikel artikel;
 
     try {
@@ -58,16 +84,29 @@ public class ArtikelVerwaltung extends Verwaltung {
       throw new ExceptionArtikelExistiertBereits(artikel);
     } catch (ExceptionArtikelNichtGefunden e) {
       // Artikel existiert nicht also machen wir einene neuen
-      artikel = new Artikel(Lager.artikelNrCount, name, bestand, einzelpreis);
-      lager.artikelListe.add(artikel);
-      Lager.artikelNrCount++;
+      artikel = createArtikel(artikelNummer, name, bestand, einzelpreis, packungsInhalt);
+      addArtikelToLager(artikel, lagerToUse);
       return artikel;
     }
   }
 
-  public void addArtikel(Artikel artikel) {
-    lager.artikelListe.add(artikel);
-    Lager.artikelNrCount++;
+  /**
+   * Add Artikel to system
+   * 
+   * @param name
+   * @param bestand
+   * @param einzelpreis
+   * @param packungsInhalt stück zahl per packung, wenn grösser 1 wird der Artikel
+   *                       ein massengut
+   * @return
+   * @throws ExceptionArtikelExistiertBereits
+   */
+  public Artikel addArtikel(String name, int bestand, double einzelpreis, int packungsInhalt)
+      throws ExceptionArtikelExistiertBereits {
+    // get lager was artikel aufnehmen soll
+    Lager lager = getLagerToAdd();
+    // add artikel
+    return addArtikel(lager, lager.useZaehler(), name, bestand, einzelpreis, packungsInhalt);
   }
 
   /**
@@ -115,10 +154,9 @@ public class ArtikelVerwaltung extends Verwaltung {
    * checkt ob der artikel existiert
    * 
    * @param name of artikel
-   * @return bool ob er existiert
-   * @throws ExceptionArtikelNichtGefunden
+   * @return bool true wenn er existiert
    */
-  public boolean ArtikelExists(String name) {
+  public boolean artikelExists(String name) {
     // iterates through artikelListe
     for (Artikel artikel : this.lager.artikelListe) {
       if (artikel.getName().equals(name))
@@ -141,6 +179,48 @@ public class ArtikelVerwaltung extends Verwaltung {
     throw new ExceptionArtikelNichtGefunden();
   }
 
+  /**
+   * chgeckt ob name gültig ist
+   * 
+   * @return true wenn alles okay
+   */
+  public boolean checkName(String string) throws ExceptionArtikelNameUngültig, ExceptionArtikelNameExistiertBereits {
+    // TODO do regex pattern checking
+    // pattern.matcher(input).matches()
+    if (string.equals(null))
+      throw new ExceptionArtikelNameUngültig();
+
+    try {
+      Artikel art = findArtikelByName(string);
+      throw new ExceptionArtikelNameExistiertBereits(art);
+    } catch (ExceptionArtikelNichtGefunden e) {
+      return true;
+    }
+
+  }
+
+  // #region Lager
+  /**
+   * gibt lager welches den artikel gegeben bekommen soll
+   * 
+   * @return Lager
+   */
+  private Lager getLagerToAdd() {
+    // temp auswahl verfahren bei mehereren lagern nach kriterien die sinn machen
+    return this.lager;
+  }
+
+  /**
+   * add artikel to lager
+   * 
+   * @param artikel
+   * @param lager
+   */
+  private void addArtikelToLager(Artikel artikel, Lager lager) {
+    lager.artikelListe.add(artikel);
+  }
+
+  // #endregion
   // #region getter
 
   public int getArtikelNr(Artikel artikel) {
@@ -167,14 +247,15 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param artikel object
    * @param name    of article
    * @throws ExceptionArtikelNameExistiertBereits
+   * @throws ExceptionArtikelNameUngültig
    */
-  public void setArtikelName(Artikel artikel, String newName) throws ExceptionArtikelNameExistiertBereits {
-    try {
-      checkForName(newName);
+  public void setArtikelName(Artikel artikel, String newName)
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
+
+    if (checkName(newName))
+      // wenn kein artikel gefunden wird
       artikel.setName(newName);
-    } catch (ExceptionArtikelNameExistiertBereits e) {
-      throw e;
-    }
+
   }
 
   /**
@@ -182,11 +263,12 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param name    name
    * @param newName neuer name
+   * @throws ExceptionArtikelNameUngültig
    * @throws ExceptionArtikelNichtGefunden
    * @throws ExceptionArtikelNameExistiertBereits
    */
   public void setArtikelName(String name, String newName)
-      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNichtGefunden {
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig, ExceptionArtikelNichtGefunden {
     setArtikelName(findArtikelByName(name), newName);// checks fo null
   }
 
@@ -245,12 +327,13 @@ public class ArtikelVerwaltung extends Verwaltung {
   // #region suchen
 
   /**
+   * suce meherere Artikel in der Artikel liste
    * 
    * @param suchBegriffe
    * @return SuchOrdnung
    */
   public SuchOrdnung suchArtikel(String suchBegriffe) {
-    return SearchCompileOrdnung(this.lager.artikelListe, suchBegriffe);
+    return SearchCompileOrdnungSorted(this.lager.artikelListe, suchBegriffe);
   }
 
   // #endregion
@@ -263,9 +346,25 @@ public class ArtikelVerwaltung extends Verwaltung {
    */
   private Vector<Artikel> load(String datei) throws IOException {
     // @SuppressWarnings("unchecked")
-    Vector<Artikel> vec = (Vector<Artikel>) persistenceManager.loadArticle(datei);
+    Vector<String[]> vec = persistenceManager.loadData(datei);
 
-    return vec;
+    Vector<Artikel> artikelListe = new Vector<Artikel>();
+
+    // erstelle für jeden eintrag in der liste einen Artikel
+    // und füge ihn einem Vector hinzu
+    for (String[] strings : vec) {
+      // artikelnr;name;bestand;preis;stückzahl
+      artikelListe.add(
+          createArtikel(
+              Integer.parseInt(strings[0]), // artikelnr
+              strings[1], // name
+              Integer.parseInt(strings[2]), // bestand
+              Double.parseDouble(strings[3]), // preis
+              (strings.length == 5 ? Integer.parseInt(strings[4]) : 1))// stückzahl
+      );
+    }
+
+    return artikelListe;
   }
 
   /**
@@ -275,7 +374,7 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws IOException
    */
   private boolean save(String datei) throws IOException {
-    return persistenceManager.saveArticle(datei, lager.artikelListe);
+    return persistenceManager.saveData(datei, lager.artikelListe);
   }
 
   /**
@@ -320,27 +419,16 @@ public class ArtikelVerwaltung extends Verwaltung {
     }
   }
 
-  private void checkForName(String name) throws ExceptionArtikelNameExistiertBereits {
-    Artikel artikel;
-    try {
-      artikel = findArtikelByName(name);
-    } catch (ExceptionArtikelNichtGefunden e) {
-      // dont print stack
-      return;
-    }
-    throw new ExceptionArtikelNameExistiertBereits(artikel);
-  }
-
   // #endregion
 
   @Override
   public String toString() {
-    // TODO Auto-generated method stub
+
     return toString(false);
   }
 
   public String toString(boolean detailed) {
-    // TODO Auto-generated method stub
+
     return this.lager.toString(detailed);
   }
 

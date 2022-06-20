@@ -31,8 +31,7 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
    * @param artikelPreis   Artikel Preis nummer
    */
   public EreignisSystemArtikel(Verwaltung verwaltung, int ereignisNummer, String ereignisDesc, Artikel artikel,
-      int artikelNummer,
-      String artikelName, int artikelBestand, double artikelPreis) {
+      int artikelNummer, String artikelName, int artikelBestand, double artikelPreis) {
     super(verwaltung, ereignisNummer, ereignisDesc);
     this.artikel = artikel;
     this.artikelNummer = artikelNummer;
@@ -41,7 +40,7 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
     this.artikelPreis = artikelPreis;
 
     // search terms
-    String[] searchTerms = { "artikel", "ware", "preis", this.artikelName };
+    String[] searchTerms = { "artikel", "ware", "preis", this.artikelName, Integer.toString(this.artikelNummer) };
     SearchTermAdd(searchTerms);
   }
 
@@ -74,19 +73,24 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
 
   @Override
   public String toString() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
+    // this.ereignisNummer + " " + this.ereignisDesc + "## " + this.ereignisDatum;
 
-    String str = this.artikelName + this.artikelBestand;
+    String str = " " + this.artikelName + this.artikelBestand;
     return super.toString().replace("##", str);
   }
 
   @Override
   public String toStringDetailed() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
+    // "Nr: " + this.ereignisNummer +
+    // "\nDate: " + this.ereignisDatum +
+    // "\nDesc: '" + this.ereignisDesc +
+    // "\nSystem: " + simpleName + "##";
 
-    String str = this.artikelName + " " + this.artikelNummer + this.artikelPreis + this.artikelBestand;
+    String str = "\n\nArtikel: '" +
+        "\nName: '" + this.artikelName + "'" +
+        "\nNummer: " + this.artikelNummer +
+        "\nPreis: " + this.artikelPreis +
+        "\nBestand: " + this.artikelBestand;
     return super.toStringDetailed().replace("##", str);
   }
 }

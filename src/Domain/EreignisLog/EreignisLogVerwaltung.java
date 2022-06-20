@@ -16,6 +16,7 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemNotice;
+import Domain.Search.SuchOrdnung;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
@@ -238,13 +239,32 @@ public class EreignisLogVerwaltung extends Verwaltung {
     log.add(ereignis);
   }
 
-  public Ereignis findEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
+  //// #region suchen und finden
+  /**
+   * findet ein ereignis mit der ereignis nummer
+   * 
+   * @param ereignisNummer
+   * @return
+   * @throws ExceptionEreignisNichtGefunden
+   */
+  public Ereignis findeEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
     for (Ereignis ereignis : this.log)
       if (ereignis.getEreignisNummer() == ereignisNummer)
         return ereignis;
     throw new ExceptionEreignisNichtGefunden();
   }
 
+  /**
+   * suche mehrere Events in dem Event Log
+   * 
+   * @param suchBegriffe
+   * @return SuchOrdnung
+   */
+  public SuchOrdnung suchEvent(String suchBegriffe) {
+    return SearchCompileOrdnungSorted(log, suchBegriffe);
+  }
+
+  // #endregion
   // #region display
   /**
    * displayd den gesamten Ereignis Log
@@ -254,7 +274,7 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * @return ereignis log string
    */
   public String displayLog(boolean detailed) {
-    String str = "EREIGNIS LOG:\n";
+    String str = "";
     if (this.log.isEmpty()) {
       // log empty
       str += "\tKeine Ereignisse\n";
@@ -283,7 +303,7 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * @throws ExceptionEreignisNichtGefunden
    */
   public String displayEreignis(boolean detailed, int ereignisNummer) throws ExceptionEreignisNichtGefunden {
-    Ereignis ereignis = findEreignis(ereignisNummer);
+    Ereignis ereignis = findeEreignis(ereignisNummer);
     if (detailed)
       return ereignis.toStringDetailed();
     else

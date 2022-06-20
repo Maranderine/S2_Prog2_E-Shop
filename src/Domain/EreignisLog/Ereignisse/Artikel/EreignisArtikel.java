@@ -84,24 +84,27 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
   @Override
   public String toString() {
     // return this.ereignisNummer + " " + this.ereignisDesc + " " +
-    // this.callingBenutzerName
-    // + " " + "##" + " " + this.ereignisDatum;
-    String str = this.artikelName + " ## " + this.artikelBestand;
+    // this.callingBenutzerName + "## " + this.ereignisDatum;
+    String str = " " + this.artikelName + "## " + this.artikelBestand;
     return super.toString().replace("##", str);
   }
 
   @Override
   public String toStringDetailed() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " +
-    // this.callingBenutzerName
-    // +
-    // " "
-    // + this.callingBenutzerNummer + " " + this.callingBenutzerType + " " + "##"
-    // +
-    // " " +
-    // this.ereignisDatum;
+    // // "Event--" +
+    // // "\nNr: " + this.ereignisNummer +
+    // // "\nDate: " + this.ereignisDatum +
+    // // "\nDesc: '" + this.ereignisDesc +
+    // "\n\nCalling User--" +
+    // "\nUser: " + this.callingBenutzerName +
+    // "\nNummer: " + this.callingBenutzerNummer +
+    // "\nType: " + this.callingBenutzerType + "##";
 
-    String str = this.artikelName + " " + this.artikelNummer + this.artikelPreis + " ## " + this.artikelBestand;
+    String str = "\n\nArtikel: '" +
+        "\nName: '" + this.artikelName + "'" +
+        "\nNummer: " + this.artikelNummer +
+        "\nPreis: " + this.artikelPreis +
+        "\nBestand: " + this.artikelBestand + "##";
     return super.toStringDetailed().replace("##", str);
   }
 }
