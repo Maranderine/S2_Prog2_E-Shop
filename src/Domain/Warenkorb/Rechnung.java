@@ -30,7 +30,6 @@ public class Rechnung {
     });
 
     kaufDatum = new Date();
-    // TODO rechnungs id
     rechnungsId = id;
   }
 

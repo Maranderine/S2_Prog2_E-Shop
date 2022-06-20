@@ -20,7 +20,7 @@ public class SuchOrdnung {
   /**
    * ordnungs index
    */
-  protected enum OrdnungIndex {
+  protected static enum OrdnungIndex {
     OBJEKT,
     RELEVANZ;
 
@@ -121,7 +121,7 @@ public class SuchOrdnung {
   /**
    * stellt die Objecte mit ihrer toString oder toStringDetailed methoden da
    * 
-   * @param detailed     boolean ob die einträge in detaaillierter form
+   * @param detailed      boolean ob die einträge in detaaillierter form
    *                      dargestellte werden soll
    * @param leereNachicht nachicht die angezeigt wird wenn die liste leer ist
    * @return
@@ -135,11 +135,11 @@ public class SuchOrdnung {
     } else {
       if (detailed) {
         for (HashMap<OrdnungIndex, Object> hashMap : grid) {
-          str += getEntry_searchable(hashMap).toStringDetailed();
+          str += getEntry_searchable(hashMap).toStringDetailed() + "\n";
         }
       } else {
         for (HashMap<OrdnungIndex, Object> hashMap : grid) {
-          str += getEntry_searchable(hashMap).toString();
+          str += getEntry_searchable(hashMap).toString() + "\n";
         }
       }
     }

@@ -9,4 +9,8 @@ public class ExceptionArtikel extends Exception {
     super(message);
     this.artikel = artikel;
   }
+
+  public ExceptionArtikel(String message) {
+    super(message);
+  }
 }

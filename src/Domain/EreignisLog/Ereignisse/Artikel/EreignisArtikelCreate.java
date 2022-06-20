@@ -30,11 +30,9 @@ public class EreignisArtikelCreate extends EreignisArtikel {
     // new search terms
     /*
      * new
-     * add-ed
-     * erstell-t
-     * erstell-en
+     * erstellt
      */
-    String[] searchTerms = { "new", "add", "erstell", "neu" };
+    String[] searchTerms = { "new", "added", "erstellt", "neu", "create" };
     SearchTermAdd(searchTerms);
   }
 
@@ -44,12 +42,28 @@ public class EreignisArtikelCreate extends EreignisArtikel {
 
   @Override
   public String toString() {
+
+    // return this.ereignisNummer + " " + this.ereignisDesc + " " +
+    // this.callingBenutzerName + " " + this.artikelName + "## " +
+    // this.artikelBestand + " " + this.ereignisDatum;
+
     String str = "";
     return super.toString().replace("##", str);
   }
 
   @Override
   public String toStringDetailed() {
+    // "Nr: " + this.ereignisNummer +
+    // "\nDesc: '" + this.ereignisDesc + "'" +
+    // "\nUser: " + this.callingBenutzerName +
+    // "\nUserNr: " + this.callingBenutzerNummer +
+    // "\nUserType: " + this.callingBenutzerType
+    // "\nArtikel: '" + this.artikelName + "'" +
+    // "\nNummer: " + this.artikelNummer +
+    // "\nPreis: " + this.artikelPreis +
+    // "\nBestand: " + this.artikelBestand + "##" +
+    // "\nDate: " + this.ereignisDatum
+
     String str = "";
     return super.toStringDetailed().replace("##", str);
   }

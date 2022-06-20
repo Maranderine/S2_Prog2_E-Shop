@@ -22,12 +22,12 @@ public abstract class EreignisSystem extends Ereignis implements EreignisInterfa
   public EreignisSystem(Verwaltung verwaltung, int ereignisNummer, String ereignisDesc) {
     super(ereignisNummer, ereignisDesc);
     this.verwaltung = verwaltung;
-    simpleName = verwaltung.getClass().getSimpleName();
+    this.simpleName = verwaltung.getClass().getSimpleName();
     // search terms
     /*
      * verwalt-ung/-en
      */
-    String[] searchTerms = { "system", "sys", "verwalt", simpleName.toLowerCase() };
+    String[] searchTerms = { "system", "verwaltung", this.simpleName };
     SearchTermAdd(searchTerms);
   }
 
@@ -42,17 +42,20 @@ public abstract class EreignisSystem extends Ereignis implements EreignisInterfa
 
   @Override
   public String toString() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
-    String str = "";
-    return super.toString().replace("##", str);
+    // this.ereignisNummer + " " + this.ereignisDesc + "## " + this.ereignisDatum;
+    // String str = "";
+    // return super.toString().replace("##", str);
+    return super.toString();
   }
 
   @Override
   public String toStringDetailed() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
-    String str = simpleName;
+
+    // "Nr: " + this.ereignisNummer +
+    // "\nDate: " + this.ereignisDatum;
+    // "\nDesc: '" + this.ereignisDesc + "'##";
+    String str = "\n\nSystem--" +
+        "\nsimplename: " + simpleName + "##";
     return super.toStringDetailed().replace("##", str);
   }
 }

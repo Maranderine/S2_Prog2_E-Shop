@@ -3,15 +3,16 @@ package Domain.Artikel;
 import java.io.Serializable;
 
 import Domain.Search.Searchable;
+import persistence.PersistentDataObjekt;
 
-public class Artikel extends Searchable implements Serializable{
+public class Artikel extends Searchable implements Serializable, PersistentDataObjekt {
 
   private final int artikelNr;
   private String name;
   private int bestand;
   private double preis;
 
-  public Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
+  protected Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
     this.artikelNr = artikelNr;
     this.name = name;
     this.bestand = bestand;
@@ -19,9 +20,10 @@ public class Artikel extends Searchable implements Serializable{
 
     // adding search terms
     /*
-     * artik-el/-le
+     * artikel
+     * artikle
      */
-    String[] searchTerms = { "artik", this.name, Integer.toString(this.artikelNr) };
+    String[] searchTerms = { "artikel", this.name, Integer.toString(this.artikelNr) };
     SearchTermAdd(searchTerms);
   }
 
@@ -65,7 +67,7 @@ public class Artikel extends Searchable implements Serializable{
    * @return
    */
   protected String toStringRaw() {
-    return this.artikelNr + "\t" + this.name + "\t##\t" + this.preis;
+    return this.name + "##\t" + this.preis;
   }
 
   /**
@@ -75,20 +77,26 @@ public class Artikel extends Searchable implements Serializable{
    * @return
    */
   protected String toStringDetailedRaw() {
-    return this.artikelNr + "\t" + this.name + "\t" + this.bestand + "\t" + this.preis;
+    return "Artikel--" +
+        "\nName: '" + this.name + "'" +
+        "\nNummer: " + this.artikelNr +
+        "\nBestand: " + this.bestand + "##" +
+        "\nPreis: " + this.preis;
   }
 
   // tostring
   @Override
   public String toString() {
-    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
-    // this.preis;
+    // return this.name + "##\t" + this.preis;
     return toStringRaw().replace("##", "");
   }
 
   public String toStringDetailed() {
-    // return this.artikelNr + " | " + this.name + " | " + this.bestand + " | " +
-    // this.preis;
+    // "Artikel--" +
+    // "\nName: '" + this.name + "'" +
+    // "\nNummer: " + this.artikelNr +
+    // "\nBestand: " + this.bestand +
+    // "\nPreis: " + this.preis + "##";
     return toStringDetailedRaw().replace("##", "");
   }
 

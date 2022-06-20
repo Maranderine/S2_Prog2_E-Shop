@@ -21,21 +21,22 @@ public class EreignisSystemNotice extends EreignisSystem {
     /*
      * verwalt-ung/-en
      */
-    String[] searchTerms = { "notice" };
+    String[] searchTerms = { "notice", "meldung" };
     SearchTermAdd(searchTerms);
   }
 
   @Override
   public String toString() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
+    // this.ereignisNummer + " " + this.ereignisDesc + "## " + this.ereignisDatum;
     return super.toString().replace("##", "");
   }
 
   @Override
   public String toStringDetailed() {
-    // this.ereignisNummer + " " + this.ereignisDesc + " " + "##" + " " +
-    // this.ereignisDatum;
+    // "Nr: " + this.ereignisNummer +
+    // "\nDate: " + this.ereignisDatum +
+    // "\nDesc: '" + this.ereignisDesc +
+    // "\nSystem: " + simpleName + "##";
     return super.toStringDetailed().replace("##", "");
   }
 }

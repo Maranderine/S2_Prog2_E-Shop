@@ -44,19 +44,9 @@ public class EreignisArtikelData extends EreignisArtikel implements EreignisInte
     this.artikelAltPreis = AaltPreis;
 
     // new search terms
-    /*
-     * editier-t
-     * editier-en
-     * edit
-     * 
-     * change
-     * chang-ing
-     * chang-ed
-     * 
-     * ver-änder-t
-     * änder-n
-     */
-    String[] searchTerms = { "edit", "chang", "änder" };
+    String[] searchTerms = { "edit", "changed", "geändert", this.artikelAltName,
+        Integer.toString(this.artikelAltBestand),
+        Double.toString(this.artikelAltPreis) };
     SearchTermAdd(searchTerms);
   }
 
@@ -87,7 +77,23 @@ public class EreignisArtikelData extends EreignisArtikel implements EreignisInte
 
   @Override
   public String toStringDetailed() {
-    String str = "";
+    // // "Event--" +
+    // // "\nNr: " + this.ereignisNummer +
+    // // "\nDate: " + this.ereignisDatum +
+    // // "\nDesc: '" + this.ereignisDesc +
+    // "\n\nCalling User--" +
+    // "\nUser: " + this.callingBenutzerName +
+    // "\nNummer: " + this.callingBenutzerNummer +
+    // "\nType: " + this.callingBenutzerType +
+    // "\n\nArtikel: '" +
+    // "\nName: '" + this.artikelName + "'" +
+    // "\nNummer: " + this.artikelNummer +
+    // "\nPreis: " + this.artikelPreis +
+    // "\nBestand: " + this.artikelBestand + "##";
+    String str = "\n\nOld Data--" +
+        "\nName: " + this.artikelAltName +
+        "\nPreis: " + this.artikelAltPreis +
+        "\nBestand: " + this.artikelAltBestand;
     return super.toStringDetailed().replace("##", str);
   }
 }

@@ -41,32 +41,26 @@ public class FilePersistenceManager implements PersistenceManager {
   }
 
   // Artikelverwaltung Datensicherung
-  // TODO ArtikelLoad/Save generalisieren und oder in child class packen welche
-  // artikel läd
-  public Vector<Artikel> loadArticle(String artikelDoc) throws IOException {
+  @Override
+  public Vector<String[]> loadData(String artikelDoc) throws IOException {
 
     // öffnet Schnittstelle zum laden von Artikeln aus Datei
     reader = new BufferedReader(new FileReader(artikelDoc));
-    Vector<Artikel> artikelListe = new Vector<Artikel>();
+    Vector<String[]> dataList = new Vector<String[]>();
     String zeile;
-    String[] data;
 
     // Zeile einlesen, wenn nicht leer dann besteht zeile aus einem Artikel
-    // "artikelnr;name;bestand;preis"
     while (!((zeile = reader.readLine()) == null)) {
       // String zeile aufteilen in einzelne Strings, mit jeweils einem Wert des in
-      // dieser Zeile eingelesenen Artikels
-      data = zeile.split(";");
-      // neuen Artikeln mit eingelesenen Werten, hinzufügen zur artikeL´lListe
-      artikelListe
-          .add(new Artikel(Integer.parseInt(data[0]), data[1], Integer.parseInt(data[2]), Double.parseDouble(data[3])));
+      dataList.add(zeile.split(";"));
     }
     // schnittstelle schließen
     close();
-    return artikelListe;
+    return dataList;
   }
 
-  public boolean saveArticle(String artikelDoc, Vector<Artikel> objektListe) throws IOException {
+  @Override
+  public boolean saveData(String artikelDoc, Vector<Artikel> objektListe) throws IOException {
     // öffnet Schnittstelle zum schreiben von Artikeln in Datei
     writer = new PrintWriter(new BufferedWriter(new FileWriter(artikelDoc)));
     // schreibt jeden Artikel aus der Liste in "Datenform"
@@ -80,35 +74,7 @@ public class FilePersistenceManager implements PersistenceManager {
   }
   // Benutzer Datensicherung
 
-  /*
-   * public List<Benutzer> loadNutzer(String kundenDoc, String MitarbeiterDoc){
-   * List<Benutzer> nutzer = new Vector<Benutzer>();
-   * Object obj = null;
-   * try {
-   * //öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc
-   * objectReader = new ObjectInputStream(new FileInputStream(kundenDoc));
-   * //Solange noch Objekte in der Datei sind werden diese eingelesen und nach
-   * type cast (Kunde) der Nutzer Liste hinzugefügt
-   * while ((obj = objectReader.readObject()) != null) {
-   * nutzer.add((Kunde) obj);
-   * }
-   * close();
-   * //öffnet Schnittstelle zum speichern von Objekten(Mitarbeiter) in
-   * MitarbieterDoc
-   * objectWriter = new ObjectOutputStream(new FileOutputStream(MitarbeiterDoc));
-   * //Solange noch Objekte in der Datei sind werden diese eingelesen und nach
-   * type cast (Mitarbeiter) der Nutzer Liste hinzugefügt
-   * while ((obj = objectReader.readObject()) != null) {
-   * nutzer.add((Mitarbeiter) obj);
-   * }
-   * }catch(IOException | ClassNotFoundException e){
-   * e.printStackTrace();
-   * }
-   * close();
-   * return nutzer;
-   * }
-   */
-
+  @Override
   public Vector<? extends Object> loadObjekt(String kundenDoc) {
     Vector<? extends Object> nutzer;
     try {
@@ -128,6 +94,7 @@ public class FilePersistenceManager implements PersistenceManager {
     return nutzer;
   }
 
+  @Override
   public boolean saveObjekt(String kundenDoc, Vector<? extends Object> nutzerListe) {
     try {
       // öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc

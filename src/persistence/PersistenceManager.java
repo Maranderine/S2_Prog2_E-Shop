@@ -9,9 +9,9 @@ import Domain.Artikel.Artikel;
 
 public interface PersistenceManager {
 
-  public Vector<Artikel> loadArticle(String datenquelle) throws IOException;
+  public Vector<String[]> loadData(String artikelDoc) throws IOException;
 
-  public boolean saveArticle(String datenquelle, Vector<Artikel> objektListe) throws IOException;
+  public boolean saveData(String artikelDoc, Vector<Artikel> objektListe) throws IOException;
 
   public Vector<? extends Object> loadObjekt(String datei) throws IOException;
 

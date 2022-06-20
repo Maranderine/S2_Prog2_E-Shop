@@ -31,7 +31,7 @@ public class EreignisArtikelDelete extends EreignisArtikel {
         artikelBestand, artikelPreis);
 
     // search terms
-    String[] searchTerms = { "delete", "lösch", "entfern" };
+    String[] searchTerms = { "deleted", "gelöscht", "entfernt" };
     SearchTermAdd(searchTerms);
   }
 
@@ -43,12 +43,16 @@ public class EreignisArtikelDelete extends EreignisArtikel {
 
   @Override
   public String toStringDetailed() {
-    /*
-     * " " + this.ereignisDesc + " " + this.callingBenutzerName + " " +
-     * this.callingBenutzerNummer + " " + this.callingBenutzerType + " " +
-     * this.artikelName + " " + this.artikelNummer + " ## " + this.artikelBestand
-     * + " " + this.ereignisDatum;
-     */
+    // "Nr: " + this.ereignisNummer +
+    // "\nDesc: '" + this.ereignisDesc + "'" +
+    // "\nUser: " + this.callingBenutzerName +
+    // "\nUserNr: " + this.callingBenutzerNummer +
+    // "\nUserType: " + this.callingBenutzerType
+    // "\nArtikel: '" + this.artikelName + "'" +
+    // "\nNummer: " + this.artikelNummer +
+    // "\nPreis: " + this.artikelPreis +
+    // "\nBestand: " + this.artikelBestand + "##" +
+    // "\nDate: " + this.ereignisDatum
     String str = "";
     return super.toStringDetailed().replace("##", str);
   }

@@ -2,7 +2,7 @@ package Domain.BenutzerObjekte;
 
 import java.io.Serializable;
 
-public abstract class Benutzer implements Serializable{
+public abstract class Benutzer implements Serializable {
 
   // Klassenvariablen
   private String username;
@@ -10,7 +10,7 @@ public abstract class Benutzer implements Serializable{
   private String name;
   private Benutzerverwaltung.BeutzerType benutzerType;
 
-  protected Benutzer(Benutzerverwaltung.BeutzerType benutzerType, String name, String username, byte[] password) {
+  Benutzer(Benutzerverwaltung.BeutzerType benutzerType, String name, String username, byte[] password) {
     this.benutzerType = benutzerType;
     this.name = name;
     this.username = username;
@@ -50,7 +50,7 @@ public abstract class Benutzer implements Serializable{
   // #endregion
 
   protected boolean changePassword(String oldPassword, String newPassword) {
-    // TODO complete
+    // TODO complete passwort ändern
     // if (oldPassword.compareTo(this.password) == 0) {
     // this.password = newPassword;
     // return true;

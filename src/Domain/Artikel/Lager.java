@@ -5,7 +5,7 @@ import java.util.Vector;
 public class Lager {
 
   protected Vector<Artikel> artikelListe;
-  protected static int artikelNrCount = 0;
+  private static int artikelNrCount = 0;
 
   public Lager() {
     this.artikelListe = new Vector<Artikel>();
@@ -13,6 +13,14 @@ public class Lager {
 
   public Lager(Vector<Artikel> vec) {
     this.artikelListe = vec;
+  }
+
+  protected int useZaehler() {
+    return artikelNrCount++;
+  }
+
+  protected void setZaehler(int num) {
+    artikelNrCount = num;
   }
 
   @Override

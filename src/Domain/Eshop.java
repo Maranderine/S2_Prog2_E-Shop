@@ -15,9 +15,12 @@ import Domain.Warenkorb.WarenkorbVerwaltung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
+import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
+import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
@@ -49,16 +52,15 @@ public class Eshop {
 
     // BV_mitarbeiterHinzufügen("Admin", "Admin", "12345");
 
+    // existierende Mitarbeiter
     // Admin 12345
+    // a a
+
+    // existierende kunden
     // test 12345
+    // t t
 
     // Artikel
-
-    // LevelMove(MenuLevel.WARENKORB);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST1", 1, 1.99), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST2", 1, 1.55), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST3", 1, 1.66), 1);
-    // eshop.WV_setArtikel(eshop.AV_addArtikel("TEST4", 1, 1.77), 1);
 
     // #endregion TEMP PLEASE DELETE FOR FINAL PRODUCT
 
@@ -74,13 +76,14 @@ public class Eshop {
    * @param password
    * @param email
    * @param address
+   * @throws ExceptionBenutzerNameUngültig
    */
-  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) {
+  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) throws ExceptionBenutzerNameUngültig {
     BenutzerVw.registrieren(name, username, password, email, address);
     // EreignisVw.ereignisAdd(user, type);
   }
 
-  public void BV_mitarbeiterHinzufügen(String name, String username, String password) {
+  public void BV_mitarbeiterHinzufügen(String name, String username, String password) throws ExceptionBenutzerNameUngültig {
     BenutzerVw.registrieren(name, username, password);
   }
 
@@ -95,6 +98,7 @@ public class Eshop {
    * @param username
    * @param password
    * @return
+   * @throws ExceptionBenutzerNichtGefunden
    */
   public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
@@ -165,7 +169,6 @@ public class Eshop {
    * @throws ExceptionArtikelCollection
    */
   public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
-    // TODO kauf event was alle artikel anzeigt und deren neue bestände, anstadt
 
     Rechnung rechnung = WarenkorbVw.ArtikelKaufen();
 
@@ -175,7 +178,6 @@ public class Eshop {
       try {
         AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
       } catch (ExceptionArtikelUngültigerBestand e) {
-        // TODO falscher bestand gesetzt, was machen?
         e.printStackTrace();
       }
 
@@ -215,10 +217,10 @@ public class Eshop {
    * @param einzelpreis
    * @throws ExceptionArtikelExistiertBereits
    */
-  public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis)
+  public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
       throws ExceptionArtikelExistiertBereits {
 
-    Artikel artikel = ArtikelVw.addArtikel(name, bestand, einzelpreis);
+    Artikel artikel = ArtikelVw.addArtikel(name, bestand, einzelpreis, packungsInhalt);
     // ereignis loggen
     // TODO: EVENT - event basiert
 
@@ -244,9 +246,10 @@ public class Eshop {
    * @param artikel   artikel obj
    * @param neuerName artikel neuer name
    * @throws ExceptionArtikelNameExistiertBereits
+   * @throws ExceptionArtikelNameUngültig
    */
   public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
-      throws ExceptionArtikelNameExistiertBereits {
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
     String nameAlt = ArtikelVw.getArtikelName(artikel);
     // set neuer Name
     ArtikelVw.setArtikelName(artikel, neuerName);
@@ -262,9 +265,10 @@ public class Eshop {
    * @param neuerName artikel neuer name
    * @throws ExceptionArtikelNichtGefunden
    * @throws ExceptionArtikelNameExistiertBereits
+   * @throws ExceptionArtikelNameUngültig
    */
   public void AV_setArtikel(byte[] userHash, String name, String neuerName)
-      throws ExceptionArtikelNichtGefunden, ExceptionArtikelNameExistiertBereits {
+      throws ExceptionArtikelNichtGefunden, ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
     AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName);
   }
 
@@ -410,7 +414,15 @@ public class Eshop {
   }
 
   public Ereignis EV_getEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
-    return EreignisVw.findEreignis(ereignisNummer);
+    return EreignisVw.findeEreignis(ereignisNummer);
+  }
+
+  public SuchOrdnung EV_sucheEreignis(String searchterm) {
+    return EreignisVw.suchEvent(searchterm);
+  }
+
+  public SuchOrdnung EV_compileEreignis(String searchterm) {
+    return EreignisVw.suchEvent(searchterm);
   }
 
   // #region neue ereignisse /////////////////////////////////////////
@@ -475,6 +487,7 @@ public class Eshop {
   }
 
   // #endregion ////////////////////////////////////////////////
+
   // #endregion ////////////////////////////////////////////////
 
   public void saveData() {

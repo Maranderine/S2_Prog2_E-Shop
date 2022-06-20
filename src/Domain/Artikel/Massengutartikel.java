@@ -1,42 +1,60 @@
 package Domain.Artikel;
 
+/**
+ * massengut
+ */
 public class Massengutartikel extends Artikel {
 
   /** gebündelte anzahl des artikels */
-  private int minAnzahl;
+  private int stückZahl;
 
-  public Massengutartikel(int artikelNr, String bezeichnung, int bestand, double einzelpreis, int minAnzahl) {
-    super(artikelNr, bezeichnung, bestand, einzelpreis);
-    this.minAnzahl = minAnzahl;
+  /**
+   * massengut
+   * 
+   * @param artikelNr
+   * @param name
+   * @param bestand
+   * @param einzelpreis
+   * @param stückZahl
+   */
+  public Massengutartikel(int artikelNr, String name, int bestand, double einzelpreis, int stückZahl) {
+    super(artikelNr, name, bestand, einzelpreis);
+    this.stückZahl = stückZahl;
 
     // adding search terms
-    String[] searchTerms = { "mass", "massen" };
+    String[] searchTerms = { "massengut" };
     SearchTermAdd(searchTerms);
   }
 
-  // Gibt die MinAnzahl aus
-  public int getMinAnzahl() {
-    return minAnzahl;
+  // Gibt die stückZahl aus
+  public int getstückZahl() {
+    return stückZahl;
   }
 
-  // Setzt die MinAnzahl als Integer-Wert fest
-  public void setMinAnzahl(int minAnzahl) {
-    this.minAnzahl = minAnzahl;
+  // Setzt die stückZahl als Integer-Wert fest
+  public void setstückZahl(int stückZahl) {
+    this.stückZahl = stückZahl;
   }
 
   ///////////// to String /////////////////
   @Override
   public String toString() {
-    return super.toStringRaw().replace("##", Integer.toString(this.minAnzahl));
+    // return this.name + "##\t" + this.preis;
+    return super.toStringRaw().replace("##", " (" + this.stückZahl + ")");
   }
 
   @Override
   public String toStringDetailed() {
-    return super.toStringDetailedRaw().replace("##", Integer.toString(this.minAnzahl));
+    // "Artikel--" +
+    // "\nName: '" + this.name + "'" +
+    // "\nNummer: " + this.artikelNr +
+    // "\nBestand: " + this.bestand + "##" +
+    // "\nPreis: " + this.preis;
+    return super.toStringDetailedRaw().replace("##", "\nInhalt: " + this.stückZahl);
   }
 
   @Override
   public String toData() {
-    return super.toData() + ";" + this.minAnzahl;
+    return super.toData() + ";" + this.stückZahl;
   }
 }
