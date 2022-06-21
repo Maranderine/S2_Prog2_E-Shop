@@ -42,15 +42,33 @@ public class Benutzerverwaltung extends Verwaltung {
   public Benutzerverwaltung(String benutzerDox) {
     this.benutzerDoc = benutzerDox;
 
-    // loading register
-
     try {
+      // loading register
       benutzerRegister = load(this.benutzerDoc);
 
     } catch (IOException e) {
       e.printStackTrace();
       benutzerRegister = new Vector<Benutzer>();
       System.out.println("Could not load BenutzerVerwaltung");
+
+      // Backup test user
+      try {
+        registrieren(
+            "Admin Adminton",
+            "a",
+            "a");
+
+        registrieren(
+            "Test Benutzer",
+            "t",
+            "t",
+            "t@t.t",
+            "Testrasse 22, 22222 Testhausen, Testland");
+
+      } catch (ExceptionBenutzerNameUngültig e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
     }
   }
 
@@ -297,8 +315,9 @@ public class Benutzerverwaltung extends Verwaltung {
   public BeutzerType login(UserInterface callingUI, String username, String passw) {
     Benutzer benutzer;
     try {
-      benutzer = this.sucheBenutzer(username);
-      if (benutzer != null && (Arrays.equals(benutzer.getPassword(), encryptString(passw)))) {
+      benutzer = sucheBenutzer(username);
+
+      if ((benutzer != null) && (Arrays.equals(benutzer.getPassword(), encryptString(passw)))) {
         //////////// if user is found ///////////
 
         // generate user identifier

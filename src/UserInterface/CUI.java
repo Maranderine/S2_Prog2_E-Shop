@@ -1,6 +1,8 @@
 package UserInterface;
 
+import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
@@ -10,6 +12,8 @@ import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtGelöschtWerden;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
@@ -35,6 +39,7 @@ public class CUI extends UserInterface {
   Artikel artikel_bearbeiten = null;
   SuchOrdnung suchOrdnung = null;
   String searchTerm = null;
+  Vector<Artikel> atikelList = eshop.AV_getAlleArtikelList();
 
   public boolean run() {
     // TODO TEST
@@ -59,7 +64,6 @@ public class CUI extends UserInterface {
         try {
           switch (GetInputNavigation("\n > ")) {
             case "1":// Anmelden
-              // #region Anmelden
               System.out.print("\n---------LOGIN---------\n\n");
               String username = GetInputUserNameAbfrage("username > ");
               String password = GetInputPasswortAbfrage("password  > ");
@@ -78,7 +82,6 @@ public class CUI extends UserInterface {
                   break;
               }
               break;
-            // #endregion
             case "2":// Registrieren
               LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
               break;
@@ -126,7 +129,7 @@ public class CUI extends UserInterface {
 
         if (suchOrdnung == null) {
           System.out.println("Alle Artikel:");
-          System.out.print(eshop.AV_alleArtikelAusgeben(false) + "\n");
+          System.out.print(eshop.AV_ArtikelAusgeben(atikelList, false, "Keine Artikel Vorhanden") + "\n");
         } else {
           System.out.println("Gesuchte Artikel: \"" + this.searchTerm + "\"");
           System.out.println("Name | Preis");
@@ -135,14 +138,16 @@ public class CUI extends UserInterface {
 
         System.out.println("1 = Alle Artikel ausgeben");
         System.out.println("2 = Artikel suchen");
-        System.out.println("3 = Artikel ispizieren");
-        System.out.println("4 = Einen Artikel dem Warenkorb hinzufügen");
-        System.out.println("5 = Warenkorb Anzeigen");
+        System.out.println("3 = Ordnung wechseln");
+        System.out.println("4 = Artikel ispizieren");
+        System.out.println("5 = Einen Artikel dem Warenkorb hinzufügen");
+        System.out.println("6 = Warenkorb Anzeigen");
         System.out.println("0 = Logout");
 
         try {
           switch (GetInputNavigation("\n > ")) {
             case "1":// alle artikel
+              atikelList = eshop.AV_getAlleArtikelList();
               this.searchTerm = null;
               this.suchOrdnung = null;
               break;
@@ -151,7 +156,10 @@ public class CUI extends UserInterface {
               this.searchTerm = GetInputText(0, "Suchen nach > ", "exit");
               this.suchOrdnung = eshop.AV_sucheArtikel(searchTerm);
               break;
-            case "3":// artikel ispizieren
+            case "3":// Ordnung wechseln
+              LevelMove(MenuLevel.SORTIEREN);
+              break;
+            case "4":// artikel ispizieren
               System.out.print("\n");
               String titel = GetInputArtikel(1, "Artikel Name  > ", null);
               try {
@@ -161,7 +169,7 @@ public class CUI extends UserInterface {
                 runCatch(e);
               }
               break;
-            case "4":// artikel in den Warenkorb
+            case "5":// artikel in den Warenkorb
               try {
                 System.out.print("\n");
                 artikel = eshop.AV_findArtikelByName(GetInputArtikel(1, "Artikel Name  > ", "exit"));
@@ -173,7 +181,7 @@ public class CUI extends UserInterface {
                 runCatch(e);
               }
               break;
-            case "5":// Warenkorb
+            case "6":// Warenkorb
               LevelMove(MenuLevel.WARENKORB);
               break;
             case "0":// Exit
@@ -294,7 +302,7 @@ public class CUI extends UserInterface {
 
         if (suchOrdnung == null) {
           System.out.println("Alle Artikel:");
-          System.out.print(eshop.AV_alleArtikelAusgeben(false) + "\n");
+          System.out.print(eshop.AV_ArtikelAusgeben(atikelList, false, "Keine Artikel Vorhanden") + "\n");
         } else {
           System.out.println("Gesuchte Artikel: \"" + this.searchTerm + "\"");
           System.out.println("Artikelnr | Name | Preis");
@@ -303,15 +311,17 @@ public class CUI extends UserInterface {
 
         System.out.println("1 = Alle Artikel Anzeigen");
         System.out.println("2 = Artikel Suchen");
-        System.out.println("3 = Artikel Detail Ansicht");
-        System.out.println("4 = Artikel löschen");
+        System.out.println("3 = Ordnung wechseln");
+        System.out.println("4 = Artikel Detail Ansicht");
         System.out.println("5 = Artikel hinzufügen");
         System.out.println("6 = Artikel bearbeiten");
+        System.out.println("7 = Artikel löschen");
         System.out.println("0 = Exit");
 
         try {
           switch (GetInputNavigation("\n > ")) {
             case "1":// alle artikel
+              atikelList = eshop.AV_getAlleArtikelList();
               this.searchTerm = null;
               this.suchOrdnung = null;
               break;
@@ -320,16 +330,11 @@ public class CUI extends UserInterface {
               this.searchTerm = GetInputText(0, "Suchen nach > ", "exit");
               this.suchOrdnung = eshop.AV_sucheArtikel(searchTerm);
               break;
-            case "3":// detail ansicht artikel
-              LevelMove(MenuLevel.ARTIKEL_DETAILANSICHT);
+            case "3":// Ordnung wechseln
+              LevelMove(MenuLevel.SORTIEREN);
               break;
-            case "4":// Artikel löschen
-              string = GetInputArtikel(0, "zu löschender Artikel > ", "exit");
-              try {
-                eshop.AV_deleteArtikel(this.userHash, string);
-              } catch (ExceptionArtikelNichtGefunden e) {
-                runCatch(e);
-              }
+            case "4":// detail ansicht artikel
+              LevelMove(MenuLevel.ARTIKEL_DETAILANSICHT);
               break;
             case "5":// Artikel hinzufügen
               System.out.println("Neuer Artikel");
@@ -341,7 +346,7 @@ public class CUI extends UserInterface {
               try {
                 eshop.AV_addArtikel(this.userHash, artikelName, bestand, preis, massenNummer);
                 System.out.println("Erfolgreich erstellt!");
-              } catch (ExceptionArtikelExistiertBereits e) {
+              } catch (ExceptionArtikelExistiertBereits | ExceptionArtikelKonnteNichtErstelltWerden e) {
                 System.out.println("Etwas ist schief gelaufen.");
                 runCatch(e);
               }
@@ -359,6 +364,14 @@ public class CUI extends UserInterface {
               // runCatch(e);
               // }
 
+              break;
+            case "7":// Artikel löschen
+              string = GetInputArtikel(0, "zu löschender Artikel > ", "exit");
+              try {
+                eshop.AV_deleteArtikel(this.userHash, string);
+              } catch (ExceptionArtikelKonnteNichtGelöschtWerden e) {
+                runCatch(e);
+              }
               break;
             case "0":
               this.searchTerm = null;
@@ -407,7 +420,7 @@ public class CUI extends UserInterface {
         System.out.print("----------------------------------------------------------------------\n\n");
         System.out.println("1 = Alle Ansehen");
         System.out.println("2 = Suchen");
-        System.out.println("3 = Inhalt finden");
+        System.out.println("3 = Ordnung wechseln");
         System.out.println("4 = Detail ansicht Event");
         System.out.println("5 = Detail ansicht Artikel");
         System.out.println("0 = Exit");
@@ -423,11 +436,16 @@ public class CUI extends UserInterface {
               this.searchTerm = GetInputText(0, "Suchen nach > ", "exit");
               this.suchOrdnung = eshop.EV_sucheEreignis(this.searchTerm);
               break;
-            case "3":// suche nach inhalt
-              // TODO suche nach inhalt
+            case "3":// Ordnung wechseln
+              // TODO ordnen
               // eshop.AV_findArtikelByName(name)
               // eshop.BV_
               break;
+            // case "3":// suche nach inhalt
+            // // TODO suche nach inhalt
+            // // eshop.AV_findArtikelByName(name)
+            // // eshop.BV_
+            // break;
             case "4":// Detail ansicht Event
               LevelMove(MenuLevel.EREIGNIS_DETAILANSICHT);
               break;
@@ -604,6 +622,53 @@ public class CUI extends UserInterface {
         }
         break;
       // #endregion
+      case SORTIEREN:
+        // #region
+
+        System.out.print("\nSortieren Nach\n");
+        System.out.println("1 = Name");
+        System.out.println("2 = Preis - Aufsteigend");
+        System.out.println("3 = Preis - Absteigend");
+        try {
+          if (suchOrdnung == null) {
+
+            switch (GetInputNavigation("\n > ")) {
+              case "1":
+                eshop.AV_sortListName(atikelList, false);
+                break;
+              case "2":
+                eshop.AV_sortListPreis(atikelList, false);
+                break;
+              case "3":
+                eshop.AV_sortListPreis(atikelList, true);
+                break;
+            }
+          } else {
+            System.out.println("4 = Preis - Relevanz");
+
+            switch (GetInputNavigation("\n > ")) {
+              case "1":
+                eshop.AV_sortListName(suchOrdnung, false);
+                break;
+              case "2":
+                eshop.AV_sortListPreis(suchOrdnung, false);
+                break;
+              case "3":
+                eshop.AV_sortListPreis(suchOrdnung, true);
+                break;
+              case "4":
+                eshop.AV_sortListRelevanz(suchOrdnung);
+                break;
+            }
+          }
+        } catch (ExceptionInputFalsch e) {
+          runCatch(e);
+        }
+
+        LevelReturn();
+        // #endregion
+        break;
+
     }
     // true to continue
     return true;
@@ -623,7 +688,8 @@ public class CUI extends UserInterface {
     MITARBEITER_EREIGNISLOG,
     EREIGNIS_DETAILANSICHT,
     ARTIKEL_DETAILANSICHT,
-    ARTIKEL_BEARBEITEN
+    ARTIKEL_BEARBEITEN,
+    SORTIEREN
   }
 
   /** the start level, displayed on statup */

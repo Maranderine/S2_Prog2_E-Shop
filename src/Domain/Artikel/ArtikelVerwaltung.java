@@ -1,45 +1,47 @@
 package Domain.Artikel;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 import Domain.Eshop;
 import Domain.Verwaltung;
 import Domain.Search.SuchOrdnung;
+import Domain.Search.SuchOrdnung.OrdnungIndex;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtGelöschtWerden;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
+import Exceptions.Lager.ExceptionLagerNichtGefunden;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
 
 public class ArtikelVerwaltung extends Verwaltung {
 
-  private Lager lager;
+  private ArrayList<Lager> lagerList = new ArrayList<Lager>();
   private final Eshop eshop;
   private PersistenceManager persistenceManager = new FilePersistenceManager();
-  private String artikelDox;
+  private final String artikelDox = "Artikel_#.txt";
 
-  public ArtikelVerwaltung(Eshop eshop, String artikelDox) {
+  public ArtikelVerwaltung(Eshop eshop) {
     this.eshop = eshop;
-    this.artikelDox = artikelDox;
 
     try {
-      lager = new Lager(load(artikelDox));
+      autoLoad(artikelDox);
     } catch (IOException e) {
-      lager = new Lager();
+      newLager();
       e.printStackTrace();
       System.out.println("Could not load BenutzerVerwaltung");
     }
 
   }
 
-  public Lager alleArtikel() {
-    return this.lager;
-  }
-
+  // #region artikel management
   /**
    * erstellt nur den Artikel
    * 
@@ -72,9 +74,8 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws ExceptionArtikelExistiertBereits
    */
   private Artikel addArtikel(Lager lager, int artikelNummer, String name, int bestand, double einzelpreis,
-      int packungsInhalt)
-      throws ExceptionArtikelExistiertBereits {
-    Lager lagerToUse = this.lager;
+      int packungsInhalt) throws ExceptionArtikelExistiertBereits {
+
     Artikel artikel;
 
     try {
@@ -85,7 +86,7 @@ public class ArtikelVerwaltung extends Verwaltung {
     } catch (ExceptionArtikelNichtGefunden e) {
       // Artikel existiert nicht also machen wir einene neuen
       artikel = createArtikel(artikelNummer, name, bestand, einzelpreis, packungsInhalt);
-      addArtikelToLager(artikel, lagerToUse);
+      addArtikelToLager(artikel, lager);
       return artikel;
     }
   }
@@ -100,13 +101,22 @@ public class ArtikelVerwaltung extends Verwaltung {
    *                       ein massengut
    * @return
    * @throws ExceptionArtikelExistiertBereits
+   * @throws ExceptionArtikelKonnteNichtErstelltWerden
    */
   public Artikel addArtikel(String name, int bestand, double einzelpreis, int packungsInhalt)
-      throws ExceptionArtikelExistiertBereits {
+      throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden {
     // get lager was artikel aufnehmen soll
-    Lager lager = getLagerToAdd();
-    // add artikel
-    return addArtikel(lager, lager.useZaehler(), name, bestand, einzelpreis, packungsInhalt);
+    Lager lager;
+    try {
+      lager = getLagerToAdd();
+      // add artikel
+      return addArtikel(lager, lager.useZaehler(), name, bestand, einzelpreis, packungsInhalt);
+    } catch (ExceptionLagerNichtGefunden e) {
+      // TODO was wenn kein lager
+      e.printStackTrace();
+      throw new ExceptionArtikelKonnteNichtErstelltWerden(e);
+    }
+
   }
 
   /**
@@ -114,10 +124,30 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @param artikel obj
    * @return boolean, true if something was deleted, false if not
+   * @throws ExceptionArtikelKonnteNichtGelöschtWerden
+   */
+  public void deleteArtikel(Lager lager, Artikel artikel) throws ExceptionArtikelKonnteNichtGelöschtWerden {
+    if (!lager.removeItem(artikel))
+      throw new ExceptionArtikelKonnteNichtGelöschtWerden();
+  }
+
+  /**
+   * Deletes a artikel from the artikelListe
+   * 
+   * @param artikel obj
+   * @return boolean, true if something was deleted, false if not
+   * @throws ExceptionArtikelKonnteNichtGelöschtWerden
    * @throws ExceptionArtikelNichtGefunden
    */
-  public boolean deleteArtikel(Artikel artikel) {
-    return this.lager.artikelListe.remove(artikel);
+  public void deleteArtikel(Artikel artikel) throws ExceptionArtikelKonnteNichtGelöschtWerden {
+
+    try {
+      deleteArtikel(searchLager(artikel), artikel);
+    } catch (ExceptionLagerNichtGefunden e) {
+
+      e.printStackTrace();
+      throw new ExceptionArtikelKonnteNichtGelöschtWerden(e);
+    }
   }
 
   /**
@@ -126,14 +156,20 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param name of artikel
    * @return boolean, true if something was deleted, false if not
    */
-  public boolean deleteArtikel(String name) throws ExceptionArtikelNichtGefunden {
+  public boolean deleteArtikel(String name) throws ExceptionArtikelKonnteNichtGelöschtWerden {
 
-    Artikel artikel = findArtikelByName(name);
-    deleteArtikel(artikel);
+    try {
+      Artikel artikel = findArtikelByName(name);
+      deleteArtikel(artikel);
+    } catch (ExceptionArtikelNichtGefunden e) {
+      throw new ExceptionArtikelKonnteNichtGelöschtWerden(e);
+    }
 
     return true;// if nothing could be deleted
   }
 
+  // #endregion new artikel
+  // #region check artikel
   /**
    * find Artikel by name in artikelListe
    * 
@@ -142,11 +178,14 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws ExceptionArtikelNichtGefunden
    */
   public Artikel findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
+    // go through all Lager
     // iterates through artikelListe
-    for (Artikel artikel : this.lager.artikelListe) {
-      if (artikel.getName().equals(name))
-        return artikel;
-    }
+
+    for (Lager lager : getLagerList())
+      for (Artikel artikel : lager.getList()) {
+        if (artikel.getName().equals(name))
+          return artikel;
+      }
     throw new ExceptionArtikelNichtGefunden();
   }
 
@@ -157,26 +196,13 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @return bool true wenn er existiert
    */
   public boolean artikelExists(String name) {
-    // iterates through artikelListe
-    for (Artikel artikel : this.lager.artikelListe) {
-      if (artikel.getName().equals(name))
-        return true;
+
+    try {
+      findArtikelByName(name);
+      return true;
+    } catch (ExceptionArtikelNichtGefunden e) {
+      return false;
     }
-    return false;
-  }
-
-  /**
-   * gets Artikel Object from artikelListe by index
-   * 
-   * @param index of the Artikel to return
-   * @return Artikel type Object
-   * @throws ExceptionArtikelNichtGefunden
-   */
-  public Artikel getArtikel(int index) throws ExceptionArtikelNichtGefunden {
-    if (index < lager.artikelListe.size())
-      return lager.artikelListe.get(index);
-
-    throw new ExceptionArtikelNichtGefunden();
   }
 
   /**
@@ -198,16 +224,72 @@ public class ArtikelVerwaltung extends Verwaltung {
     }
 
   }
-
+  // #endregion check artikel
   // #region Lager
+
+  /**
+   * erstellt neues Laager OBj und gibt es zurück
+   * mit gegebener Artikel Liste
+   * 
+   * @param artikelList
+   * @return Lager
+   */
+  private Lager createLager(Vector<Artikel> artikelList) {
+    return new Lager(artikelList);
+  }
+
+  /**
+   * erstellt neues Lager OBj und gibt es zurück
+   * 
+   * @param artikelList
+   * @return Lager
+   */
+  private Lager createLager() {
+    return new Lager();
+  }
+
+  /**
+   * fügt Lager der Lager handlung hinzu
+   * 
+   * @param lager
+   */
+  private void addLagerToSystem(Lager lager) {
+
+    this.lagerList.add(lager);
+  }
+
+  /**
+   * erstellt neues lager und fügt es dem system hinzu
+   * mit gegebener Artikel Liste
+   */
+  private void newLager(Vector<Artikel> artikelList) {
+    Lager lager = createLager(artikelList);
+    addLagerToSystem(lager);
+  }
+
+  /**
+   * erstellt neues lager und fügt es dem system hinzu
+   * 
+   */
+  private void newLager() {
+    Lager lager = createLager();
+    addLagerToSystem(lager);
+  }
+
   /**
    * gibt lager welches den artikel gegeben bekommen soll
    * 
    * @return Lager
+   * @throws ExceptionLagerNichtGefunden
    */
-  private Lager getLagerToAdd() {
-    // temp auswahl verfahren bei mehereren lagern nach kriterien die sinn machen
-    return this.lager;
+  private Lager getLagerToAdd() throws ExceptionLagerNichtGefunden {
+    // TODO temp auswahl verfahren bei mehereren lagern nach kriterien die
+    // sinnmachen
+    for (Lager lager : getLagerList()) {
+      // if (something)
+      return lager;
+    }
+    throw new ExceptionLagerNichtGefunden();
   }
 
   /**
@@ -217,11 +299,94 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param lager
    */
   private void addArtikelToLager(Artikel artikel, Lager lager) {
-    lager.artikelListe.add(artikel);
+    lager.addItem(artikel);
+  }
+
+  /**
+   * 
+   * @param name artikel name
+   * @return
+   * @throws ExceptionLagerNichtGefunden
+   */
+  private Lager searchLager(String name) throws ExceptionLagerNichtGefunden {
+    for (Lager lager : getLagerList())
+      for (Artikel artikel : lager.getList()) {
+        if (artikel.getName().equals(name))
+          return lager;
+      }
+
+    throw new ExceptionLagerNichtGefunden();
+  }
+
+  /**
+   * 
+   * @param name artikel name
+   * @return
+   * @throws ExceptionLagerNichtGefunden
+   */
+  private Lager searchLager(Artikel artikel) throws ExceptionLagerNichtGefunden {
+    for (Lager lager : getLagerList())
+      if (lager.getList().contains(artikel))
+        return lager;
+
+    throw new ExceptionLagerNichtGefunden();
+  }
+
+  /**
+   * compiles artikel list aus allen Lagern
+   * 
+   * @return Vector<Artikel> liste an allen aartikeln
+   */
+  private Vector<Artikel> compileLagerInhalt() {
+    Vector<Artikel> complist = new Vector<>();
+
+    for (Lager lager : lagerList) {
+      complist.addAll(lager.getList());
+    }
+
+    return complist;
   }
 
   // #endregion
   // #region getter
+
+  /**
+   * gibt Lager
+   * 
+   * @return Lager
+   */
+  public ArrayList<Lager> getLagerList() {
+    return this.lagerList;
+  }
+
+  /**
+   * get layer by index
+   * 
+   * @param index
+   * @return
+   */
+  public Lager getLager(int index) {
+    return this.lagerList.get(index);
+  }
+
+  /**
+   * gets Artikel Object from artikelListe by index
+   * 
+   * @param index of the Artikel to return
+   * @return Artikel type Object
+   * @throws ExceptionArtikelNichtGefunden
+   */
+  public Artikel getArtikel(Lager lager, int index) throws ExceptionArtikelNichtGefunden {
+    Vector<Artikel> list = lager.getList();
+    if (index < list.size())
+      return list.get(index);
+
+    throw new ExceptionArtikelNichtGefunden();
+  }
+
+  protected Vector<Artikel> getArtikelList(Lager lager) {
+    return lager.getList();
+  }
 
   public int getArtikelNr(Artikel artikel) {
     return artikel.getArtikelNr();
@@ -324,7 +489,121 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   // #endregion
-  // #region suchen
+  // #region ordnen
+
+  private void sortList(Vector<Artikel> artikelList, Comparator<Artikel> comparator) {
+    artikelList.sort(comparator);
+  }
+
+  private void sortList(SuchOrdnung ordnung, Comparator<HashMap<OrdnungIndex, ? extends Object>> comparator) {
+    sortOrdnung(ordnung, comparator);
+  }
+
+  /**
+   * 
+   * @param artikelList
+   * @param reverse
+   */
+  public void sortListName(Vector<Artikel> artikelList, boolean reverse) {
+
+    Comparator<Artikel> comp = (o1, o2) -> {
+      return compareName(o1, o2);
+    };
+    if (reverse)
+      comp.reversed();
+
+    sortList(artikelList, comp);
+  }
+
+  /**
+   * 
+   * @param artikelList
+   * @param reverse
+   */
+  public void sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
+
+    Comparator<Artikel> comp = (o1, o2) -> {
+      return comparePreis(o1, o2);
+    };
+    if (reverse)
+      comp.reversed();
+
+    sortList(artikelList, comp);
+  }
+
+  /**
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void sortListName(SuchOrdnung ordnung, boolean reverse) {
+
+    Comparator<HashMap<SuchOrdnung.OrdnungIndex, ? extends Object>> comp = (o1, o2) -> {
+      return compareName((Artikel) ordnung.getObjekt(o1), (Artikel) ordnung.getObjekt(o2));
+    };
+
+    if (reverse)
+      comp.reversed();
+
+    sortList(ordnung, comp);
+
+  }
+
+  /**
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void sortListPreis(SuchOrdnung ordnung, boolean reverse) {
+    Comparator<HashMap<SuchOrdnung.OrdnungIndex, ? extends Object>> comp = (o1, o2) -> {
+      return comparePreis((Artikel) ordnung.getObjekt(o1), (Artikel) ordnung.getObjekt(o2));
+    };
+
+    if (reverse)
+      comp.reversed();
+
+    sortList(ordnung, comp);
+  }
+
+  /**
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void sortListRelevanz(SuchOrdnung ordnung) {
+    sortOrdnung(ordnung);
+  }
+
+  // comparing
+  /**
+   * compare names lexicographically
+   * 
+   * @see java.lang.String.compareTo(String anotherString)
+   * 
+   * @param artikel1
+   * @param artikel2
+   * @return the value 0 if the argument string is equal to this string; a value
+   *         less than 0 if this string is lexicographically less than the string
+   *         argument; and a value greater than 0 if this string is
+   *         lexicographically greater than the string argument.
+   */
+  private int compareName(Artikel artikel1, Artikel artikel2) {
+    return artikel1.getName().compareTo(artikel2.getName());
+  }
+
+  /**
+   * compare names lexicographically
+   * 
+   * @param artikel1
+   * @param artikel2
+   * @return int, -n to +n
+   */
+  private int comparePreis(Artikel artikel1, Artikel artikel2) {
+    return Double.compare(artikel1.getPreis(), artikel2.getPreis());
+  }
+
+  // #endregion
+  // #region user interface suchen
 
   /**
    * suce meherere Artikel in der Artikel liste
@@ -333,11 +612,33 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @return SuchOrdnung
    */
   public SuchOrdnung suchArtikel(String suchBegriffe) {
-    return SearchCompileOrdnungSorted(this.lager.artikelListe, suchBegriffe);
+    // TODO lager temp code
+    return SearchCompileOrdnungSorted(compileLagerInhalt(), suchBegriffe);
   }
 
   // #endregion
   // #region persistenz
+
+  /**
+   * 
+   * @param artikelDox
+   * @throws IOException
+   */
+  private void autoLoad(String dataNamingConvention) throws IOException {
+    String str;
+    int i = 0;
+    try {
+      do {
+        str = dataNamingConvention.replace("#", Integer.toString(i));
+        newLager(load(str));
+        i++;
+      } while (true);
+    } catch (IOException e) {
+      if (i == 0)// didnt load anything
+        throw e;
+    }
+  }
+
   /**
    * 
    * @param datei
@@ -373,16 +674,38 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param datei Datei
    * @throws IOException
    */
-  private boolean save(String datei) throws IOException {
-    return persistenceManager.saveData(datei, lager.artikelListe);
+  private boolean save(String datei, Lager lager) throws IOException {
+
+    return persistenceManager.saveData(datei, getArtikelList(lager));
   }
 
   /**
-   * Speichert daaten
+   * Speichert alles daten
+   * 
+   * @throws IOException
+   */
+  public boolean save(String dataNamingConvention) throws IOException {
+
+    boolean ergebnis = true;
+    String str;
+    int i = 0;
+    for (int index = 0; index < lagerList.size(); index++) {
+      str = dataNamingConvention.replace("#", Integer.toString(i));
+
+      if (!save(str, getLager(index)))
+        ergebnis = false;
+    }
+
+    return ergebnis;
+  }
+
+  /**
+   * Speichert alles daten
    * 
    * @throws IOException
    */
   public boolean save() throws IOException {
+
     return save(artikelDox);
   }
 
@@ -420,16 +743,104 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   // #endregion
+  // #region displaying
+  /**
+   * display list
+   * 
+   * @param list
+   * @param detailed
+   * @return
+   */
+  public String displayArtikel(Vector<Artikel> list, boolean detailed, String leereNachicht) {
+    String sepStr = "///////////////////////////////////////////////\n\n";
+    String str = "";
+    if (list.isEmpty()) {
+      str += "\t" + leereNachicht + "\n";
+    } else {
+      if (detailed) {
+        for (Artikel artikel : list) {
+          str += sepStr;
+          str += artikel.toStringDetailed() + "\n";
+        }
+        str += sepStr;
+
+      } else {
+        str += "Artikelnr | Name | Preis\n";
+        for (Artikel artikel : list) {
+          str += artikel.toString() + "\n";
+        }
+      }
+    }
+
+    return str;
+  }
+
+  /**
+   * displays ordnung
+   * 
+   * @param ordnung
+   * @param detailed
+   * @param header
+   * @param leereNachicht
+   * @return
+   */
+  public String displayArtikel(SuchOrdnung ordnung, boolean detailed, String leereNachicht) {
+    String str = "";
+
+    if (!detailed)
+      str += "Artikelnr | Name | Preis\n";
+    str += ordnung.display(detailed, leereNachicht);
+
+    return str;
+  }
+
+  /**
+   * displayed alle lager nacheinander
+   * 
+   * @param detailed
+   * @param leereNachicht
+   * @return
+   */
+  public String displayArtikelAll(boolean detailed, String leereNachicht) {
+    String str = "";
+
+    for (Lager lager : getLagerList()) {
+
+      str += displayArtikel(getArtikelList(lager), detailed, leereNachicht);
+    }
+
+    return str;
+  }
+
+  /**
+   * erstellt eine liste aus allen lagern undstellt sie dar
+   * 
+   * @param detailed
+   * @param leereNachicht
+   * @return
+   */
+  public String displayArtikelAllCompiled(boolean detailed, String leereNachicht) {
+
+    return displayArtikel(compileLagerInhalt(), detailed, leereNachicht);
+  }
+
+  /**
+   * compiles artikel list aus allen Lagern
+   * public usage
+   * 
+   * @return Vector<Artikel> liste an allen aartikeln
+   */
+  public Vector<Artikel> getAlleArtikelList() {
+    return compileLagerInhalt();
+  }
 
   @Override
   public String toString() {
-
-    return toString(false);
+    return displayArtikelAll(false, "Keine Artikel Vorhanden");
   }
 
-  public String toString(boolean detailed) {
-
-    return this.lager.toString(detailed);
+  public String toString(boolean detailed, String leereNachicht) {
+    return displayArtikelAll(detailed, leereNachicht);
   }
-
+  // #endregion
 }

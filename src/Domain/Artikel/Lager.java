@@ -4,15 +4,27 @@ import java.util.Vector;
 
 public class Lager {
 
-  protected Vector<Artikel> artikelListe;
+  private Vector<Artikel> artikelListe;
   private static int artikelNrCount = 0;
 
-  public Lager() {
+  protected Lager() {
     this.artikelListe = new Vector<Artikel>();
   }
 
-  public Lager(Vector<Artikel> vec) {
+  protected Lager(Vector<Artikel> vec) {
     this.artikelListe = vec;
+  }
+
+  public Vector<Artikel> getList() {
+    return this.artikelListe;
+  }
+
+  public boolean addItem(Artikel obj) {
+    return this.artikelListe.add(obj);
+  }
+
+  public boolean removeItem(Artikel obj) {
+    return this.artikelListe.remove(obj);
   }
 
   protected int useZaehler() {
@@ -23,28 +35,7 @@ public class Lager {
     artikelNrCount = num;
   }
 
-  @Override
   public String toString() {
-    return toString(false);
-  }
-
-  public String toString(boolean detailed) {
-    String str = "";
-    if (!artikelListe.isEmpty()) {
-      if (detailed) {
-        str += "Artikelnr | Name | Bestand | Preis\n";
-        for (Artikel artikel : artikelListe) {
-          str += artikel.toStringDetailed() + "\n";
-        }
-      } else {
-        str += "Artikelnr | Name | Preis\n";
-        for (Artikel artikel : artikelListe) {
-          str += artikel.toString() + "\n";
-        }
-      }
-    } else
-      str += "Keine Artikel";
-
-    return str;
+    return artikelListe.toString();
   }
 }

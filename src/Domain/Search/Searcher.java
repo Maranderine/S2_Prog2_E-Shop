@@ -87,6 +87,8 @@ public abstract class Searcher {
     return ordnung;
   }
 
+  // #region sorting
+
   /**
    * Sortiert gegebene ordnung mit der standart ordnung nach relevanz-
    * 
@@ -102,7 +104,9 @@ public abstract class Searcher {
    * @param ordnung    SuchOrdnung objekt
    * @param comparator
    */
-  protected void sortOrdnung(SuchOrdnung ordnung, Comparator<HashMap<OrdnungIndex, Object>> comparator) {
+  protected void sortOrdnung(SuchOrdnung ordnung, Comparator<HashMap<OrdnungIndex, ? extends Object>> comparator) {
     ordnung.sort(comparator);
   }
+
+  // #endregion sorting
 }
