@@ -3,24 +3,36 @@ package Domain.Search;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 /**
  * Management Klasse für eine geordnete liste mit Searchaable objekten
  */
 public class SuchOrdnung {
 
-  private ArrayList<HashMap<OrdnungIndex, Object>> grid = new ArrayList<HashMap<OrdnungIndex, Object>>();
+  private ArrayList<HashMap<OrdnungIndex, ? extends Object>> grid = new ArrayList<HashMap<OrdnungIndex, ? extends Object>>();
 
   /**
-   * 
+   * neue Such ordnung
    */
   public SuchOrdnung() {
+
+  }
+
+  /**
+   * shallow clone
+   */
+  public SuchOrdnung(SuchOrdnung andereOrdnung) {
+
+    for (int i = 0; i < andereOrdnung.size(); i++) {
+      add(andereOrdnung.getObjekt(i), andereOrdnung.getRelevanz(i));
+    }
   }
 
   /**
    * ordnungs index
    */
-  protected static enum OrdnungIndex {
+  public static enum OrdnungIndex {
     OBJEKT,
     RELEVANZ;
 
@@ -61,39 +73,31 @@ public class SuchOrdnung {
   }
 
   // get
-  private Searchable getEntry_searchable(HashMap<OrdnungIndex, Object> entry) {
-    return (Searchable) entry.get(OrdnungIndex.OBJEKT);
-  }
-
-  private int getEntry_relevanz(HashMap<OrdnungIndex, Object> entry) {
-    return (int) entry.get(OrdnungIndex.RELEVANZ);
+  public Searchable getObjekt(HashMap<OrdnungIndex, ? extends Object> hashMap) {
+    return (Searchable) hashMap.get(OrdnungIndex.OBJEKT);
   }
 
   public Searchable getObjekt(int index) {
-    return getEntry_searchable(grid.get(index));
+    return getObjekt(grid.get(index));
+  }
+
+  public int getRelevanz(HashMap<OrdnungIndex, ? extends Object> hashMap) {
+    return (int) hashMap.get(OrdnungIndex.RELEVANZ);
   }
 
   public int getRelevanz(int index) {
-    return getEntry_relevanz(grid.get(index));
+    return getRelevanz(grid.get(index));
   }
 
   // #region sorting
-  /**
-   * Comparator Object mit compare methode die nach relevanz ordnet. Hohe relevanz
-   * hoch (niedriger index) in der liste.
-   */
-  private Comparator<HashMap<OrdnungIndex, Object>> ComparatorRelevanz = new Comparator<HashMap<OrdnungIndex, Object>>() {
-    @Override
-    public int compare(HashMap<OrdnungIndex, Object> o1, HashMap<OrdnungIndex, Object> o2) {
-      return getEntry_relevanz(o1) - getEntry_relevanz(o2);
-    }
-  };
 
   /**
    * Sortiere nach relevanz
    */
   protected void sort() {
-    grid.sort(this.ComparatorRelevanz);
+    grid.sort((o1, o2) -> {
+      return getRelevanz(o1) - getRelevanz(o2);
+    });
   }
 
   /**
@@ -102,21 +106,15 @@ public class SuchOrdnung {
    * 
    * @param comparator der die ordnung vorgibt
    */
-  protected void sort(Comparator<HashMap<OrdnungIndex, Object>> comparator) {
+  protected void sort(Comparator<HashMap<OrdnungIndex, ? extends Object>> comparator) {
     grid.sort(comparator);
   }
 
   // #endregion
-  // #region generelles
+
   public int size() {
     return grid.size();
   }
-
-  /** gibt einen iterator über das grid zurück */
-  public void iterator() {
-    grid.iterator();
-  }
-  // #endregion
 
   /**
    * stellt die Objecte mit ihrer toString oder toStringDetailed methoden da
@@ -127,6 +125,8 @@ public class SuchOrdnung {
    * @return
    */
   public String display(boolean detailed, String leereNachicht) {
+    // seperation string
+    String sepStr = "///////////////////////////////////////////////\n\n";
     String str = "";
 
     if (this.grid.isEmpty()) {
@@ -134,12 +134,14 @@ public class SuchOrdnung {
       str += "\t" + leereNachicht + "\n";
     } else {
       if (detailed) {
-        for (HashMap<OrdnungIndex, Object> hashMap : grid) {
-          str += getEntry_searchable(hashMap).toStringDetailed() + "\n";
+        for (HashMap<OrdnungIndex, ? extends Object> hashMap : grid) {
+          str += sepStr;
+          str += getObjekt(hashMap).toStringDetailed() + "\n";
         }
+
       } else {
-        for (HashMap<OrdnungIndex, Object> hashMap : grid) {
-          str += getEntry_searchable(hashMap).toString() + "\n";
+        for (HashMap<OrdnungIndex, ? extends Object> hashMap : grid) {
+          str += getObjekt(hashMap).toString() + "\n";
         }
       }
     }

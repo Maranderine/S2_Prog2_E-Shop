@@ -13,4 +13,9 @@ public class ExceptionArtikel extends Exception {
   public ExceptionArtikel(String message) {
     super(message);
   }
+
+  public ExceptionArtikel(Throwable cause) {
+    super(cause);
+  }
+
 }

@@ -44,19 +44,24 @@ public class FilePersistenceManager implements PersistenceManager {
   @Override
   public Vector<String[]> loadData(String artikelDoc) throws IOException {
 
-    // öffnet Schnittstelle zum laden von Artikeln aus Datei
-    reader = new BufferedReader(new FileReader(artikelDoc));
-    Vector<String[]> dataList = new Vector<String[]>();
-    String zeile;
+    try {
+      // öffnet Schnittstelle zum laden von Artikeln aus Datei
+      reader = new BufferedReader(new FileReader(artikelDoc));
+      Vector<String[]> dataList = new Vector<String[]>();
+      String zeile;
 
-    // Zeile einlesen, wenn nicht leer dann besteht zeile aus einem Artikel
-    while (!((zeile = reader.readLine()) == null)) {
-      // String zeile aufteilen in einzelne Strings, mit jeweils einem Wert des in
-      dataList.add(zeile.split(";"));
+      // Zeile einlesen, wenn nicht leer dann besteht zeile aus einem Artikel
+      while (!((zeile = reader.readLine()) == null)) {
+        // String zeile aufteilen in einzelne Strings, mit jeweils einem Wert des in
+        dataList.add(zeile.split(";"));
+      }
+      // schnittstelle schließen
+      close();
+      return dataList;
+    } catch (IOException e) {
+      close();
+      throw e;
     }
-    // schnittstelle schließen
-    close();
-    return dataList;
   }
 
   @Override

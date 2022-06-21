@@ -2,6 +2,7 @@ package Domain;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
@@ -14,6 +15,8 @@ import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtGelöschtWerden;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
@@ -36,10 +39,10 @@ public class Eshop {
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String artikelDox, String benutzerDox, String ereignisDox) {
+  public Eshop(String benutzerDox, String ereignisDox) {
 
     BenutzerVw = new Benutzerverwaltung(benutzerDox);
-    ArtikelVw = new ArtikelVerwaltung(this, artikelDox);
+    ArtikelVw = new ArtikelVerwaltung(this);
     WarenkorbVw = new WarenkorbVerwaltung(this, ArtikelVw);
     EreignisVw = new EreignisLogVerwaltung(this, ereignisDox, BenutzerVw, ArtikelVw);
 
@@ -78,12 +81,14 @@ public class Eshop {
    * @param address
    * @throws ExceptionBenutzerNameUngültig
    */
-  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address) throws ExceptionBenutzerNameUngültig {
+  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
+      throws ExceptionBenutzerNameUngültig {
     BenutzerVw.registrieren(name, username, password, email, address);
     // EreignisVw.ereignisAdd(user, type);
   }
 
-  public void BV_mitarbeiterHinzufügen(String name, String username, String password) throws ExceptionBenutzerNameUngültig {
+  public void BV_mitarbeiterHinzufügen(String name, String username, String password)
+      throws ExceptionBenutzerNameUngültig {
     BenutzerVw.registrieren(name, username, password);
   }
 
@@ -190,35 +195,16 @@ public class Eshop {
   // #endregion Warenkorb
   // #region Artikelvw
   /**
-   * @author Maranderine
-   */
-  public Lager AV_alleArtikel() {
-    return ArtikelVw.alleArtikel();
-  }
-
-  public String AV_alleArtikelAusgeben(boolean detailed) {
-    return AV_alleArtikel().toString(detailed);
-  }
-
-  /**
-   * 
-   * @param searchTerm
-   * @return SuchOrdnung
-   */
-  public SuchOrdnung AV_sucheArtikel(String searchTerm) {
-    return ArtikelVw.suchArtikel(searchTerm);
-  }
-
-  /**
    * Add Artikel to artikelListe
    * 
    * @param name
    * @param bestand
    * @param einzelpreis
    * @throws ExceptionArtikelExistiertBereits
+   * @throws ExceptionArtikelKonnteNichtErstelltWerden
    */
   public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
-      throws ExceptionArtikelExistiertBereits {
+      throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden {
 
     Artikel artikel = ArtikelVw.addArtikel(name, bestand, einzelpreis, packungsInhalt);
     // ereignis loggen
@@ -229,13 +215,26 @@ public class Eshop {
     return artikel;
   }
 
-  public boolean AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelNichtGefunden {
+  /**
+   * del artikel
+   * 
+   * @param userHash
+   * @param name
+   * @throws ExceptionArtikelKonnteNichtGelöschtWerden
+   */
+  public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden {
 
-    Artikel artikel = ArtikelVw.findArtikelByName(name);
+    Artikel artikel;
+    try {
+      artikel = ArtikelVw.findArtikelByName(name);
 
-    // TODO: EVENT - basiert und fehlschlag
-    EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
-    return ArtikelVw.deleteArtikel(artikel);
+      ArtikelVw.deleteArtikel(artikel);
+      EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
+    } catch (ExceptionArtikelNichtGefunden e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new ExceptionArtikelKonnteNichtGelöschtWerden(e);
+    }
   }
 
   // #region set artikel
@@ -396,6 +395,104 @@ public class Eshop {
   public Artikel AV_findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
     return ArtikelVw.findArtikelByName(name);
   }
+
+  // #region Artikelvw darstellung
+
+  /**
+   * get alle artikel in einer liste
+   * ist eine kopie
+   * 
+   * @return
+   */
+  public Vector<Artikel> AV_getAlleArtikelList() {
+    return ArtikelVw.getAlleArtikelList();
+  }
+
+  /**
+   * liste ausgeben
+   * 
+   * @param list
+   * @param detailed
+   * @param leereNachicht
+   * @return
+   */
+  public String AV_ArtikelAusgeben(Vector<Artikel> list, boolean detailed, String leereNachicht) {
+    return ArtikelVw.displayArtikel(list, detailed, leereNachicht);
+  }
+
+  /**
+   * liste ausgeben
+   * 
+   * @param ordnung
+   * @param detailed
+   * @param leereNachicht
+   * @return
+   */
+  public String AV_ArtikelAusgeben(SuchOrdnung ordnung, boolean detailed, String leereNachicht) {
+    return ArtikelVw.displayArtikel(ordnung, detailed, leereNachicht);
+  }
+
+  /**
+   * 
+   * @param searchTerm
+   * @return SuchOrdnung
+   */
+  public SuchOrdnung AV_sucheArtikel(String searchTerm) {
+    return ArtikelVw.suchArtikel(searchTerm);
+  }
+
+  // sort
+  /**
+   * sortier die liste nach name
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
+    ArtikelVw.sortListName(ordnung, reverse);
+  }
+
+  /**
+   * sortier die liste nach name
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
+    ArtikelVw.sortListName(artikelList, reverse);
+  }
+
+  /**
+   * sortier die liste nach Preis
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
+    ArtikelVw.sortListPreis(ordnung, reverse);
+  }
+
+  /**
+   * sortier die liste nach Preis
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
+    ArtikelVw.sortListPreis(artikelList, reverse);
+  }
+
+  /**
+   * sortier die liste nach Relevanz
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListRelevanz(SuchOrdnung ordnung) {
+    ArtikelVw.sortListRelevanz(ordnung);
+  }
+
+  // #endregion Artikelvw darstellung
 
   // #endregion Artikel
   // #region Ereignis Log /////////////////////////////////////////

@@ -9,7 +9,7 @@ public abstract class MAIN {
 
   // create eshop
 
-  private final static Eshop eshop = new Eshop("Artikel.txt", "Nutzer.txt", "Ereignisse.txt");
+  private final static Eshop eshop = new Eshop("Nutzer.txt", "Ereignisse.txt");
 
   // get used user interface from Eshop
   private final static UserInterface ui = eshop.createUserInterface();
