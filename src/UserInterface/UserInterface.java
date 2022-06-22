@@ -216,7 +216,7 @@ public abstract class UserInterface {
         }
       // check input für fehler
       try {
-        if (input.isBlank()) {
+        if (input.isEmpty()) {
           throw new ExceptionInputFeldIstLeer();
         } else {
           if (pattern != null) {
