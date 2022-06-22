@@ -1,11 +1,11 @@
 package UserInterface;
 
-import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
+import Domain.BenutzerObjekte.Benutzer;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.EreignisLog.Interfaces.EreignisInterface_CallingBenutzer;
 import Domain.Search.SuchOrdnung;
@@ -39,6 +39,7 @@ public class CUI extends UserInterface {
   Artikel artikel_bearbeiten = null;
   SuchOrdnung suchOrdnung = null;
   String searchTerm = null;
+  Benutzer benutzerBearbeiten = null;
   Vector<Artikel> atikelList = eshop.AV_getAlleArtikelList();
 
   public boolean run() {
@@ -142,6 +143,7 @@ public class CUI extends UserInterface {
         System.out.println("4 = Artikel ispizieren");
         System.out.println("5 = Einen Artikel dem Warenkorb hinzufügen");
         System.out.println("6 = Warenkorb Anzeigen");
+        System.out.println("7 = Warenkorb Anzeigen");
         System.out.println("0 = Logout");
 
         try {
@@ -183,6 +185,10 @@ public class CUI extends UserInterface {
               break;
             case "6":// Warenkorb
               LevelMove(MenuLevel.WARENKORB);
+              break;
+            case "7":// benutzerBearbeiten
+              // benutzerBearbeiten = eshop.BV_NutzerEntfernen(username);
+              // LevelMove();
               break;
             case "0":// Exit
               this.searchTerm = null;
@@ -247,9 +253,13 @@ public class CUI extends UserInterface {
                 Rechnung rechnung;
                 try {
                   rechnung = eshop.WV_kaufen(this.userHash);
+                  System.out.print("\n====================================\n");
+                  System.out.print("\tRechnung:\n\n");
                   System.out.print(rechnung);
+                  System.out.print("\n====================================\n");
                 } catch (ExceptionArtikelCollection e) {
-                  System.out.println("Kaufen Fehl Geschlagen!");
+                  System.out.println("Kaufen Fehlgeschlagen!");
+                  runCatch(e);
                 }
               }
 
@@ -271,6 +281,7 @@ public class CUI extends UserInterface {
         System.out.println("1 = Artikel Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
         System.out.println("3 = Ereignis Log");
+        System.out.println("4 = Benutzer Bearbeiten");
         System.out.println("0 = Logout");
 
         try {
@@ -283,6 +294,9 @@ public class CUI extends UserInterface {
               break;
             case "3":// Mitarbeiter hinzufügen
               LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
+              break;
+            case "4":// Mitarbeiter hinzufügen
+              LevelMove(MenuLevel.BENUTZER_BEARBEITEN);
               break;
             case "0":// logout
               Logout();
@@ -666,9 +680,13 @@ public class CUI extends UserInterface {
         }
 
         LevelReturn();
-        // #endregion
         break;
+      // #endregion
+      case BENUTZER_BEARBEITEN:
+        // #region
 
+        break;
+      // #endregion
     }
     // true to continue
     return true;
@@ -689,6 +707,7 @@ public class CUI extends UserInterface {
     EREIGNIS_DETAILANSICHT,
     ARTIKEL_DETAILANSICHT,
     ARTIKEL_BEARBEITEN,
+    BENUTZER_BEARBEITEN,
     SORTIEREN
   }
 

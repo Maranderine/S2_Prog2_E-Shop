@@ -40,8 +40,10 @@ public class EreignisSystemArtikel extends EreignisSystem implements EreignisInt
     this.artikelPreis = artikelPreis;
 
     // search terms
-    String[] searchTerms = { "artikel", "ware", "preis", this.artikelName, Integer.toString(this.artikelNummer) };
+    String[] searchTerms = { "artikel", "ware", "preis", Integer.toString(this.artikelNummer) };
     SearchTermAdd(searchTerms);
+    // add artikel name split
+    SearchTermAdd(this.artikelName.split(" "));
   }
 
   // #region implementations

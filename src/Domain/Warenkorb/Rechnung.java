@@ -60,8 +60,8 @@ public class Rechnung {
     return "Rechnungs Id: " + this.rechnungsId + "\n" +
         "Datum: " + this.getKaufDatum() + "\n" +
         "________________________" + "\n" +
-        ausgabeString + "________________________" +
-        "\n" + "Gesamtbetrag: " +
-        this.betrag + "\n";
+        ausgabeString +
+        "________________________" + "\n" +
+        "Gesamtbetrag: " + this.betrag + "\n";
   }
 }

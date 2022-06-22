@@ -179,13 +179,11 @@ public class Eshop {
 
     // setz neuen Bestand
     rechnung.getInhalt().forEach((artikel, anzahl) -> {
-
       try {
         AV_setArtikel(userHash, artikel, ArtikelVw.getArtikelBestand(artikel) - anzahl);
       } catch (ExceptionArtikelUngültigerBestand e) {
         e.printStackTrace();
       }
-
     });
 
     // duzende Artikel.änderungs events

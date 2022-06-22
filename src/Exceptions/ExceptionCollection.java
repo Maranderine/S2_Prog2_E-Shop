@@ -44,11 +44,11 @@ public class ExceptionCollection extends Exception implements Iterable<Exception
 
   // displays niormal to string + allthat is in list
   @Override
-  public String toString() {
-    String str = super.toString();
+  public String getMessage() {
+    String str = super.getMessage() + "\n\n";
 
     for (Exception exception : exceptionList) {
-      str += exception.toString() + "\n";
+      str += exception.getMessage() + "\n";
     }
 
     return str;

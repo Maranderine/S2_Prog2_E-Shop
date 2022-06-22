@@ -338,9 +338,9 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @return Vector<Artikel> liste an allen aartikeln
    */
   private Vector<Artikel> compileLagerInhalt() {
-    Vector<Artikel> complist = new Vector<>();
+    Vector<Artikel> complist = new Vector<Artikel>();
 
-    for (Lager lager : lagerList) {
+    for (Lager lager : getLagerList()) {
       complist.addAll(lager.getList());
     }
 
@@ -612,7 +612,7 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @return SuchOrdnung
    */
   public SuchOrdnung suchArtikel(String suchBegriffe) {
-    // TODO lager temp code
+
     return SearchCompileOrdnungSorted(compileLagerInhalt(), suchBegriffe);
   }
 
@@ -765,7 +765,7 @@ public class ArtikelVerwaltung extends Verwaltung {
         str += sepStr;
 
       } else {
-        str += "Artikelnr | Name | Preis\n";
+        str += "Name | Preis\n";
         for (Artikel artikel : list) {
           str += artikel.toString() + "\n";
         }
@@ -788,7 +788,7 @@ public class ArtikelVerwaltung extends Verwaltung {
     String str = "";
 
     if (!detailed)
-      str += "Artikelnr | Name | Preis\n";
+      str += "Name | Preis\n";
     str += ordnung.display(detailed, leereNachicht);
 
     return str;
