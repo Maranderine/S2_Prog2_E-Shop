@@ -2,4 +2,6 @@
 1;Baterien AAA;1000;2.1;4
 0;Hamster Rad;5;30.0
 1;Hamster;9999999;20.0
-2;Hamster 6er;5000;120.0;6
+0;Blau Augiger Weisser Drache;1;9.9999999E7
+1;Zweikoepfiger Blau Augiger Weisser Drache;3;1.0E20;2
+0;E;500;1.0;5

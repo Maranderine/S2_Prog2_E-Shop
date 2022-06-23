@@ -13,18 +13,17 @@ public class Artikel extends Searchable implements Serializable, PersistentDataO
   private double preis;
 
   protected Artikel(int artikelNr, String name, int bestand, double einzelpreis) {
+    super();
     this.artikelNr = artikelNr;
     this.name = name;
     this.bestand = bestand;
     this.preis = einzelpreis;
 
     // adding search terms
-    /*
-     * artikel
-     * artikle
-     */
-    String[] searchTerms = { "artikel", this.name, Integer.toString(this.artikelNr) };
-    SearchTermAdd(searchTerms);
+    String[] searchTermsToAdd = { "artikel", Integer.toString(this.artikelNr) };
+    SearchTermAdd(searchTermsToAdd);
+    // add name in split parts
+    SearchTermAdd(this.name.split(" "));
   }
 
   // getter
@@ -81,7 +80,9 @@ public class Artikel extends Searchable implements Serializable, PersistentDataO
         "\nName: '" + this.name + "'" +
         "\nNummer: " + this.artikelNr +
         "\nBestand: " + this.bestand + "##" +
-        "\nPreis: " + this.preis;
+        "\nPreis: " + this.preis +
+        "\n\nSearch Terms:\n" +
+        SearchDisplayTerms();
   }
 
   // tostring
@@ -91,12 +92,13 @@ public class Artikel extends Searchable implements Serializable, PersistentDataO
     return toStringRaw().replace("##", "");
   }
 
+  @Override
   public String toStringDetailed() {
     // "Artikel--" +
     // "\nName: '" + this.name + "'" +
     // "\nNummer: " + this.artikelNr +
-    // "\nBestand: " + this.bestand +
-    // "\nPreis: " + this.preis + "##";
+    // "\nBestand: " + this.bestand + "##" +
+    // "\nPreis: " + this.preis;
     return toStringDetailedRaw().replace("##", "");
   }
 

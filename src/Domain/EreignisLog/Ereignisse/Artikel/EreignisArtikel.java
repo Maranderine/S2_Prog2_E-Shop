@@ -46,8 +46,10 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
     this.artikelPreis = artikelPreis;
 
     // search terms
-    String[] searchTerms = { "artikel", "ware", "preis", this.artikelName };
+    String[] searchTerms = { "artikel", "ware", "preis" };
     SearchTermAdd(searchTerms);
+    //add artikel name split
+    SearchTermAdd(this.artikelName.split(" "));
   }
 
   // #region implementierungen
