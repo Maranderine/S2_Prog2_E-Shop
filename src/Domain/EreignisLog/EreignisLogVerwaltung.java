@@ -24,6 +24,7 @@ import persistence.PersistenceManager;
 public class EreignisLogVerwaltung extends Verwaltung {
 
   // TODO: EVENTS - suche nach artikel objekt
+  // TODO: EVENTS älter als 30 tage delete
 
   private int EreignisZaehler;
   private final Eshop meinShop;
