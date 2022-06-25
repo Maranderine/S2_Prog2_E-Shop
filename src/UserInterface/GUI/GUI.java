@@ -44,9 +44,9 @@ public class GUI extends UserInterface implements ActionListener{
         frame.setResizable(false);
         }
 
+
     //reagiert auf aktionen, kommuniziert mit Eshop, führt entsprechende Befehle zur Layout Änderung in den Panels aus
     public void actionPerformed(ActionEvent ae) {
-
         //login
         if(ae.getSource() == login.loginButton){
             switch(eshop.login(this, login.userText.getText(), login.passwordText.getText())){
@@ -56,9 +56,12 @@ public class GUI extends UserInterface implements ActionListener{
                         break;
                     case KUNDE:
                         setVisiblePanel("kunde");
+                        login.clearText();
                         break;
                     case MITARBEITER:
+                     login.clearText();
                         setVisiblePanel("kunde");
+                        login.clearText();
                         break;
             }
         }
@@ -69,9 +72,9 @@ public class GUI extends UserInterface implements ActionListener{
         //register
         if(ae.getSource()== register.registerButton){
             try{
-                String name = register.nameText.getText();
+                String name = "" + register.vornameLabel.getText() + register.nameText.getText();
                 String email = register.mailText.getText();
-                String address = register.adressText.getText();
+                String address = "" + register.landBox.getSelectedItem() + register.ortLabel.getText() + register.streetLabel.getText();
                 String un = register.userText.getText();
                 String passwort = register.passwordText.getText();
 
@@ -90,22 +93,25 @@ public class GUI extends UserInterface implements ActionListener{
 
     //bestimmmt sichtbares Panel
     public void setVisiblePanel(String sichtbar){
+
+        //Alle panels unsichtbar setzen
+        login.setVisible(false);
+        register.setVisible(false);
+        kunde.setVisible(false);
+
+        //richtiges Panel sichtbar setzen
         switch(sichtbar){
+            case "none":
+                break;
             case "login": 
                 login.setVisible(true);
-                register.setVisible(false);
-                kunde.setVisible(false);
                 frame.pack();
                 break;
             case "register": 
-                login.setVisible(false);
                 register.setVisible(true);
-                kunde.setVisible(false);
                 frame.pack();
                 break;
             case "kunde":
-                login.setVisible(false);
-                register.setVisible(false);
                 kunde.setVisible(true);
                 frame.pack();
                 break;

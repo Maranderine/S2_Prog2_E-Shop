@@ -268,7 +268,7 @@ public class CUI extends UserInterface {
       case MITARBEITER_ANSICHT:
         // #region MITARBEITER_ANSICHT
         System.out.print("\n____________MITARBEITER____________\n\n");
-        System.out.println("1 = Artikel Verwalten");
+        System.out.println("1 = Artikel #Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
         System.out.println("3 = Ereignis Log");
         System.out.println("0 = Logout");

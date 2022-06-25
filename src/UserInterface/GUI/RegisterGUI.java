@@ -16,37 +16,52 @@ public class RegisterGUI extends JPanel{
     JLabel title;
     JPanel inputPanel;
     JLabel nameLabel;
+    JLabel vornameLabel;
     JLabel userLabel;
     JLabel passwordLabel;
+    JLabel landLabel;
     JLabel mailLabel;
-    JLabel adressLabel;
+    JLabel ortLabel;
+    JLabel streetLabel;
     JTextField nameText;
+    JTextField vornameText;
     JTextField userText;
     JTextField passwordText;
     JTextField mailText;
-    JTextField adressText;
+    JTextField ortText;
+    JTextField streetText;
     JLabel validation;
     JButton registerButton;
     JButton backToLogin;
+    JComboBox landBox;
 
     public RegisterGUI(GUI gui)   {
 
         this.gui = gui;
+
+        String[] landAuswahl = {"Deutschland", "England"};
         title = new JLabel("Register", JLabel.CENTER);   
         inputPanel = new JPanel();
         nameLabel = new JLabel("Name");
+        vornameLabel = new JLabel("Vorname");
         userLabel = new JLabel("User");
         passwordLabel = new JLabel("password");
         mailLabel = new JLabel("Email");
-        adressLabel = new JLabel("Adresse");
+        landLabel= new JLabel("Land");
+        ortLabel = new JLabel("Ort");
+        streetLabel = new JLabel("Straße/HausNr");
+
         nameText = new JTextField();
+        vornameText = new JTextField();
         userText = new JTextField();
         passwordText = new JTextField();
         mailText = new JTextField();
-        adressText = new JTextField();
+        ortText = new JTextField();
+        streetText = new JTextField();
         validation = new JLabel("");
         registerButton = new JButton("register");
         backToLogin = new JButton("back to login");
+        landBox = new JComboBox<>(landAuswahl);
         
         initializeLayout();
         initializeAction();
@@ -56,7 +71,7 @@ public class RegisterGUI extends JPanel{
     private void initializeLayout() {
         
         //gesamtes Panel
-        setPreferredSize(new Dimension(400,600));
+        setPreferredSize(new Dimension(400,560));
         setLayout(null);
         setBackground(new Color(71,39,79));
         GridBagConstraints c = new GridBagConstraints();
@@ -71,7 +86,7 @@ public class RegisterGUI extends JPanel{
 
         //Label, Eingabefelder, Button in einem Panel 
         inputPanel.setLayout(new GridBagLayout());
-        inputPanel.setBounds(50,110,300, 290);
+        inputPanel.setBounds(50,110,300, 380);
         add(inputPanel);
 
         c.gridy = 0;
@@ -84,41 +99,56 @@ public class RegisterGUI extends JPanel{
 
         c.gridy=1;
         c.gridx=0;
-        inputPanel.add(userLabel, c);
+        inputPanel.add(vornameLabel, c);
 
         c.gridy=2;
-        inputPanel.add(passwordLabel, c);
+        inputPanel.add(userLabel, c);
 
         c.gridy=3;
-        inputPanel.add(mailLabel, c);
+        inputPanel.add(passwordLabel, c);
 
         c.gridy=4;
-        inputPanel.add(adressLabel, c);
+        inputPanel.add(mailLabel, c);
+
+        c.gridy=5;
+        inputPanel.add(landLabel, c);
+
+        c.gridy=6;
+        inputPanel.add(ortLabel, c);
+
+        c.gridy=7;
+        inputPanel.add(streetLabel, c);
 
         c.weightx = 1;
         c.gridx=1;
-        c.fill = GridBagConstraints.BOTH;
         c.gridy = 0;
         c.ipady = 10;
         c.insets = new Insets(0,10,10,10);
+        c.fill = GridBagConstraints.BOTH;
         inputPanel.add(nameText, c);
 
         c.gridy = 1;
-        inputPanel.add(userText, c);
+        inputPanel.add(vornameText, c);
 
         c.gridy = 2;
-        inputPanel.add(passwordText, c);
+        inputPanel.add(userText, c);
 
         c.gridy = 3;
-        inputPanel.add(mailText, c);
+        inputPanel.add(passwordText, c);
 
         c.gridy = 4;
-        inputPanel.add(adressText,c);
+        inputPanel.add(mailText,c);
 
         c.gridy = 5;
-        inputPanel.add(validation, c);
+        inputPanel.add(landBox, c);
 
         c.gridy = 6;
+        inputPanel.add(ortText, c);
+
+        c.gridy = 7;
+        inputPanel.add(streetText, c);
+
+        c.gridy = 8;
         c.gridx = 0;
         c.ipady = 5;
         c.gridwidth = 2;
@@ -126,7 +156,7 @@ public class RegisterGUI extends JPanel{
         inputPanel.add(registerButton,c);
 
         
-        backToLogin.setBounds(50,560,300,30);
+        backToLogin.setBounds(50,510,300,30);
         backToLogin.setOpaque(false);
         backToLogin.setContentAreaFilled(false);
         backToLogin.setBorderPainted(false);
@@ -154,7 +184,7 @@ public class RegisterGUI extends JPanel{
         userText.setText("");
         passwordText.setText("");
         mailText.setText("");
-        adressText.setText("");
+        ortText.setText("");
     }
 
 }

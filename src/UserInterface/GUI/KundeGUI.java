@@ -21,7 +21,7 @@ public class KundeGUI extends JPanel{
     }
 
     public void initializeLayout(){
-        setPreferredSize(new Dimension(600,600));
+        setPreferredSize(new Dimension(800,600));
         setLayout(null);
         setBackground(new Color(71,39,79));
 
