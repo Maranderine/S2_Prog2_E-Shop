@@ -14,7 +14,7 @@ public abstract class Searchable {
    * such begriffe.
    * Alle search terms müssen lowecase sein!!!
    */
-  protected Vector<String> searchTerms;
+  private Vector<String> searchTerms;
 
   /**
    * Searchable.
@@ -82,8 +82,8 @@ public abstract class Searchable {
    * 
    * @param string
    */
-  protected void SearchTermAdd(String string) {
-    this.searchTerms.add(searchableStringFormat(string));
+  protected void SearchTermAdd(String term) {
+    this.searchTerms.add(searchableStringFormat(term));
   }
 
   /**
@@ -92,10 +92,9 @@ public abstract class Searchable {
    * 
    * @param stringArr
    */
-  protected void SearchTermAdd(String[] stringArr) {
-    this.searchTerms = new Vector<String>();
-    for (String string : stringArr) {
-      SearchTermAdd(string);
+  protected void SearchTermAdd(String[] termArr) {
+    for (String term : termArr) {
+      SearchTermAdd(term);
     }
   }
 
@@ -140,26 +139,50 @@ public abstract class Searchable {
     SearchTermAdd(newTerm);
   }
 
-  // #region searching
   /**
    * look how many search terms of the obj are contained in the termstring.
    * Ignores character case.
    * For one term only use SearchTermCheck
    * 
-   * @param termstring to check for occurences
+   * @param tosearch to check for occurences
    * @return int value of how many terms were found, or 0
    */
-  protected int SearchTermContains(String termstring) {
-    termstring = searchableStringFormat(termstring);
+  protected int SearchTermContains(String tosearch) {
+    tosearch = searchableStringFormat(tosearch);
     int val = 0;
-    for (String string : this.searchTerms) {
-      if (string.contains(termstring))
+    for (String term : this.searchTerms) {
+      if (term.contains(tosearch))
         val++;
     }
     return val;
   }
 
-  // #endregion
+  /**
+   * display all search terms
+   * 
+   * @return string
+   */
+  protected String SearchDisplayTerms() {
+    String str = "";
+
+    if (!this.searchTerms.isEmpty()) {
+      for (String term : searchTerms) {
+        str += "\n" + term;
+      }
+    } else {
+      str += "no Terms";
+    }
+    return str;
+  }
+
+  /**
+   * get vectors
+   * 
+   * @return Vector<String>
+   */
+  protected Vector<String> SearchGetTerms() {
+    return this.searchTerms;
+  }
 
   @Override
   public abstract String toString();

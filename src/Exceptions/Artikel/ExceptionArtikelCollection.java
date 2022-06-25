@@ -16,5 +16,4 @@ public class ExceptionArtikelCollection extends ExceptionCollection {
   public ExceptionArtikelCollection(String message, Vector<ExceptionArtikel> list) {
     super(message, list);
   }
-
 }
