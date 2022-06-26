@@ -13,7 +13,6 @@ public class Kunde extends Benutzer {
    * @param name         name des kunden
    * @param username     benutzername für login
    * @param password     passwort zum einloggen
-   * @param kundenNr
    * @param email
    * @param address
    */

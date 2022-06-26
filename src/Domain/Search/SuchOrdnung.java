@@ -3,7 +3,6 @@ package Domain.Search;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.ListIterator;
 
 /**
  * Management Klasse für eine geordnete liste mit Searchaable objekten

@@ -22,8 +22,8 @@ public class Massengutartikel extends Artikel {
     this.stückZahl = stückZahl;
 
     // adding search terms
-    String[] searchTerms = { "massengut" };
-    SearchTermAdd(searchTerms);
+    String[] searchTermsToAdd = { "massengut" };
+    SearchTermAdd(searchTermsToAdd);
   }
 
   // Gibt die stückZahl aus

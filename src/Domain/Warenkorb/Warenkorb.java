@@ -33,7 +33,7 @@ class Warenkorb {/* "protected" */
   @Override
   public String toString() {
 
-    String str = "Artikelnr\tName\tBestand\tPreis\n";
+    String str = "\tName\tBestand\tPreis\n";
 
     if (!inhalt.isEmpty())
       for (Entry<Artikel, Integer> entry : inhalt.entrySet()) {
