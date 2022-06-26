@@ -60,7 +60,9 @@ public class RegisterGUI extends JPanel{
         streetText = new JTextField();
         validation = new JLabel("");
         registerButton = new JButton("register");
+        registerButton.setActionCommand("register_registerButton");
         backToLogin = new JButton("back to login");
+        backToLogin.setActionCommand("register_backToLogin");
         landBox = new JComboBox<>(landAuswahl);
         
         initializeLayout();

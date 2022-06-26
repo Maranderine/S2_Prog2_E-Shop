@@ -47,47 +47,47 @@ public class GUI extends UserInterface implements ActionListener{
 
     //reagiert auf aktionen, kommuniziert mit Eshop, führt entsprechende Befehle zur Layout Änderung in den Panels aus
     public void actionPerformed(ActionEvent ae) {
-        //login
-        if(ae.getSource() == login.loginButton){
-            switch(eshop.login(this, login.userText.getText(), login.passwordText.getText())){
-                    case NONE: 
-                        info.infoBox("username oder Passwort falsch", "Login Fehler");
+        switch(ae.getActionCommand()){
+            case "login_loginButton":
+                switch(eshop.login(this, login.userText.getText(), login.passwordText.getText())){
+                        case NONE: 
+                            info.infoBox("username oder Passwort falsch", "Login Fehler");
+                            login.clearText();
+                            break;
+                        case KUNDE:
+                            setVisiblePanel("kunde");
+                            login.clearText();
+                            break;
+                        case MITARBEITER:
                         login.clearText();
-                        break;
-                    case KUNDE:
-                        setVisiblePanel("kunde");
-                        login.clearText();
-                        break;
-                    case MITARBEITER:
-                     login.clearText();
-                        setVisiblePanel("kunde");
-                        login.clearText();
-                        break;
-            }
-        }
-        if(ae.getSource() == login.toRegister){
-            setVisiblePanel("register");
-        }
+                            setVisiblePanel("kunde");
+                            login.clearText();
+                            break;
+                }
+                break;
+            case "login_toRegister":
+                setVisiblePanel("register");
+                break;
 
-        //register
-        if(ae.getSource()== register.registerButton){
-            try{
-                String name = "" + register.vornameLabel.getText() + register.nameText.getText();
-                String email = register.mailText.getText();
-                String address = "" + register.landBox.getSelectedItem() + register.ortLabel.getText() + register.streetLabel.getText();
-                String un = register.userText.getText();
-                String passwort = register.passwordText.getText();
+            case "register_registerButton":
+                try{
+                    String name = "" + register.vornameLabel.getText() + register.nameText.getText();
+                    String email = register.mailText.getText();
+                    String address = "" + register.landBox.getSelectedItem() + register.ortLabel.getText() + register.streetLabel.getText();
+                    String un = register.userText.getText();
+                    String passwort = register.passwordText.getText();
 
-                eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-                info.infoBox("Konto wurde erstellt", "Bestätigung");
+                    eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
+                    info.infoBox("Konto wurde erstellt", "Bestätigung");
 
-            } catch (ExceptionBenutzerNameUngültig e) {
-                info.infoBox(e.getMessage(), "Registrieren Fehler");
-                register.clearText();
-            }  
-        }
-        if(ae.getSource()== register.backToLogin){
-            setVisiblePanel("login");
+                } catch (ExceptionBenutzerNameUngültig e) {
+                    info.infoBox(e.getMessage(), "Registrieren Fehler");
+                    register.clearText();
+                }
+                break;  
+            case "register_backToLogin":
+                setVisiblePanel("login");
+                break;
         }
     }
 

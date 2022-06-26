@@ -28,11 +28,13 @@ public class LoginGUI extends JPanel {
         this.gui = gui;
         title = new JLabel("Login", JLabel.CENTER);
         toRegister = new JButton("Register now");
+        toRegister.setActionCommand("login_toRegister");
         validation = new JLabel("", JLabel.CENTER);
         inputPanel = new JPanel();
         userLabel = new JLabel("User");
         passwordLabel = new JLabel("password");
         loginButton = new JButton("login");
+        loginButton.setActionCommand("login_loginButton");
         userText = new JTextField();
         passwordText = new JPasswordField();
         
