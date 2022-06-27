@@ -3,12 +3,11 @@ package UserInterface;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import Domain.Eshop;
-import Exceptions.Input.ExceptionInputExit;
 import Exceptions.Input.ExceptionInputFalsch;
-import Exceptions.Input.ExceptionInputFeldIstLeer;
 
 /**
  * Parent for local usability classes like CUI or GUI
@@ -42,9 +41,6 @@ public abstract class UserInterface {
 
   // #region input
 
-  /** Stream-Objekt fuer Texteingabe ueber Konsolenfenster erzeugen */
-  private BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-
   // #region character collections
   /** buchstaben klein a-z */
   private String cc_bk = "a-z";
@@ -71,23 +67,50 @@ public abstract class UserInterface {
   /** alles: Buchstaben, zahlen, bindezeichen */
   private String cc_all = cc_ab + cc_n + cc_wB;
   // #endregion
-
   // #region precompiled patterns
+
+  /**
+   * hält den erklärungs text zu jedem pattern
+   * die texte sind an den user gerichtet
+   */
+  private HashMap<Pattern, String> patternInfoText = new HashMap<Pattern, String>();
+
+  /**
+   * gets the pattern associated user info string
+   * 
+   * @param pattern precompiled regex pattern
+   * @return string
+   */
+  private String getPatternInfo(Pattern pattern) {
+    return patternInfoText.get(pattern);
+  }
+
+  /**
+   * 
+   */
+  /**
+   * compiles a pattern for the given regex and add its user information text to
+   * to the patternInfoText map
+   * 
+   * @param regex        regex pattern
+   * @param userInfoText user informationen über gewollten input
+   * @return Pattern pattern
+   */
+  private Pattern compilePattern(String regex, String userInfoText) {
+
+    Pattern pattern = Pattern.compile(regex);
+    patternInfoText.put(pattern, userInfoText);
+    return pattern;
+  }
+
   /**
    * 1ne beliebig lange grupierungen an Buchstaben und zahlen mit umlauten,
    * zahlen, Bindezeichen und whitespaces
    * 
    * @see UserInterface.cc_all
    */
-  protected Pattern PatternText = Pattern.compile("(?U)[" + cc_all + "\\s]+");
-  // protected Pattern PatternText = Pattern.compile("(?U)[" + cc_all + "\\s]+");
-  /**
-   * 1ne beliebig lange grupierungen an Buchstaben mit umlauten, zahlen, und Binde
-   * zeichen ohne whitespaces
-   * 
-   * @see UserInterface.cc_all
-   */
-  protected Pattern PatternUserName = Pattern.compile("(?U)[" + cc_all + "\\S]+");
+  protected Pattern PatternText = compilePattern("(?U)[" + cc_all + "\\s]+",
+      "Keine zeichen ausser: -_");
   /**
    * mindestends 2 belieblig lange grupierungen an klein buchstaben, die mit einem
    * großbuchstaben anfangen, alle von einem wihte space getrennt
@@ -95,27 +118,31 @@ public abstract class UserInterface {
    * @see UserInterface.cc_abg
    * @see UserInterface.cc_abk
    */
-  protected Pattern PatternEchtNamen = Pattern
-      .compile("(?U)[" + cc_abg + "][" + cc_abk + "]*(\\s[" + cc_abg + "][" + cc_abk + "]*)+");
+  protected Pattern PatternEchtNamen = compilePattern(
+      "(?U)[" + cc_abg + "][" + cc_abk + "]*(\\s[" + cc_abg + "][" + cc_abk + "]*)+",
+      "Darf keine Zeichen, Zahlen oder extra Leerzeichen enthalten.\nz.B: Hanna Maria Antonia Rodrigez");
   /**
    * beliebig viele und lange grupierungen an allen zeichen die von 1 whitespace
    * getrennt werden
    * 
    * @see UserInterface.cc_all
    */
-  protected Pattern PatternArtikel = Pattern.compile("(?U)[" + cc_all + "]+(\\s[" + cc_all + "]+)*");
+  protected Pattern PatternArtikel = compilePattern("(?U)[" + cc_all + "]+(\\s[" + cc_all + "]+)*",
+      "Darf keine Sonderzeichen oder extra Leerzeichen enthalten.");
   /**
    * 1ne positieve beliebig lange nummer ohne whitespaces
    * 
    * @see UserInterface.cc_n
    */
-  protected Pattern PatternNum = Pattern.compile("(?U)[" + cc_n + "]+");
+  protected Pattern PatternNum = compilePattern("(?U)[" + cc_n + "]+",
+      "Eine beliebig lange positive Zahl ohne Nachkommastelle.\nz.B. 100, 4, 99999999");
   /**
    * 1 oder kein minus, 1ne beliebig lange nummer
    * 
    * @see UserInterface.cc_n
    */
-  protected Pattern PatternInt = Pattern.compile("(?U)(-)?[" + cc_n + "]+");
+  protected Pattern PatternInt = compilePattern("(?U)(-)?[" + cc_n + "]+",
+      "Eine beliebig lange Zahl ohne Nachkommastelle.\nz.B: 1, 99, -7");
   /**
    * 1 oder kein minus, 1ne beliebig lange nummer, optional ein punkt und 1ne
    * beliebig lange nummer
@@ -123,20 +150,15 @@ public abstract class UserInterface {
    * @see UserInterface.cc_n
    * @see UserInterface.cc_all
    */
-  protected Pattern PatternFloat = Pattern.compile("(?U)(-)?[" + cc_n + "]+((.)[" + cc_all + "]+)?");
+  protected Pattern PatternFloat = compilePattern("(?U)(-)?[" + cc_n + "]+((.)[" + cc_all + "]+)?",
+      "Eine beliebig lange Zahl.\nz.B: 9, 20, 11.5, -99.003");
   /**
    * eine email adresse
    * 
    * @see UserInterface.cc_all
    */
-  protected Pattern PatternEmail = Pattern.compile("(?U)[" + cc_all + "]+(@)[" + cc_all + "]+(.)[" + cc_all + "]+");
-  /**
-   * ein passwort
-   * 
-   * @see UserInterface.cc_all
-   * @see UserInterface.cc_sz
-   */
-  protected Pattern PatternPasswort = Pattern.compile("(?U)[" + cc_all + cc_sz + "\\s]+");
+  protected Pattern PatternEmail = compilePattern("(?U)[" + cc_all + "]+(@)[" + cc_all + "]+(.)[" + cc_all + "]+",
+      "Eine Email: 'xxxx@xxxx.xxx'\nz.B: max.mustermann99@test.de");
   /**
    * nach diesem format: StraßenName 11
    * 
@@ -145,8 +167,9 @@ public abstract class UserInterface {
    * @see UserInterface.cc_ab
    * @see UserInterface.cc_n
    */
-  protected Pattern PatternAdresseStraße = Pattern
-      .compile("(?U)[" + cc_ab + "]+(\\s|" + cc_wB + "[" + cc_ab + "]+)*\\s[" + cc_n + "]+");
+  protected Pattern PatternAdresseStraße = compilePattern(
+      "(?U)[" + cc_ab + "]+(\\s|" + cc_wB + "[" + cc_ab + "]+)*\\s[" + cc_n + "]+",
+      "Ein Straßen Name z.B. Hans-Peter Friedrich Weg 22");
   /**
    * nach diesem format: 99999 Ortsname
    * 
@@ -156,431 +179,84 @@ public abstract class UserInterface {
    * @see UserInterface.cc_wB
    * @see UserInterface.cc_ab
    */
-  protected Pattern PatternAdresseOrt = Pattern
-      .compile("(?U)[" + cc_n + "]{5}\\s[" + cc_abg + "][" + cc_abk + "]*(\\s|" + cc_wB + "[" + cc_ab + "]+)*");
+  protected Pattern PatternAdresseOrt = compilePattern(
+      "(?U)[" + cc_n + "]{5}\\s[" + cc_abg + "][" + cc_abk + "]*(\\s|" + cc_wB + "[" + cc_ab + "]+)*",
+      "Ein Orts Name z.B. 22222 Über-Unter Beispielhausen");
   /**
    * nach diesem format: Deutschland
    * 
    * @see UserInterface.cc_abg
    * @see UserInterface.cc_abk
    */
-  protected Pattern PatternAdresseLand = Pattern
-      .compile("(?U)[" + cc_abg + "][" + cc_abk + "]+");
+  protected Pattern PatternAdresseLand = compilePattern("(?U)[" + cc_abg + "][" + cc_abk + "]+",
+      "Ein Lands Name z.B. Deutschland");
+  /**
+   * ein passwort
+   * 
+   * @see UserInterface.cc_all
+   * @see UserInterface.cc_sz
+   */
+  protected Pattern PatternPasswort = compilePattern("(?U)[" + cc_all + cc_sz + "\\s]+",
+      "Darf keine sonderzeichen enthalten ausser: " + cc_wB + cc_sz);
+  /**
+   * 1ne beliebig lange grupierungen an Buchstaben mit umlauten, zahlen, und Binde
+   * zeichen ohne whitespaces
+   * 
+   * @see UserInterface.cc_all
+   */
+  protected Pattern PatternUserName = compilePattern("(?U)[" + cc_all + "\\S]+",
+      "Darf Buchstaben, Nummern und Zeichen enthalten ausser: " + cc_sz + "\nUnd keine Leerzeichen enthalten.");
 
   // #endregion
-
-  // #region input methoden
+  // #region check input
 
   /**
-   * gets an input as a string
+   * check ob ein String input in das vorgegebene pattern fällt
+   * alle vordefinierten patterns sind true wenn der string akzeptierbar zur
+   * benutzung ist
    * 
-   * @param loopnum         number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @param pattern         regex pattern oder null
-   * @param wrongInputText  text der erklärt welche inputs erlaubt sind
-   * @param linePre         before every printed line of text
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
+   * @param pattern regex pattern oder null
+   * @param string  string zu überprüfen
+   * @return boolean
    */
-  protected String GetInput(int loopNummer, String inputEinleitung, String exitPhrase, Pattern pattern,
-      String wrongInputText, String linePre) throws ExceptionInputFalsch, ExceptionInputExit {
-    String input;
-    if (linePre == null)
-      linePre = "";
-    if (exitPhrase != null)
-      System.out.println(linePre + "Zurück input: " + exitPhrase);
-
-    do {
-      // display intro
-      if (inputEinleitung != null)
-        System.out.print(linePre + inputEinleitung);
-      // get input
-      try {
-        input = inputStream.readLine();
-      } catch (IOException e) {
-        e.printStackTrace();
-        return null;
-      }
-
-      // input auswertung
-
-      // esit?
-      if (exitPhrase != null)
-        if (input.equals(exitPhrase)) {
-          throw new ExceptionInputExit();
-        }
-      // check input für fehler
-      try {
-        if (input.isEmpty()) {
-          throw new ExceptionInputFeldIstLeer();
-        } else {
-          if (pattern != null) {
-            if (pattern.matcher(input).matches())
-              return input;
-            else
-              throw new ExceptionInputFalsch(wrongInputText);
-          } else
-            return input;// no pattern return input
-        }
-      } catch (Exception e) {
-        System.out.println(linePre + e.getMessage());
-      }
-
-    } while (--loopNummer != 0);
-
-    throw new ExceptionInputFalsch(wrongInputText);
+  protected boolean CheckString(Pattern pattern, String string) {
+    return pattern.matcher(string).matches();
   }
 
   /**
-   * einfach nur input nehmen, ohne pattern matching und input erklärung
+   * check ob ein String input in das vorgegebene pattern fällt
+   * alle vordefinierten patterns sind true wenn der string akzeptierbar zur
+   * benutzung ist
    * 
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInput(int loopNummer, String inputEinleitung, String exitPhrase, Pattern pattern,
-      String wrongInputText)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, pattern, wrongInputText, "");
-  }
-
-  /**
-   * einfach nur input nehmen, ohne pattern matching und input erklärung
-   * 
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInput(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, null, "");
-  }
-
-  /**
-   * einfach nur input nehmen
-   * 
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInput() throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(1, null, null, null, "");
-  }
-
-  // premade pattern matching
-
-  /**
-   * erlaubt nur text eingabe ohne sonderzeichen
-   * 
-   * @see UserInterface.PatternText
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputText(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternText,
-        "Keine zeichen ausser: -_");
-  }
-
-  /**
-   * erlaubt nur Echt Namen input.
-   * mindestends 2 belieblig lange grupierungen an klein buchstaben, die mit einem
-   * großbuchstaben anfangen, alle von einem wihte space getrennt
-   * 
-   * @see UserInterface.PatternEchtNamen
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputNamen(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternEchtNamen,
-        "Darf keine Zeichen, Zahlen oder extra Leerzeichen enthalten.\nz.B: Hanna Maria Antonia Rodrigez");
-  }
-
-  /**
-   * erlaubt nur Artikel namen konventionen input.
-   * beliebig viele und lange grupierungen an allen zeichen die von 1 whitespace
-   * getrennt werden
-   * 
-   * @see UserInterface.PatternArtikel
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputArtikel(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternArtikel,
-        "Darf keine Sonderzeichen oder extra Leerzeichen enthalten.");
-  }
-
-  /**
-   * erlaubt nur simplen zahlen input, eine beliebig lange positive Zahl ohne
-   * Nachkommastelle
-   * 
-   * @see UserInterface.PatternNum
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputNum(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternNum,
-        "Eine beliebig lange positive Zahl ohne Nachkommastelle.\nz.B. 100, 4, 99999999");
-  }
-
-  /**
-   * erlaubt nur navigations input, eine beliebig lange positive Zahl ohne
-   * Nachkommastelle
-   * 
-   * @see UserInterface.PatternNum
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
+   * @param pattern        regex pattern oder null
+   * @param string         string zu überprüfen
+   * @param wrongInputText custom text der erklärt welche inputs erlaubt sind,
+   *                       null wenn der pattern spezifische text genommen werden
+   *                       soll
    * @throws ExceptionInputFalsch
    */
-  protected String GetInputNavigation(String inputEinleitung)
-      throws ExceptionInputFalsch {
-    try {
-      return GetInput(0, inputEinleitung, null, PatternNum,
-          "Eine der in der Navigation angegebenen Nummern.");
-    } catch (ExceptionInputExit e) {
-      return "";
-    }
-  }
+  protected void CheckString(Pattern pattern, String string, String wrongInputText) throws ExceptionInputFalsch {
+    // wenn apttern icht true erstellt exception mit fehlermeldung
+    if (!CheckString(pattern, string)) {
+      if (wrongInputText == null && patternInfoText.containsKey(pattern))
+        throw new ExceptionInputFalsch(getPatternInfo(pattern));
 
-  /**
-   * erlaubt nur int eingaben
-   * 
-   * @see UserInterface.PatternInt
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputInt(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternInt,
-        "Eine beliebig lange Zahl ohne Nachkommastelle.\nz.B: 1, 99, -7");
-  }
-
-  /**
-   * erlaubt nur float eingaben
-   * 
-   * @see UserInterface.PatternFloat
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputFloat(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternFloat,
-        "Eine beliebig lange Zahl.\nz.B: 9, 20, 11.5, -99.003");
-  }
-
-  /**
-   * erlaubt nur email eingaben
-   * 
-   * @see UserInterface.PatternEmail
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputEmail(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternEmail,
-        "Eine Email: 'xxxx@xxxx.xxx'\nz.B: max.mustermann99@test.de");
-  }
-
-  /**
-   * erlaubt adress eingaben nach diesem format: StraßenName 11, 99999 Ortsname,
-   * Deutschland.
-   * Input nahme ist in 3 schritte aufgeteilt: Staße, Ort, Land
-   * 
-   * @see UserInterface.
-   * @param loopNummer number of loops to try, 1 to run one time, X<=0 for
-   *                   infinite loops
-   * @param exitPhrase eingabe die den loop verlässt oder null für nichts,
-   *                   wird vorher einmal ausgegeben: "Zurück input: " +
-   *                   exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputAdresse(int loopNummer, String erstEinleitung, String exitPhrase, String linePre)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    String str = "";
-    System.out.println(erstEinleitung);
-    str += GetInput(loopNummer, "Straße - Format: \"StraßenName 11\"\n\t > ", exitPhrase,
-        PatternAdresseStraße, "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
-    str += GetInput(loopNummer, "Ort - Format: \"99999 Ortsname\"\n\t > ", exitPhrase, PatternAdresseOrt,
-        "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
-    str += GetInput(loopNummer, "Land - Format: \"Deutschland\"\"\n\t > ", exitPhrase, PatternAdresseLand,
-        "Nur eingaben mit dem gewollten format werden erkannt.", linePre);
-
-    return str;
-  }
-
-  /**
-   * erlaubt nur passwort input, gibt ausgabe zu erlaubten zeichen.
-   * Bei passwort abfrage bitte GetInputPasswortAbfrage benutzen.
-   * 
-   * @see UserInterface.PatternPasswort
-   * @see UserInterface.GetInputPasswortAbfrage
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputPasswortNew(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternPasswort,
-        "Darf keine sonderzeichen enthalten ausser: " + cc_sz);
-  }
-
-  /**
-   * erlaubt nur passwort input, gibt KEINE ausgabe zu erlaubten zeichen.
-   * Bei passwort neu erstellung bitte GetInputPasswortNew benutzen.
-   * 
-   * @see UserInterface.PatternPasswort
-   * @see UserInterface.GetInputPasswortNew
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   */
-  protected String GetInputPasswortAbfrage(String inputEinleitung) {
-    try {
-      return GetInput(1, inputEinleitung, null, PatternPasswort,
-          null);
-    } catch (ExceptionInputFalsch | ExceptionInputExit e) {
-      // falscher typ input muss nicht angezeigt werden
-      return "";
-    }
-  }
-
-  /**
-   * erlaubt usernamen eingabe. gibt ausgabe zu erlaubten zeichen.
-   * Bei usernamen abfrage bitte GetInputUserNameAbfrage benutzen.
-   * 1ne beliebig lange grupierungen an Buchstaben mit umlauten, zahlen, und Binde
-   * zeichen ohne whitespaces
-   * 
-   * @see UserInterface.PatternUserName
-   * @see UserInterface.GetInputUserNameAbfrage
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   * @throws ExceptionInputExit
-   */
-  protected String GetInputUserNameNew(int loopNummer, String inputEinleitung, String exitPhrase)
-      throws ExceptionInputFalsch, ExceptionInputExit {
-    return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternUserName,
-        "Darf Buchstaben, Nummern und Zeichen enthalten ausser: " + cc_sz + "\nUnd keine Leerzeichen enthalten.");
-  }
-
-  /**
-   * erlaubt usernamen eingabe. gibt KEINE ausgabe zu erlaubten zeichen.
-   * Bei usernamen neu erstellung bitte GetInputUserNameNew benutzen.
-   * 1ne beliebig lange grupierungen an Buchstaben mit umlauten, zahlen, und Binde
-   * zeichen ohne whitespaces
-   * 
-   * @see UserInterface.PatternUserName
-   * @see UserInterface.GetInputUserNameNew
-   * @param loopNummer      number of loops to try, 1 to run one time, X<=0 for
-   *                        infinite loops
-   * @param inputEinleitung string gezeigt vor input nahme oder null für nichts
-   * @param exitPhrase      eingabe die den loop verlässt oder null für nichts,
-   *                        wird vorher einmal ausgegeben: "Zurück input: " +
-   *                        exitPhrase
-   * @return String eingegebener input
-   * @throws ExceptionInputFalsch
-   */
-  protected String GetInputUserNameAbfrage(String inputEinleitung) {
-    try {
-      return GetInput(1, inputEinleitung, null, PatternUserName,
-          null);
-    } catch (ExceptionInputFalsch | ExceptionInputExit e) {
-      // falscher typ input muss nicht angezeigt werden
-      return "";
+      throw new ExceptionInputFalsch(wrongInputText);
     }
   }
 
   // #endregion
 
+  // #region debug
+
+  /**
+   * ist nur als debug gedacht
+   * 
+   * @param pat
+   */
   protected void regexChecker(Pattern pat) {
     String input;
-
+    BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
     do {
       try {
         input = inputStream.readLine();
@@ -590,6 +266,8 @@ public abstract class UserInterface {
       }
     } while (true);
   }
+
+  // #endregion
 
   // #endregion
 }
