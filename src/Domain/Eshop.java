@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
-import Domain.Artikel.Lager;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
@@ -20,7 +19,6 @@ import Exceptions.Artikel.ExceptionArtikelKonnteNichtGelöschtWerden;
 import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
-import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
