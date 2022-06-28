@@ -90,8 +90,8 @@ public class Eshop {
     BenutzerVw.registrieren(name, username, password);
   }
 
-  public void BV_NutzerEntfernen(String username) {
-
+  public void BV_NutzerEntfernen(String username) throws ExceptionBenutzerNichtGefunden {
+    BenutzerVw.deleteBenutzer(username);
   }
 
   /**

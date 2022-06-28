@@ -90,10 +90,24 @@ public class Benutzerverwaltung extends Verwaltung {
     this.benutzerRegister.add(einNutzer);
   }
 
-  void loeschen(String username) throws ExceptionBenutzerNichtGefunden {
-    Benutzer benutzer = this.sucheBenutzer(username);
-    // übernimmt Vector:
+  /**
+   * delete be utzer aus register
+   * 
+   * @param benutzer
+   * @throws ExceptionBenutzerNichtGefunden
+   */
+  public void deleteBenutzer(Benutzer benutzer) throws ExceptionBenutzerNichtGefunden {
     benutzerRegister.remove(benutzer);
+  }
+
+  /**
+   * delete be utzer aus register
+   * 
+   * @param username
+   * @throws ExceptionBenutzerNichtGefunden
+   */
+  public void deleteBenutzer(String username) throws ExceptionBenutzerNichtGefunden {
+    deleteBenutzer(this.sucheBenutzer(username));
   }
 
   /**
@@ -172,7 +186,7 @@ public class Benutzerverwaltung extends Verwaltung {
 
   // #region get user data
   /*
-   * get dddata methoden
+   * get data methoden
    * returnen daten unabhängig vom typ oder benutzung der daten
    * 
    */
