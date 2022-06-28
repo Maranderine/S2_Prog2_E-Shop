@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 import Domain.Eshop;
+import Domain.Search.SuchOrdnung;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import UserInterface.UserInterface;
 
@@ -17,6 +18,7 @@ public class GUI extends UserInterface implements ActionListener{
     RegisterGUI register;
     KundeGUI kunde;
     InfoBox info;
+    SuchOrdnung suchOrdnung = null;
 
     public GUI(Eshop eshop){
 
@@ -131,58 +133,3 @@ public class GUI extends UserInterface implements ActionListener{
     }
         
 }
-
-
-//reagiert auf aktionen, kommuniziert mit Eshop, führt entsprechende Befehle zur Layout Änderung in den Panels aus
-   /* public void actionPerformed(ActionEvent ae) {
-        switch(Level()){
-            case LOGIN:
-
-                //entnimmt Textfeldern String --> eshop.login
-                switch(eshop.login(this, login.userText.getText(), login.passwordText.getText())){
-                        case NONE: 
-                            login.clearText();
-                            info.infoBox("username oder passwort falsch", "login Fehler");
-                            break;
-                        case KUNDE:
-                            LevelMove(MenuLevel.KUNDEN_ANSICHT);
-                            setVisiblePanel();
-                            info.infoBox("username oder passwort falsch", "login Fehler");
-                            break;
-                        case MITARBEITER:
-                            LevelMove(MenuLevel.KUNDEN_ANSICHT);
-                            setVisiblePanel();
-                            break;
-                }
-
-            case KUNDEN_REGISTRIEREN:
-
-                try{
-                    String name = register.nameText.getText();
-                    String email = register.mailText.getText();
-                    String address = register.adressText.getText();
-                    String un = register.userText.getText();
-                    String passwort = register.passwordText.getText();
-
-                    eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-
-                    info.infoBox("Konto wurde erstellt", "Bestätigung");
-                    LevelReturn();
-                    setVisiblePanel();
-
-                } catch (ExceptionBenutzerNameUngültig e) {
-                    info.infoBox(e.getMessage(), "Registrieren Fehler");
-                }
-                break;
-            case KUNDEN_ANSICHT:
-                break;
-        }
-    }
-    
-    enum MenuLevel {
-        LOGIN, // start menu
-        KUNDEN_REGISTRIEREN,
-        KUNDEN_ANSICHT,
-      }
-      
-    */
