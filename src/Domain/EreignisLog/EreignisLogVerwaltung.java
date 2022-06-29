@@ -2,6 +2,10 @@
 package Domain.EreignisLog;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Vector;
 
 import Domain.Eshop;
@@ -57,6 +61,15 @@ public class EreignisLogVerwaltung extends Verwaltung {
       System.out.println("Could not load BenutzerVerwaltung");
     }
 
+    wartung();
+  }
+
+  private void addToLog(Ereignis ereignis) {
+    log.add(ereignis);
+  }
+
+  private void delFromLog(Ereignis ereignis) {
+    log.remove(ereignis);
   }
 
   // #region neues ereignis//////////////////////////////////////////////////////
@@ -235,12 +248,7 @@ public class EreignisLogVerwaltung extends Verwaltung {
   }
 
   // #endregion///////////////////////////////////////////////////////////
-
-  private void addToLog(Ereignis ereignis) {
-    log.add(ereignis);
-  }
-
-  //// #region suchen und finden
+  // #region suchen und finden
   /**
    * findet ein ereignis mit der ereignis nummer
    * 
@@ -312,28 +320,6 @@ public class EreignisLogVerwaltung extends Verwaltung {
   }
 
   // #endregion
-
-  /**
-   * return and increment Ereigniszaehler
-   * 
-   * @return
-   */
-  protected int useZaehler() {
-    // returns original value and increases by one
-    return this.EreignisZaehler++;
-  }
-
-  /**
-   * set zähler
-   * 
-   * @param num
-   * @return
-   */
-  private void setZaehler(int num) {
-    // returns original value and increases by one
-    this.EreignisZaehler = num;
-  }
-
   // #region persistenz
 
   /**
@@ -378,6 +364,90 @@ public class EreignisLogVerwaltung extends Verwaltung {
    */
   public boolean save() throws IOException {
     return save(ereignisDox);
+  }
+
+  // #endregion
+  // #region wartung
+
+  private void wartung() {
+    System.out.println("////////WARTUNG WIRDD DURCHGEFÜHRT////////");
+
+    // löscht evens vor 30 tagen
+    eventsVerwerfenVor(30);
+    // checkMissionRef();
+  }
+
+  /**
+   * löscht alle events die älter als gegebenes datum sind
+   * 
+   * @param tage x tage ältere events
+   */
+  private void eventsVerwerfenVor(int tage) {
+    eventsVerwerfenVor(Date.from(Instant.now().minus(Duration.ofDays(-tage))));
+  }
+
+  /**
+   * löscht alle events die älter als gegebenes datum sind
+   * 
+   * @param date
+   */
+  private void eventsVerwerfenVor(Date date) {
+
+    Ereignis ereignis;
+
+    Iterator<Ereignis> it = log.iterator();
+    while (it.hasNext()) {
+      ereignis = it.next();
+      if (ereignis.getEreignisDatum().before(date)) {
+        delFromLog(ereignis);
+      }
+    }
+  }
+
+  // private void checkRefrences() {
+
+  // for (Ereignis ereignis : log) {
+  // if (ereignis instanceof EreignisInterface_CallingBenutzer) {
+  // checkRefrences(((EreignisInterface_CallingBenutzer)
+  // ereignis).getCallingBenutzer());
+  // }
+  // if (ereignis instanceof EreignisInterface_ZielArtikel) {
+  // checkRefrences(((EreignisInterface_ZielArtikel) ereignis).getZielArtikel());
+  // }
+  // }
+  // }
+
+  // private Benutzer checkRefrences(Benutzer benutzer){
+  // benutzerVW. (lager, index)
+  // }
+
+  // private Artikel checkRefrences(Artikel artikel){
+
+  // if (!artikelVW.artikelExists(artikel))
+  // artikelVW.getArtikel(lager, index)
+  // }
+
+  // #endregion
+  // #region zähler
+  /**
+   * return and increment Ereigniszaehler
+   * 
+   * @return
+   */
+  protected int useZaehler() {
+    // returns original value and increases by one
+    return this.EreignisZaehler++;
+  }
+
+  /**
+   * set zähler
+   * 
+   * @param num
+   * @return
+   */
+  private void setZaehler(int num) {
+    // returns original value and increases by one
+    this.EreignisZaehler = num;
   }
 
   // #endregion

@@ -119,11 +119,11 @@ public class Benutzerverwaltung extends Verwaltung {
    * @return
    * @throws ExceptionKundeNichtGefunden
    */
-  public Benutzer sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
+  public Kunde sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
-          return benutzer;
+          return (Kunde) benutzer;
         }
       }
 
@@ -139,11 +139,11 @@ public class Benutzerverwaltung extends Verwaltung {
    * @return
    * @throws ExceptionMitarbeiterNichtGefunden
    */
-  public Benutzer sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
+  public Mitarbeiter sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
-          return benutzer;
+          return (Mitarbeiter) benutzer;
         }
       }
     }
