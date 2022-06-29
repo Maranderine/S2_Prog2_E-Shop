@@ -6,6 +6,48 @@
 	"configurations": [
 		{
 			"type": "java",
+			"name": "Launch MAIN",
+			"request": "launch",
+			"mainClass": "MAIN",
+			"projectName": "S2_Prog2_E-Shop_55d4d447"
+		},
+		{
+			"type": "java",
+			"name": "Launch GUI",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.GUI",
+			"projectName": "S2_Prog2_E-Shop_4ed2c5f2"
+		},
+		{
+			"type": "java",
+			"name": "Launch GUI",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.GUI",
+			"projectName": "S2_Prog2_E-Shop_55d4d447"
+		},
+		{
+			"type": "java",
+			"name": "Launch MainGui2",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.MainGui2",
+			"projectName": "S2_Prog2_E-Shop_55d4d447"
+		},
+		{
+			"type": "java",
+			"name": "Launch MainGui",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.MainGui",
+			"projectName": "S2_Prog2_E-Shop_55d4d447"
+		},
+		{
+			"type": "java",
+			"name": "Launch MainGui",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.MainGui",
+			"projectName": "S2_Prog2_E-Shop_4ed2c5f2"
+		},
+		{
+			"type": "java",
 			"name": "Launch Current File",
 			"request": "launch",
 			"mainClass": "${workspaceRoot}/src/MAIN.java"
