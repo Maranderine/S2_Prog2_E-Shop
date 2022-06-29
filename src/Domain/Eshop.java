@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
+import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
@@ -90,8 +91,12 @@ public class Eshop {
     BenutzerVw.registrieren(name, username, password);
   }
 
-  public void BV_NutzerEntfernen(String username) {
+  public void BV_NutzerEntfernen(String username) throws ExceptionBenutzerNichtGefunden {
+    BenutzerVw.deleteBenutzer(username);
+  }
 
+  public Benutzer BV_getUserActive(byte[] userHash) {
+    return BenutzerVw.getAktiverBenutzer(userHash);
   }
 
   /**
@@ -173,7 +178,12 @@ public class Eshop {
    */
   public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
 
-    Rechnung rechnung = WarenkorbVw.ArtikelKaufen();
+    // BenutzerVw.sucheMitarbeiter(userNumber)
+    Benutzer thisuser = BV_getUserActive(userHash);
+    Rechnung rechnung = WarenkorbVw.ArtikelKaufen(
+        thisuser,
+        BenutzerVw.getDataNummer(thisuser),
+        BenutzerVw.getDataName(thisuser));
 
     // setz neuen Bestand
     rechnung.getInhalt().forEach((artikel, anzahl) -> {

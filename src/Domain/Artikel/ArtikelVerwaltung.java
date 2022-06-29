@@ -196,11 +196,25 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @return bool true wenn er existiert
    */
   public boolean artikelExists(String name) {
-
     try {
       findArtikelByName(name);
       return true;
     } catch (ExceptionArtikelNichtGefunden e) {
+      return false;
+    }
+  }
+
+  /**
+   * checkt ob der artikel existiert
+   * 
+   * @param artikel objekt
+   * @return bool true wenn er existiert
+   */
+  public boolean artikelExists(Artikel artikel) {
+    try {
+      searchLager(artikel);
+      return true;
+    } catch (ExceptionLagerNichtGefunden e) {
       return false;
     }
   }
@@ -224,6 +238,7 @@ public class ArtikelVerwaltung extends Verwaltung {
     }
 
   }
+
   // #endregion check artikel
   // #region Lager
 
@@ -360,7 +375,7 @@ public class ArtikelVerwaltung extends Verwaltung {
   }
 
   /**
-   * get layer by index
+   * get lager by index
    * 
    * @param index
    * @return
