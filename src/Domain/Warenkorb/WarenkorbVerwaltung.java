@@ -8,7 +8,6 @@ import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Kunde;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 
