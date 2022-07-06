@@ -112,7 +112,6 @@ public class ArtikelVerwaltung extends Verwaltung {
       // add artikel
       return addArtikel(lager, lager.useZaehler(), name, bestand, einzelpreis, packungsInhalt);
     } catch (ExceptionLagerNichtGefunden e) {
-      // TODO was wenn kein lager
       e.printStackTrace();
       throw new ExceptionArtikelKonnteNichtErstelltWerden(e);
     }
@@ -298,8 +297,6 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws ExceptionLagerNichtGefunden
    */
   private Lager getLagerToAdd() throws ExceptionLagerNichtGefunden {
-    // TODO temp auswahl verfahren bei mehereren lagern nach kriterien die
-    // sinnmachen
     for (Lager lager : getLagerList()) {
       // if (something)
       return lager;

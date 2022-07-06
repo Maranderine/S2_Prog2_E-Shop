@@ -237,8 +237,6 @@ public class Eshop {
       ArtikelVw.deleteArtikel(artikel);
       EV_EreignisArtikelDelete(userHash, "Artikel Löschen", artikel);
     } catch (ExceptionArtikelNichtGefunden e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
       throw new ExceptionArtikelKonnteNichtGelöschtWerden(e);
     }
   }
@@ -520,11 +518,7 @@ public class Eshop {
     return EreignisVw.findeEreignis(ereignisNummer);
   }
 
-  public SuchOrdnung EV_sucheEreignis(String searchterm) {
-    return EreignisVw.suchEvent(searchterm);
-  }
-
-  public SuchOrdnung EV_compileEreignis(String searchterm) {
+  public SuchOrdnung EV_sucheEreignisse(String searchterm) {
     return EreignisVw.suchEvent(searchterm);
   }
 

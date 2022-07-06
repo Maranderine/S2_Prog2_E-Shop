@@ -66,7 +66,6 @@ public class Benutzerverwaltung extends Verwaltung {
             "Testrasse 22, 22222 Testhausen, Testland");
 
       } catch (ExceptionBenutzerNameUngültig e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     }

@@ -442,7 +442,7 @@ public class CUI extends UserInterface {
             case "2":// suchen
               System.out.print("\n");
               this.searchTerm = GetInputText(0, "Suchen nach > ", "exit");
-              this.suchOrdnung = eshop.EV_sucheEreignis(this.searchTerm);
+              this.suchOrdnung = eshop.EV_sucheEreignisse(this.searchTerm);
               break;
             case "3":// Ordnung wechseln
               // TODO ordnen
@@ -544,7 +544,7 @@ public class CUI extends UserInterface {
           System.out.print(artikelDetailAnsicht.toStringDetailed());
           System.out.println("\n------------------------------------\n");
           // TODO display events relating to Artikel
-          // eshop.EV_sucheEreignis(searchterm)
+          // eshop.EV_sucheEreignisse(artikelDetailAnsicht);
 
           System.out.println("\n------------------------------------\n");
           System.out.println("1 = Artikel Bearbeiten");
@@ -959,7 +959,7 @@ public class CUI extends UserInterface {
   protected String GetInputNavigation(String inputEinleitung)
       throws ExceptionInputFalsch {
     try {
-      return GetInput(0, inputEinleitung, "Eine der in der Navigation angegebenen Nummern.", PatternNum, null);
+      return GetInput(0, inputEinleitung, null, PatternNum, "Eine der in der Navigation angegebenen Nummern.");
     } catch (ExceptionInputExit e) {
       return "";
     }

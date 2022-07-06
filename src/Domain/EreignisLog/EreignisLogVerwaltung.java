@@ -27,14 +27,12 @@ import persistence.PersistenceManager;
 
 public class EreignisLogVerwaltung extends Verwaltung {
 
-  // TODO: EVENTS - suche nach artikel objekt
-  // TODO: EVENTS älter als 30 tage delete
-
   private int EreignisZaehler;
   private final Eshop meinShop;
   private final Benutzerverwaltung benutzerVW;
   private final ArtikelVerwaltung artikelVW;
   private PersistenceManager persistenceManager = new FilePersistenceManager();
+  /** ereignis log liste */
   private Vector<Ereignis> log;
   private String ereignisDox;
 
@@ -64,10 +62,18 @@ public class EreignisLogVerwaltung extends Verwaltung {
     wartung();
   }
 
+  /**
+   * füge ereignis zum log hinzu
+   * 
+   * @param ereignis
+   */
   private void addToLog(Ereignis ereignis) {
     log.add(ereignis);
   }
 
+  /**
+   * lösche ereignis vom log
+   */
   private void delFromLog(Ereignis ereignis) {
     log.remove(ereignis);
   }
@@ -383,7 +389,7 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * @param tage x tage ältere events
    */
   private void eventsVerwerfenVor(int tage) {
-    eventsVerwerfenVor(Date.from(Instant.now().minus(Duration.ofDays(-tage))));
+    eventsVerwerfenVor(Date.from(Instant.now().minus(Duration.ofDays(tage))));
   }
 
   /**
@@ -391,15 +397,22 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * 
    * @param date
    */
+
   private void eventsVerwerfenVor(Date date) {
 
     Ereignis ereignis;
 
-    Iterator<Ereignis> it = log.iterator();
-    while (it.hasNext()) {
-      ereignis = it.next();
+    @SuppressWarnings("unchecked")
+    Iterator<Ereignis> iterator = ((Vector<Ereignis>) log.clone()).iterator();
+
+    while (iterator.hasNext()) {
+      ereignis = iterator.next();
       if (ereignis.getEreignisDatum().before(date)) {
         delFromLog(ereignis);
+        System.out.println(
+            "wartung: ereignis ist gelöscht worden" +
+                "\nälter als datum: " + date +
+                "\nereignis" + ereignis);
       }
     }
   }
