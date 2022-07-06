@@ -32,18 +32,6 @@ public class GUI extends UserInterface implements ActionListener {
 
   }
 
-  public void buildMainWindow() {
-    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    frame.setLayout(new FlowLayout());
-    frame.add(register);
-    frame.add(login);
-    frame.add(kunde);
-    setVisiblePanel("login");
-    frame.pack();
-    frame.setVisible(true);
-    frame.setResizable(false);
-  }
-
   // reagiert auf aktionen, kommuniziert mit Eshop, führt entsprechende Befehle
   // zur Layout Änderung in den Panels aus
   public void actionPerformed(ActionEvent ae) {
