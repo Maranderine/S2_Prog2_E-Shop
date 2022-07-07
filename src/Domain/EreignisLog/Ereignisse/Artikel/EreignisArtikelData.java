@@ -68,7 +68,7 @@ public class EreignisArtikelData extends EreignisArtikel implements EreignisInte
   }
   // #endregion
 
-  // TODO event artikel data change to string
+  
   @Override
   public String toString() {
     String str = "";

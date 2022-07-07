@@ -146,7 +146,6 @@ public class CUI extends UserInterface {
         System.out.println("4 = Artikel ispizieren");
         System.out.println("5 = Einen Artikel dem Warenkorb hinzufügen");
         System.out.println("6 = Warenkorb Anzeigen");
-        System.out.println("7 = Warenkorb Anzeigen");
         System.out.println("0 = Logout");
 
         try {
@@ -188,10 +187,6 @@ public class CUI extends UserInterface {
               break;
             case "6":// Warenkorb
               LevelMove(MenuLevel.WARENKORB);
-              break;
-            case "7":// benutzerBearbeiten
-              // benutzerBearbeiten = eshop.BV_NutzerEntfernen(username);
-              // LevelMove();
               break;
             case "0":// Exit
               this.searchTerm = null;
@@ -284,7 +279,6 @@ public class CUI extends UserInterface {
         System.out.println("1 = Artikel #Verwalten");
         System.out.println("2 = Mitarbeiter hinzufügen");
         System.out.println("3 = Ereignis Log");
-        System.out.println("4 = Benutzer Bearbeiten");
         System.out.println("0 = Logout");
 
         try {
@@ -297,9 +291,6 @@ public class CUI extends UserInterface {
               break;
             case "3":// Mitarbeiter hinzufügen
               LevelMove(MenuLevel.MITARBEITER_EREIGNISLOG);
-              break;
-            case "4":// Mitarbeiter hinzufügen
-              LevelMove(MenuLevel.BENUTZER_BEARBEITEN);
               break;
             case "0":// logout
               Logout();
@@ -451,7 +442,7 @@ public class CUI extends UserInterface {
             case "2":// suchen
               System.out.print("\n");
               this.searchTerm = GetInputText(0, "Suchen nach > ", "exit");
-              this.suchOrdnung = eshop.EV_sucheEreignis(this.searchTerm);
+              this.suchOrdnung = eshop.EV_sucheEreignisse(this.searchTerm);
               break;
             case "3":// Ordnung wechseln
               // TODO ordnen
@@ -553,7 +544,7 @@ public class CUI extends UserInterface {
           System.out.print(artikelDetailAnsicht.toStringDetailed());
           System.out.println("\n------------------------------------\n");
           // TODO display events relating to Artikel
-          // eshop.EV_sucheEreignis(searchterm)
+          // eshop.EV_sucheEreignisse(artikelDetailAnsicht);
 
           System.out.println("\n------------------------------------\n");
           System.out.println("1 = Artikel Bearbeiten");
@@ -685,11 +676,6 @@ public class CUI extends UserInterface {
         LevelReturn();
         break;
       // #endregion
-      case BENUTZER_BEARBEITEN:
-        // #region
-
-        break;
-      // #endregion
     }
     // true to continue
     return true;
@@ -710,7 +696,6 @@ public class CUI extends UserInterface {
     EREIGNIS_DETAILANSICHT,
     ARTIKEL_DETAILANSICHT,
     ARTIKEL_BEARBEITEN,
-    BENUTZER_BEARBEITEN,
     SORTIEREN
   }
 
@@ -974,7 +959,7 @@ public class CUI extends UserInterface {
   protected String GetInputNavigation(String inputEinleitung)
       throws ExceptionInputFalsch {
     try {
-      return GetInput(0, inputEinleitung, "Eine der in der Navigation angegebenen Nummern.", PatternNum, null);
+      return GetInput(0, inputEinleitung, null, PatternNum, "Eine der in der Navigation angegebenen Nummern.");
     } catch (ExceptionInputExit e) {
       return "";
     }
@@ -1085,6 +1070,7 @@ public class CUI extends UserInterface {
   protected String GetInputPasswortNew(int loopNummer, String inputEinleitung, String exitPhrase)
       throws ExceptionInputFalsch, ExceptionInputExit {
     return GetInput(loopNummer, inputEinleitung, exitPhrase, PatternPasswort, null);
+
   }
 
   /**

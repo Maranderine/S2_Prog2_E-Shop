@@ -66,7 +66,6 @@ public class Benutzerverwaltung extends Verwaltung {
             "Testrasse 22, 22222 Testhausen, Testland");
 
       } catch (ExceptionBenutzerNameUngültig e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
       }
     }
@@ -90,10 +89,24 @@ public class Benutzerverwaltung extends Verwaltung {
     this.benutzerRegister.add(einNutzer);
   }
 
-  void loeschen(String username) throws ExceptionBenutzerNichtGefunden {
-    Benutzer benutzer = this.sucheBenutzer(username);
-    // übernimmt Vector:
+  /**
+   * delete be utzer aus register
+   * 
+   * @param benutzer
+   * @throws ExceptionBenutzerNichtGefunden
+   */
+  public void deleteBenutzer(Benutzer benutzer) throws ExceptionBenutzerNichtGefunden {
     benutzerRegister.remove(benutzer);
+  }
+
+  /**
+   * delete be utzer aus register
+   * 
+   * @param username
+   * @throws ExceptionBenutzerNichtGefunden
+   */
+  public void deleteBenutzer(String username) throws ExceptionBenutzerNichtGefunden {
+    deleteBenutzer(this.sucheBenutzer(username));
   }
 
   /**
@@ -119,11 +132,11 @@ public class Benutzerverwaltung extends Verwaltung {
    * @return
    * @throws ExceptionKundeNichtGefunden
    */
-  public Benutzer sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
+  public Kunde sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
-          return benutzer;
+          return (Kunde) benutzer;
         }
       }
 
@@ -139,11 +152,11 @@ public class Benutzerverwaltung extends Verwaltung {
    * @return
    * @throws ExceptionMitarbeiterNichtGefunden
    */
-  public Benutzer sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
+  public Mitarbeiter sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
       if (benutzer.getType() == BeutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
-          return benutzer;
+          return (Mitarbeiter) benutzer;
         }
       }
     }
@@ -172,7 +185,7 @@ public class Benutzerverwaltung extends Verwaltung {
 
   // #region get user data
   /*
-   * get dddata methoden
+   * get data methoden
    * returnen daten unabhängig vom typ oder benutzung der daten
    * 
    */

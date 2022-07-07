@@ -7,6 +7,7 @@ import Domain.Eshop;
 import Domain.Verwaltung;
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
+import Domain.BenutzerObjekte.Benutzer;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 
@@ -80,17 +81,20 @@ public class WarenkorbVerwaltung extends Verwaltung {
    * Kauft artikel im Warenkorb: checkt bestand, erstellt Rechnung, leert
    * Warenkrob
    * 
+   * @param kunde
+   * @param kundeNummer
+   * @param kundeName
    * @return Rechnung generierte Rechnung
-   * @throws ExceptionCollection
+   * @throws ExceptionArtikelCollection
    */
-  public Rechnung ArtikelKaufen() throws ExceptionArtikelCollection {
+  public Rechnung ArtikelKaufen(Benutzer käufer, int käuferNummer, String käufereName) throws ExceptionArtikelCollection {
     // hard set im moment, ändern in kunden bezogenes parameter
     Warenkorb warenkorbZuKaufen = warenkorb;
 
     checkWarenkorb(warenkorbZuKaufen.inhalt);
 
     // keine fehler
-    Rechnung rechnung = new Rechnung(warenkorbZuKaufen.inhalt, useRechnungZaehler());
+    Rechnung rechnung = new Rechnung(käufer, käuferNummer, käufereName, warenkorbZuKaufen.inhalt, useRechnungZaehler());
     // warenkorb löschen
     clearAll();
 
