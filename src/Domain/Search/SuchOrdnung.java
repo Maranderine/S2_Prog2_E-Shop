@@ -3,6 +3,7 @@ package Domain.Search;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * Management Klasse für eine geordnete liste mit Searchaable objekten
@@ -78,6 +79,14 @@ public class SuchOrdnung {
 
   public Searchable getObjekt(int index) {
     return getObjekt(grid.get(index));
+  }
+
+  public Vector<Searchable> getObjektList(){
+    Vector<Searchable> list = new Vector<Searchable>();
+    for (HashMap<OrdnungIndex, ? extends Object> hashMap : grid) {
+      list.add(getObjekt(hashMap));
+    }
+    return list;
   }
 
   public int getRelevanz(HashMap<OrdnungIndex, ? extends Object> hashMap) {

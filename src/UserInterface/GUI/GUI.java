@@ -5,12 +5,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import java.awt.*;
 import Domain.Eshop;
 import Domain.Search.SuchOrdnung;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Input.ExceptionInputFalsch;
 import UserInterface.UserInterface;
+import Domain.Artikel.Artikel;
 
 public class GUI extends UserInterface implements ActionListener {
   JFrame frame;
@@ -18,14 +20,17 @@ public class GUI extends UserInterface implements ActionListener {
   RegisterGUI register;
   KundeGUI kunde;
   InfoBox info;
+  SuchOrdnung ordnung;
+  Vector<Artikel> tableData;
 
   public GUI(Eshop eshop) {
 
     super(eshop);
-    frame = new JFrame("maiNFrame");
+    frame = new JFrame("mainFrame");
     login = new LoginGUI(this);
     register = new RegisterGUI(this);
-    kunde = new KundeGUI(this);
+    tableData = eshop.AV_getAlleArtikelList();
+    kunde = new KundeGUI(this, tableData);
     info = new InfoBox();
 
     buildMainWindow();
@@ -36,48 +41,79 @@ public class GUI extends UserInterface implements ActionListener {
   // zur Layout Änderung in den Panels aus
   public void actionPerformed(ActionEvent ae) {
     switch (ae.getActionCommand()) {
-      case "login_loginButton":
+
+      /*
+      * login
+      */
+      case "login_loginButton": 
         switch (eshop.login(this, login.userText.getText(), login.passwordText.getText())) {
+
           case NONE:
             info.infoBox("username oder Passwort falsch", "Login Fehler");
             login.clearText();
             break;
+
           case KUNDE:
             setVisiblePanel("kunde");
             login.clearText();
             break;
+
           case MITARBEITER:
-            login.clearText();
-            setVisiblePanel("kunde");
-            login.clearText();
-            break;
+                login.clearText();
+                setVisiblePanel("kunde");
+                login.clearText();
+                break;
         }
         break;
+
       case "login_toRegister":
         setVisiblePanel("register");
         break;
 
+      /*
+      * Registrieren
+      */
       case "register_registerButton":
         try {
-          String name = "" + register.vornameLabel.getText() + register.nameText.getText();
-          String email = register.mailText.getText();
-          String address = "" + register.landBox.getSelectedItem() + register.ortLabel.getText()
-              + register.streetLabel.getText();
-          String un = register.userText.getText();
-          String passwort = register.passwordText.getText();
+        String name = CheckStringNamen("" + register.vornameLabel.getText() + " " + register.nameText.getText());
+        String email = CheckStringEmail(""+register.mailText.getText());
+        String address = register.landBox.getSelectedItem() + CheckStringAdresseOrt(register.ortText.getText())
+          + CheckStringAdresseStraße(""+register.streetText.getText());
+        String un = register.userText.getText();
+        String passwort = CheckStringPasswort(""+register.passwordText.getText());
 
-          eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-          info.infoBox("Konto wurde erstellt", "Bestätigung");
+        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
+        info.infoBox("Konto wurde erstellt", "Bestätigung");
 
-        } catch (ExceptionBenutzerNameUngültig e) {
-          info.infoBox(e.getMessage(), "Registrieren Fehler");
-          register.clearText();
+        } catch (Exception e) {
+        info.infoBox(e.getMessage(), "Registrieren Fehler");
         }
+        
         break;
+        
       case "register_backToLogin":
         setVisiblePanel("login");
         break;
+        
+      case "kunde":
+        kunde.setCard();
+        setVisiblePanel("login");
+        System.out.println("bjhdsjs");
+        break;
+
     }
+  }
+
+  public void buildMainWindow() {
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    frame.setLayout(new FlowLayout());
+    frame.add(register);
+    frame.add(login);
+    frame.add(kunde);
+    setVisiblePanel("login");
+    frame.pack();
+    frame.setVisible(true);
+    frame.setResizable(false);
   }
 
   // bestimmmt sichtbares Panel
@@ -129,8 +165,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringText(String string) throws ExceptionInputFalsch {
+  protected String CheckStringText(String string) throws ExceptionInputFalsch {
     CheckString(PatternText, string, null);
+    return string;
   }
 
   /**
@@ -139,8 +176,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringNamen(String string) throws ExceptionInputFalsch {
-    CheckString(PatternEchtNamen, string, null);
+  protected String CheckStringNamen(String string) throws ExceptionInputFalsch {
+    CheckString(PatternEchtNamen, string, null );
+    return string;
   }
 
   /**
@@ -149,8 +187,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringArtikel(String string) throws ExceptionInputFalsch {
+  protected String CheckStringArtikel(String string) throws ExceptionInputFalsch {
     CheckString(PatternArtikel, string, null);
+    return string;
   }
 
   /**
@@ -159,8 +198,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringNum(String string) throws ExceptionInputFalsch {
+  protected String CheckStringNum(String string) throws ExceptionInputFalsch {
     CheckString(PatternNum, string, null);
+    return string;
   }
 
   /**
@@ -169,8 +209,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringInt(String string) throws ExceptionInputFalsch {
+  protected String CheckStringInt(String string) throws ExceptionInputFalsch {
     CheckString(PatternInt, string, null);
+    return string;
   }
 
   /**
@@ -179,8 +220,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringFloat(String string) throws ExceptionInputFalsch {
+  protected String CheckStringFloat(String string) throws ExceptionInputFalsch {
     CheckString(PatternFloat, string, null);
+    return string;
   }
 
   /**
@@ -189,8 +231,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringEmail(String string) throws ExceptionInputFalsch {
-    CheckString(PatternEmail, string, null);
+  protected String CheckStringEmail(String string) throws ExceptionInputFalsch {
+    CheckString(PatternEmail, string, null); 
+    return string;
   }
 
   /**
@@ -199,8 +242,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringAdresseStraße(String string) throws ExceptionInputFalsch {
+  protected String CheckStringAdresseStraße(String string) throws ExceptionInputFalsch {
     CheckString(PatternAdresseStraße, string, null);
+    return string;
   }
 
   /**
@@ -209,8 +253,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringAdresseOrt(String string) throws ExceptionInputFalsch {
+  protected String CheckStringAdresseOrt(String string) throws ExceptionInputFalsch {
     CheckString(PatternAdresseOrt, string, null);
+    return string;
   }
 
   /**
@@ -219,8 +264,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringAdresseLand(String string) throws ExceptionInputFalsch {
+  protected String CheckStringAdresseLand(String string) throws ExceptionInputFalsch {
     CheckString(PatternAdresseLand, string, null);
+    return string;
   }
 
   /**
@@ -229,8 +275,9 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-  protected void CheckStringPasswort(String string) throws ExceptionInputFalsch {
+  protected String CheckStringPasswort(String string) throws ExceptionInputFalsch {
     CheckString(PatternPasswort, string, null);
+    return string;
   }
 }
 
