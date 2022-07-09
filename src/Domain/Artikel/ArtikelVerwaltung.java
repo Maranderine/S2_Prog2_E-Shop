@@ -537,8 +537,7 @@ public class ArtikelVerwaltung extends Verwaltung {
     Comparator<Artikel> comp = (o1, o2) -> {
       return comparePreis(o1, o2);
     };
-    if (reverse)
-      comp.reversed();
+    if(reverse) {comp = comp.reversed();}
 
     sortList(artikelList, comp);
   }
@@ -572,7 +571,7 @@ public class ArtikelVerwaltung extends Verwaltung {
     };
 
     if (reverse)
-      comp.reversed();
+    if(reverse) {comp = comp.reversed();}
 
     sortList(ordnung, comp);
   }

@@ -8,19 +8,19 @@ import java.util.Vector;
 
 import Domain.Artikel.Artikel;
 
-public class ArtikelTableModel extends AbstractTableModel{
+public class WKTableModel extends AbstractTableModel{
     private Vector artikel;
-    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "auf Lager", ""};
+    private String[] spaltenNamen = {"Nr", "Artikel", "Stück", "Preis", ""};
 
     
-    public ArtikelTableModel(Vector<Object> aktuelleArtikel) {
+    public WKTableModel(Vector<Object> korbInhalt) {
     	super(); 
     	// Ich erstelle eine Kopie der Bücherliste,
     	// damit beim Aktualisieren (siehe Methode setBooks())
     	// keine unerwarteten Seiteneffekte entstehen.
     	artikel = new Vector<Object>();
-        if(!(aktuelleArtikel == null)){
-    	    artikel.addAll(aktuelleArtikel);
+        if(!(korbInhalt == null)){
+    	    artikel.addAll(korbInhalt);
         }
     }
 
@@ -64,13 +64,11 @@ public class ArtikelTableModel extends AbstractTableModel{
             case 2:
                 return selectedArtikel.getPreis();
             case 3:
-                if(selectedArtikel.getBestand() > 10){return "";}
-                if(selectedArtikel.getBestand() <= 10){return "noch " + selectedArtikel.getBestand() + " auf Lager";}
+                return selectedArtikel.getPreis();
             case 4:
-                return "+";
+                return "-";
             default:
                 return null;
         }   
     }
 }
-

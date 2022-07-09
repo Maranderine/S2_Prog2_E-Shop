@@ -1,6 +1,8 @@
 package UserInterface.GUI;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.event.ActionEvent;
@@ -11,6 +13,7 @@ import Domain.Eshop;
 import Domain.Search.SuchOrdnung;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Input.ExceptionInputFalsch;
+import Exceptions.Input.ExceptionInputFeldIstLeer;
 import UserInterface.UserInterface;
 import Domain.Artikel.Artikel;
 
@@ -21,7 +24,8 @@ public class GUI extends UserInterface implements ActionListener {
   KundeGUI kunde;
   InfoBox info;
   SuchOrdnung ordnung;
-  Vector<Artikel> tableData;
+  Vector artikelList;
+  String string = "";
 
   public GUI(Eshop eshop) {
 
@@ -29,80 +33,137 @@ public class GUI extends UserInterface implements ActionListener {
     frame = new JFrame("mainFrame");
     login = new LoginGUI(this);
     register = new RegisterGUI(this);
-    tableData = eshop.AV_getAlleArtikelList();
-    kunde = new KundeGUI(this, tableData);
+    artikelList = eshop.AV_getAlleArtikelList();
+    kunde = new KundeGUI(this, artikelList);
     info = new InfoBox();
 
     buildMainWindow();
 
   }
 
-  // reagiert auf aktionen, kommuniziert mit Eshop, führt entsprechende Befehle
-  // zur Layout Änderung in den Panels aus
+  // reagiert auf ActionEvents die Kommunikation mit Eshop verlangen
   public void actionPerformed(ActionEvent ae) {
-    switch (ae.getActionCommand()) {
-
-      /*
-      * login
-      */
-      case "login_loginButton": 
-        switch (eshop.login(this, login.userText.getText(), login.passwordText.getText())) {
-
-          case NONE:
-            info.infoBox("username oder Passwort falsch", "Login Fehler");
-            login.clearText();
+    
+      switch (ae.getActionCommand()) {
+        //#region login
+        case "login_loginButton": 
+          //gibt error falls Feld empty
+          login.clearColor();
+          String username =  checkIfEmpty(login.userText.getText(), "Benutzername", login.userText);
+          String password =  checkIfEmpty(login.passwordText.getText(), "Passwort", login.passwordText);
+          if(info.errorAccurred()){
+            info.infoBox("titleBar");
             break;
+          }
 
-          case KUNDE:
-            setVisiblePanel("kunde");
-            login.clearText();
-            break;
-
-          case MITARBEITER:
+          //Wenn nicht, leitet daten an Eshop
+            switch (eshop.login(this, username, password)) {
+              case NONE:
+                info.infoBox("username oder Passwort ungültig", "Login Fehler");
                 login.clearText();
+                break;
+              case KUNDE:
                 setVisiblePanel("kunde");
                 login.clearText();
                 break;
-        }
-        break;
-
-      case "login_toRegister":
-        setVisiblePanel("register");
-        break;
-
-      /*
-      * Registrieren
-      */
-      case "register_registerButton":
-        try {
-        String name = CheckStringNamen("" + register.vornameLabel.getText() + " " + register.nameText.getText());
-        String email = CheckStringEmail(""+register.mailText.getText());
-        String address = register.landBox.getSelectedItem() + CheckStringAdresseOrt(register.ortText.getText())
-          + CheckStringAdresseStraße(""+register.streetText.getText());
-        String un = register.userText.getText();
-        String passwort = CheckStringPasswort(""+register.passwordText.getText());
-
-        eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
-        info.infoBox("Konto wurde erstellt", "Bestätigung");
-
-        } catch (Exception e) {
-        info.infoBox(e.getMessage(), "Registrieren Fehler");
-        }
+              case MITARBEITER:
+                    login.clearText();
+                    setVisiblePanel("kunde");
+                    login.clearText();
+                    break;
+            }
+          break;
+        case "login_toRegister":
+          setVisiblePanel("register");
+          break;
+        //#endregion login 
         
-        break;
-        
-      case "register_backToLogin":
-        setVisiblePanel("login");
-        break;
-        
-      case "kunde":
-        kunde.setCard();
-        setVisiblePanel("login");
-        System.out.println("bjhdsjs");
-        break;
+        //#region register
+        case "register_registerButton":
+          try{
+            String name = CheckStringNamen("" + register.vornameLabel.getText() + " " + register.nameText.getText());
+            String email = CheckStringEmail(""+register.mailText.getText());
+            String address = register.landBox.getSelectedItem() + CheckStringAdresseOrt(register.ortText.getText())
+              + CheckStringAdresseStraße(""+register.streetText.getText());
+            String un = register.userText.getText();
+            String passwort = CheckStringPasswort(""+register.passwordText.getText());
+            eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
+            info.infoBox("Konto wurde erstellt", "Bestätigung");
+          } catch (Exception e) {
+          info.infoBox(e.getMessage(), "Registrieren Fehler");
+          }
+          break;
+        case "register_backToLogin":
+          setVisiblePanel("login");
+          break;
+          
+        //#endregion register
 
+        //#region kunde
+        case "kunde_logout":
+          setVisiblePanel("login");
+          break;
+
+        //Such Button im Shop
+        case "kunde_suchen":
+          this.ordnung = null;
+          
+          String filter = kunde.filter.getSelectedItem().toString();
+          String searchTerm = kunde.search.getText();
+          if(searchTerm.equals("wonach suchst du?")){searchTerm = null;}
+
+          //switch auf ausgewählten Filter
+          switch(filter){
+            case "Kein Filter":
+              //kein Filter gewählt, ohne suchbegriff
+              if(!(searchTerm.equals(""))){
+                this.ordnung = eshop.AV_sucheArtikel(searchTerm);
+              }else{
+              //kein Filter gewählt, mit suchbegriff
+                artikelList = eshop.AV_getAlleArtikelList();
+              }
+              break;
+            case "Preis aufsteigend":
+              //Filter Preis aufsteigend, ohne Suchbegriff
+              if(!(searchTerm.equals(""))){
+                this.ordnung = eshop.AV_sucheArtikel(searchTerm);
+                eshop.AV_sortListPreis(this.ordnung, false);
+              }else{
+              //Filter Preis aufsteigend, mit Suchbegriff
+                eshop.AV_sortListPreis(artikelList, false);
+              }
+              break;
+            case "Preis absteigend":
+              //Filter Preis absteigend, ohne Suchbegriff
+              if(!(searchTerm.equals(""))){
+                this.ordnung = eshop.AV_sucheArtikel(searchTerm);
+                eshop.AV_sortListPreis(this.ordnung, true);
+                System.out.println("meep");
+              }else{
+              //Filter Preis absteigend, mit Suchbegriff
+                eshop.AV_sortListPreis(artikelList, true);
+              }
+              break;
+          }
+          //falls Ordnung null, gibt artikelListe an Tabelle in Kundenansicht weiter --> Vektor mit allen Artikeln, sortiert oder unsortiert
+          if(ordnung == null){
+            kunde.updateArtikel(artikelList);
+          //falls Ordnung, gibt Ordnung weiter --> auf Suchbegriff angepasster Vektor
+          }else{
+            kunde.updateArtikel(this.ordnung.getObjektList());
+          }
+          
+          break;
+        case "kunde_hinzufügen":
+          string = JOptionPane.showInputDialog("Wie viele wollen sie hinzufügen?");
+          if(string.equals("") | string.equals(null)){break;}
+          int i = Integer.parseInt(string);
+          Artikel selectedArticle = (Artikel) kunde.data.get(kunde.shopTable.getSelectedRow());
+          eshop.WV_setArtikel(selectedArticle, i);
+          break;
     }
   }
+
 
   public void buildMainWindow() {
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -110,13 +171,15 @@ public class GUI extends UserInterface implements ActionListener {
     frame.add(register);
     frame.add(login);
     frame.add(kunde);
-    setVisiblePanel("login");
+    setVisiblePanel("kunde");
     frame.pack();
     frame.setVisible(true);
     frame.setResizable(false);
   }
 
-  // bestimmmt sichtbares Panel
+  /**bestimm sichtbares Panel
+   * @param String welches Panel ist sichtbar? "login", "kunde" etc
+   */
   public void setVisiblePanel(String sichtbar) {
 
     // Alle panels unsichtbar setzen
@@ -141,7 +204,6 @@ public class GUI extends UserInterface implements ActionListener {
         frame.pack();
         break;
     }
-
   }
 
   public static void main(String[] args) {
@@ -149,6 +211,20 @@ public class GUI extends UserInterface implements ActionListener {
     GUI gui = new GUI(eshop);
   }
 
+  /**
+   * überprüft ob Text Feld leer ist.
+   * @param stringToCheck
+   * @param fieldName
+   * @param field
+   * @return
+   */
+  public String checkIfEmpty(String stringToCheck, String fieldName, JTextField field){
+    if(stringToCheck.equals("")){
+      info.addString("Feld '"+ fieldName + "' ist leer.");
+      field.setBackground(Color.red);
+    }
+    return stringToCheck;
+  }
   @Override
   public boolean run() {
     // TODO Auto-generated method stub
@@ -159,14 +235,17 @@ public class GUI extends UserInterface implements ActionListener {
   // #region input checking
   // premade string pattern checks
 
+
   /**
    * checkt input für Text pattern
    * 
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
+
+   //TODO exception message nicht throwen sondern infobox hinzufügen --> am Ende gesammelte Errors ausgeben
   protected String CheckStringText(String string) throws ExceptionInputFalsch {
-    CheckString(PatternText, string, null);
+      CheckString(PatternText, string, null);
     return string;
   }
 
@@ -177,7 +256,7 @@ public class GUI extends UserInterface implements ActionListener {
    * @throws ExceptionInputFalsch
    */
   protected String CheckStringNamen(String string) throws ExceptionInputFalsch {
-    CheckString(PatternEchtNamen, string, null );
+      CheckString(PatternEchtNamen, string, null );
     return string;
   }
 

@@ -87,6 +87,8 @@ public abstract class Searcher {
     return ordnung;
   }
 
+  
+  
   // #region sorting
 
   /**
