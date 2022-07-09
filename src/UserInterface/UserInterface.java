@@ -61,7 +61,7 @@ public abstract class UserInterface {
   /** Nummern */
   private String cc_n = "0-9";
   /** Wort Bindungs Zeichen */
-  private String cc_wB = "-_";
+  private String cc_wB = ".-_";
   /** sonder zeichen */
   private String cc_sz = "!@#$%^&*";
   /** alles: Buchstaben, zahlen, bindezeichen */
@@ -180,7 +180,7 @@ public abstract class UserInterface {
    * @see UserInterface.cc_ab
    */
   protected Pattern PatternAdresseOrt = compilePattern(
-      "(?U)[" + cc_n + "]{5}\\s[" + cc_abg + "][" + cc_abk + "]*(\\s|" + cc_wB + "[" + cc_ab + "]+)*",
+      "(?U)[" + cc_n + "]{5}\\s[" + cc_abg + "][" + cc_abk + "]*(\\s|" + cc_wB + "[" + cc_ab + "])*",
       "Ein Orts Name z.B. 22222 Über-Unter Beispielhausen");
   /**
    * nach diesem format: Deutschland

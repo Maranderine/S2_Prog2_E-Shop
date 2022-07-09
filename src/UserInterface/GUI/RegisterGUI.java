@@ -93,7 +93,6 @@ public class RegisterGUI extends JPanel{
 
         c.gridy = 0;
         c.weighty=0;
-        //c.weightx=0.2;
         c.anchor = GridBagConstraints.LINE_START;
         c.insets = new Insets(0, 10, 10,0);
         c.ipadx = 10;
@@ -157,7 +156,7 @@ public class RegisterGUI extends JPanel{
         c.insets = new Insets(0,10,0,10);
         inputPanel.add(registerButton,c);
 
-        
+        //back to login button
         backToLogin.setBounds(50,510,300,30);
         backToLogin.setOpaque(false);
         backToLogin.setContentAreaFilled(false);
@@ -167,6 +166,7 @@ public class RegisterGUI extends JPanel{
 
     }
 
+    //action Listener (--> gui) und mouseListener
     public void initializeAction(){
         registerButton.addActionListener(gui);
         backToLogin.addActionListener(gui);

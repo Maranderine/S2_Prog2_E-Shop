@@ -122,6 +122,11 @@ public class LoginGUI extends JPanel {
         userText.setText("");
         passwordText.setText("");
     }
+    
+    public void clearColor(){
+        userText.setBackground(Color.white);
+        passwordText.setBackground(Color.white);
+    }
 
     public void resetLayout(){
         repaint();
