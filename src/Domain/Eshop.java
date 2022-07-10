@@ -198,6 +198,10 @@ public class Eshop {
     return rechnung;
   }
 
+  public double WV_getSumme(){
+    return WarenkorbVw.gesamtSumme();
+  }
+
   // #endregion Warenkorb
   // #region Artikelvw
   /**

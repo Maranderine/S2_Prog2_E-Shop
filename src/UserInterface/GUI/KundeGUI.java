@@ -16,11 +16,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 import java.awt.event.MouseEvent;
 import java.awt.*;
 
 public class KundeGUI extends JPanel{
+  //Variablen
   //allgemeine Daten
   GUI gui;
   Vector<Object> data;
@@ -49,6 +51,9 @@ public class KundeGUI extends JPanel{
   JScrollPane artikelScroll;
 
   JPanel WKPanel;
+  JLabel summe;
+  JButton clearAll;
+  JButton kaufen;
   WKTableModel WKTableModel;
   JTable WKTable;
   JScrollPane korbScroll;
@@ -57,7 +62,6 @@ public class KundeGUI extends JPanel{
 
     this.data = data;
     this.gui = gui;
-    String[] headerWaren = {"Nr", "Artikel", "Anzahl", "Preis"};
     String[] filterTypes = {"Kein Filter", "Preis aufsteigend", "Preis absteigend"};
 
     b1 = new JButton("Artikel");
@@ -78,8 +82,11 @@ public class KundeGUI extends JPanel{
     filter = new JComboBox<>(filterTypes);
     suchButton = new JButton("suchen");
 
-    WKPanel = new JPanel(new BoxLayout(menu, BoxLayout.X_AXIS));
-    WKTableModel = new WKTableModel(data);
+    WKPanel = new JPanel(new BoxLayout(menu, BoxLayout.PAGE_AXIS));
+    summe = new JLabel("Momentane Gesamtsumme: 0");
+    kaufen = new JButton("kaufen");
+    clearAll = new JButton("clear All");
+    WKTableModel = new WKTableModel(null);
     WKTable = new JTable(WKTableModel);
     korbScroll = new JScrollPane(WKTable);
 
@@ -119,6 +126,7 @@ public class KundeGUI extends JPanel{
     card1.setBorder(BorderFactory.createTitledBorder("Willkommen im Shop!"));
     card2.setBorder(BorderFactory.createTitledBorder("Dein Warenkorb"));
     
+    //Shopansicht mit Artikel Tabelle
     shopPanel.setPreferredSize(new Dimension(500,140));
     shopPanel.setLayout(new FlowLayout());
 
@@ -129,7 +137,8 @@ public class KundeGUI extends JPanel{
     filter.setPreferredSize(new DimensionUIResource(100, 30));
     suchButton.setPreferredSize(new DimensionUIResource(100, 30));
 
-    shopTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());;
+    //Tabelle mit eigenem CellRenderer der Zelle als Button rendered
+    shopTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer("in den Warenkorb"));;
     shopTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     shopTable.getColumn("Nr").setMaxWidth(20);
     shopTable.getColumn("Artikel").setMinWidth(200);
@@ -137,10 +146,14 @@ public class KundeGUI extends JPanel{
     shopTable.getColumn("auf Lager").setMinWidth(90);
     shopTable.getColumn("").setMaxWidth(50);
     
+    //Warenkorbansicht mit Tabelle über Warenkorb Inhalt
     WKPanel.setPreferredSize(new Dimension(500,140));
     WKPanel.setLayout(new FlowLayout());
 
-    //add Components
+    WKTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer("aus Warenkorb entfernen"));;
+
+    //add Components....
+    //...to menü
     // Abstandhalter ("Filler") zwischen Rand und erstem Element
     Dimension borderMinSize = new Dimension(5, 10);
     Dimension borderPrefSize = new Dimension(5, 10);
@@ -158,10 +171,10 @@ public class KundeGUI extends JPanel{
  
     menu.add(b3);
  
-    // Abstandhalter ("Filler") zwischen letztem Element und Rand
+    //Abstandhalter ("Filler") zwischen letztem Element und Rand
     menu.add(new Box.Filler(borderMinSize, borderPrefSize, borderMaxSize));
      
-    //card2 Layou
+    //...to shopansicht
     borderMinSize = new Dimension(500, 40);
     borderPrefSize = new Dimension(500, 40);
     borderMaxSize = new Dimension(500, 40);
@@ -170,11 +183,15 @@ public class KundeGUI extends JPanel{
     shopPanel.add(suchButton);
     shopPanel.add(filter);
 
+    //shopansicht zu card1
     card1.add(shopPanel, BorderLayout.NORTH);
     card1.add(artikelScroll, BorderLayout.CENTER);
 
+    //...to Warenkorbansicht
     WKPanel.add(new Box.Filler(borderMinSize, borderPrefSize, borderMaxSize));
-    WKPanel.add(new JButton("kaufen"));
+    WKPanel.add(summe);
+    WKPanel.add(kaufen);
+    WKPanel.add(clearAll);
 
     card2.add(WKPanel, BorderLayout.CENTER);
     card2.add(korbScroll, BorderLayout.NORTH);
@@ -189,22 +206,6 @@ public class KundeGUI extends JPanel{
   private void initializeAction(){
 
     //Actions die nur Änderungen innerhalb des Panels (der KLasse) machen
-    //event wenn in den Warenkorb geklickt wird
-    shopTable.addMouseListener(new MouseInputAdapter() {
-      @Override
-      public void mouseReleased(MouseEvent e) {
-        int selectedColumn = shopTable.getSelectedColumn();
-        if (selectedColumn == 4){
-          JButton button = new JButton();
-          //Zwecksmäßiger Button um ActionEvent zu feuern
-          button.setActionCommand("kunde_hinzufügen");
-          button.addActionListener(gui);
-          button.doClick();
-        }
-      }
-      
-      });
-      
     //wechseln des Fensters Shop <-> Warenkorb
     b1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent event) {
@@ -227,10 +228,45 @@ public class KundeGUI extends JPanel{
         
       }});
 
+      //MouseListener für gesamte Tabelle, schickt Action Event an GUI falls Click in Row 4
+      shopTable.addMouseListener(new MouseInputAdapter() {
+        @Override
+        public void mouseReleased(MouseEvent e) {
+          int selectedColumn = shopTable.getSelectedColumn();
+          if (selectedColumn == 4){
+            JButton button = new JButton();
+            //Zwecksmäßiger Button um ActionEvent zu feuern
+            button.setActionCommand("kunde_hinzufügen");
+            button.addActionListener(gui);
+            button.doClick();
+          }
+        }
+      });
+
+      WKTable.addMouseListener(new MouseInputAdapter() {
+        @Override
+        public void mouseReleased(MouseEvent e) {
+          int selectedColumn = shopTable.getSelectedColumn();
+          if (selectedColumn == 4){
+            JButton button = new JButton();
+            //Zwecksmäßiger Button um ActionEvent zu feuern
+            button.setActionCommand("kunde_entfernen");
+            button.addActionListener(gui);
+            button.doClick();
+          }
+        }
+      });
+
       //Actions die auf Methoden im Eshop zurückgreifen
       //logout Button
       b3.setActionCommand("kunde_logout");
       b3.addActionListener(this.gui);
+
+      kaufen.setActionCommand("kunde_kaufen");
+      kaufen.addActionListener(gui);
+
+      clearAll.setActionCommand("kunde_clearAll");
+      clearAll.addActionListener(gui);
 
       suchButton.setActionCommand("kunde_suchen");
       suchButton.addActionListener(this.gui);
@@ -239,6 +275,12 @@ public class KundeGUI extends JPanel{
   public void updateArtikel(Vector data){
     ArtikelTableModel tablemodel = (ArtikelTableModel) shopTable.getModel();
     tablemodel.setArtikel(data);
+  }
+
+  public void updateWK(HashMap data, double sum){
+    WKTableModel tablemodel = (WKTableModel) WKTable.getModel();
+    tablemodel.setArtikel(data);
+    summe.setText("momentane Gesamtsumme: " + sum);
   }
 }
 

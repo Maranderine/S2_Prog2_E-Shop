@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.*;
 
 public class LoginGUI extends JPanel {
+
+    //Variablen
     GUI gui;
     JLabel title;
     JButton toRegister;
@@ -45,6 +47,7 @@ public class LoginGUI extends JPanel {
 
     private void initializeLayout() {
         
+        //layout Components
         //gesamtes Panel
         setPreferredSize(new Dimension(400,330));
         setLayout(null);
@@ -72,7 +75,6 @@ public class LoginGUI extends JPanel {
         c.anchor = GridBagConstraints.LINE_START;
         inputPanel.add(userLabel, c);
 
-        
         c.gridy=1;
         inputPanel.add(passwordLabel, c);
 
@@ -94,7 +96,7 @@ public class LoginGUI extends JPanel {
         c.insets = new Insets(20,10,0,10);
         inputPanel.add(loginButton,c);
 
-        
+        //Button um ins Register Menü zu wechseln
         toRegister.setBounds(50,280,300,30);
         toRegister.setOpaque(false);
         toRegister.setContentAreaFilled(false);
@@ -105,8 +107,9 @@ public class LoginGUI extends JPanel {
     }
 
     public void initializeAction(){
-        loginButton.addActionListener(gui);
-        toRegister.addActionListener(gui);
+
+        //Listener Initialisieren 
+        //Action für Events innerhalb des Panels 
         toRegister.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent me) {
                 toRegister.setForeground(Color.blue);
@@ -116,6 +119,11 @@ public class LoginGUI extends JPanel {
                 toRegister.setForeground(Color.white);
             }
         });
+
+        //Action für Events die außerhalb des Panels behandelt werden 
+        loginButton.addActionListener(gui);
+        toRegister.addActionListener(gui);
+        
     }
 
     public void clearText(){

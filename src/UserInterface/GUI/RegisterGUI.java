@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.*;
 
 public class RegisterGUI extends JPanel{
+    //TODO Exceptions falls Feld leer ist
+    //variablen 
     GUI gui;
     JLabel title;
     JPanel inputPanel;
@@ -168,8 +170,8 @@ public class RegisterGUI extends JPanel{
 
     //action Listener (--> gui) und mouseListener
     public void initializeAction(){
-        registerButton.addActionListener(gui);
-        backToLogin.addActionListener(gui);
+
+        //Actions die innerhalb behandelt werden
         backToLogin.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent me) {
                 backToLogin.setForeground(Color.blue);
@@ -179,8 +181,14 @@ public class RegisterGUI extends JPanel{
                 backToLogin.setForeground(Color.white);
             }
         });
+
+        //Actions die außerhalb behandelt werden 
+        registerButton.addActionListener(gui);
+        backToLogin.addActionListener(gui);
+        
     }
 
+    //Methoden zum aufruf von außerhalb 
     void clearText(){
         nameText.setText("");
         userText.setText("");

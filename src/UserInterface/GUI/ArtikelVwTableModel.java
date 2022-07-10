@@ -12,12 +12,12 @@ import Domain.Artikel.Massengutartikel;
 /**
  * Klasse von TabelModel abgeleitet, speziell für Artikel Shop Tabelle 
  */
-public class ArtikelTableModel extends AbstractTableModel{
+public class ArtikelVwTableModel extends AbstractTableModel{
     private Vector artikel;
-    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "auf Lager", ""};
+    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "Bestand", ""};
 
     
-    public ArtikelTableModel(Vector<Object> aktuelleArtikel) {
+    public ArtikelVwTableModel(Vector<Object> aktuelleArtikel) {
     	super(); 
     	//Kopie der Liste
     	// damit beim Aktualisieren keine Fehler passieren 
@@ -71,13 +71,11 @@ public class ArtikelTableModel extends AbstractTableModel{
             case 2:
                 return selectedArtikel.getPreis();
             case 3:
-                if(selectedArtikel.getBestand() > 10){return "";}
-                if(selectedArtikel.getBestand() <= 10){return "noch " + selectedArtikel.getBestand() + " auf Lager";}
+                return selectedArtikel.getBestand();
             case 4:
-                return "+";
+                return "...";
             default:
                 return null;
         }   
     }
 }
-

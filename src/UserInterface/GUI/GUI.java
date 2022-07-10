@@ -7,10 +7,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Vector;
 import java.awt.*;
 import Domain.Eshop;
 import Domain.Search.SuchOrdnung;
+import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Input.ExceptionInputFalsch;
 import Exceptions.Input.ExceptionInputFeldIstLeer;
@@ -18,14 +20,19 @@ import UserInterface.UserInterface;
 import Domain.Artikel.Artikel;
 
 public class GUI extends UserInterface implements ActionListener {
+
+  //variablen
   JFrame frame;
   LoginGUI login;
   RegisterGUI register;
   KundeGUI kunde;
+  MitarbeiterGUI employ;
+
   InfoBox info;
   SuchOrdnung ordnung;
   Vector artikelList;
   String string = "";
+  Integer integ;
 
   public GUI(Eshop eshop) {
 
@@ -35,6 +42,7 @@ public class GUI extends UserInterface implements ActionListener {
     register = new RegisterGUI(this);
     artikelList = eshop.AV_getAlleArtikelList();
     kunde = new KundeGUI(this, artikelList);
+    employ = new MitarbeiterGUI(this, artikelList);
     info = new InfoBox();
 
     buildMainWindow();
@@ -42,6 +50,7 @@ public class GUI extends UserInterface implements ActionListener {
   }
 
   // reagiert auf ActionEvents die Kommunikation mit Eshop verlangen
+  //TODO: in einelne Funktionen aufteilen
   public void actionPerformed(ActionEvent ae) {
     
       switch (ae.getActionCommand()) {
@@ -67,8 +76,7 @@ public class GUI extends UserInterface implements ActionListener {
                 login.clearText();
                 break;
               case MITARBEITER:
-                    login.clearText();
-                    setVisiblePanel("kunde");
+                    setVisiblePanel("mitarbeiter");
                     login.clearText();
                     break;
             }
@@ -89,6 +97,7 @@ public class GUI extends UserInterface implements ActionListener {
             String passwort = CheckStringPasswort(""+register.passwordText.getText());
             eshop.BV_kundeHinzufügen(name, un, passwort, email, address);
             info.infoBox("Konto wurde erstellt", "Bestätigung");
+            setVisiblePanel("login");
           } catch (Exception e) {
           info.infoBox(e.getMessage(), "Registrieren Fehler");
           }
@@ -102,6 +111,8 @@ public class GUI extends UserInterface implements ActionListener {
         //#region kunde
         case "kunde_logout":
           setVisiblePanel("login");
+          eshop.logout(this);
+          eshop.saveData();
           break;
 
         //Such Button im Shop
@@ -110,7 +121,7 @@ public class GUI extends UserInterface implements ActionListener {
           
           String filter = kunde.filter.getSelectedItem().toString();
           String searchTerm = kunde.search.getText();
-          if(searchTerm.equals("wonach suchst du?")){searchTerm = null;}
+          if(searchTerm.equals("wonach suchst du?")){searchTerm = "";}
 
           //switch auf ausgewählten Filter
           switch(filter){
@@ -152,26 +163,58 @@ public class GUI extends UserInterface implements ActionListener {
           }else{
             kunde.updateArtikel(this.ordnung.getObjektList());
           }
-          
           break;
+
+        //in den Warenkorb Button 
         case "kunde_hinzufügen":
-          string = JOptionPane.showInputDialog("Wie viele wollen sie hinzufügen?");
+          string = JOptionPane.showInputDialog("Wie viele Items wollen sie in den Warenkorb tun?");
           if(string.equals("") | string.equals(null)){break;}
-          int i = Integer.parseInt(string);
+          int integ = Integer.parseInt(string);
           Artikel selectedArticle = (Artikel) kunde.data.get(kunde.shopTable.getSelectedRow());
-          eshop.WV_setArtikel(selectedArticle, i);
+          eshop.WV_setArtikel(selectedArticle, integ);
+          kunde.updateWK(eshop.WK_getInhalt(), eshop.WV_getSumme());
           break;
+        case "kunde_entfernen":
+          Artikel mep = (Artikel) kunde.data.get(kunde.shopTable.getSelectedRow());
+          integ = JOptionPane.showInternalConfirmDialog(null,  mep.getName()+ " aus Warenkorb entfernen?", "information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+          if(!(integ == 0)){break;}
+          eshop.WV_removeArtikel(mep);
+          kunde.updateWK(eshop.WK_getInhalt(), eshop.WV_getSumme());
+          break;
+        case "kunde_clearAll":
+          integ = JOptionPane.showInternalConfirmDialog(null, "Warenkorb leeren?", "information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+          if(!(integ == 0)){break;}
+          eshop.WV_clearAll();
+          kunde.updateWK(eshop.WK_getInhalt(), eshop.WV_getSumme());
+          break;
+        case "kunde_kaufen":
+          integ = JOptionPane.showInternalConfirmDialog(null, "Wollen sie die Artikel kaufen?", "Kaufbestätigung", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+          try{
+            if(integ == 0){ 
+              string = eshop.WV_kaufen(this.userHash).toString();
+              kunde.updateWK(null, 0);
+            }else{
+              string = "kaufen abgebrochen";
+            }
+          info.infoBox(string, "kaufen");
+          }catch(ExceptionArtikelCollection e){
+            info.infoBox(e.getMessage(),  "Fehler");
+          }
+          break;
+        case "mitarbeiter_bearbeiten":
+          EditFrame edit = new EditFrame();
     }
   }
 
-
+  //initialisisere JFrame
   public void buildMainWindow() {
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     frame.setLayout(new FlowLayout());
     frame.add(register);
     frame.add(login);
     frame.add(kunde);
-    setVisiblePanel("kunde");
+    frame.add(employ);
+    setVisiblePanel("mitarbeiter");
     frame.pack();
     frame.setVisible(true);
     frame.setResizable(false);
@@ -186,6 +229,7 @@ public class GUI extends UserInterface implements ActionListener {
     login.setVisible(false);
     register.setVisible(false);
     kunde.setVisible(false);
+    employ.setVisible(false);
 
     // richtiges Panel sichtbar setzen
     switch (sichtbar) {
@@ -201,6 +245,10 @@ public class GUI extends UserInterface implements ActionListener {
         break;
       case "kunde":
         kunde.setVisible(true);
+        frame.pack();
+        break;
+      case "mitarbeiter":
+        employ.setVisible(true);
         frame.pack();
         break;
     }
@@ -225,6 +273,7 @@ public class GUI extends UserInterface implements ActionListener {
     }
     return stringToCheck;
   }
+
   @Override
   public boolean run() {
     // TODO Auto-generated method stub
@@ -234,7 +283,7 @@ public class GUI extends UserInterface implements ActionListener {
 
   // #region input checking
   // premade string pattern checks
-
+  //TODO exception message nicht throwen sondern infobox hinzufügen --> am Ende gesammelte Errors ausgeben
 
   /**
    * checkt input für Text pattern
@@ -242,8 +291,6 @@ public class GUI extends UserInterface implements ActionListener {
    * @param string string zu checken
    * @throws ExceptionInputFalsch
    */
-
-   //TODO exception message nicht throwen sondern infobox hinzufügen --> am Ende gesammelte Errors ausgeben
   protected String CheckStringText(String string) throws ExceptionInputFalsch {
       CheckString(PatternText, string, null);
     return string;

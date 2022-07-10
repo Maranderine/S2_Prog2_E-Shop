@@ -3,33 +3,44 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import java.lang.Class;
-
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import Domain.Artikel.Artikel;
 
+/**
+ * Klasse von TabelModel abgeleitet, speziell für Warenkorb Tabelle 
+ */
 public class WKTableModel extends AbstractTableModel{
-    private Vector artikel;
+    private HashMap<Artikel, Integer> warenkorb;
+    private Vector<Artikel> korbArtikel;
     private String[] spaltenNamen = {"Nr", "Artikel", "Stück", "Preis", ""};
 
     
-    public WKTableModel(Vector<Object> korbInhalt) {
+    public WKTableModel(HashMap korbInhalt) {
     	super(); 
-    	// Ich erstelle eine Kopie der Bücherliste,
-    	// damit beim Aktualisieren (siehe Methode setBooks())
-    	// keine unerwarteten Seiteneffekte entstehen.
-    	artikel = new Vector<Object>();
-        if(!(korbInhalt == null)){
-    	    artikel.addAll(korbInhalt);
-        }
+    	//Kopie der Liste,
+    	// damit beim Aktualisieren keine unerwarteten Seiteneffekte entstehen.
+    	warenkorb = korbInhalt;
+        if(!(warenkorb == null)){korbArtikel = getKeys();}
     }
 
-    public void setArtikel(Vector aktuelleArtikel){
-        artikel.clear();
-        artikel.addAll(aktuelleArtikel);
+    //aktualsisiert Tabelle
+    public void setArtikel(HashMap aktuelleArtikel){
+        warenkorb = aktuelleArtikel;
+        korbArtikel = (warenkorb ==null)? null: getKeys();
         fireTableDataChanged();
     }
 
+    public Vector<Artikel> getKeys(){
+        Vector<Artikel> artikel = new Vector<>();
+        for (Entry<Artikel, Integer> entry : warenkorb.entrySet()) {
+           artikel.add(entry.getKey());
+        }
+        return artikel;
+    }
     /*
      * Ab hier überschriebene Methoden mit Informationen, 
      * die eine JTable von jedem TableModel erwartet:
@@ -40,8 +51,7 @@ public class WKTableModel extends AbstractTableModel{
      */
     @Override
     public int getRowCount() {
-        
-        return artikel.size();
+        return (korbArtikel == null)? 0 :  korbArtikel.size();
     }
 
     @Override
@@ -55,20 +65,24 @@ public class WKTableModel extends AbstractTableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Artikel selectedArtikel = (Artikel) artikel.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return selectedArtikel.getArtikelNr();
-            case 1:
-                return selectedArtikel.getName();
-            case 2:
-                return selectedArtikel.getPreis();
-            case 3:
-                return selectedArtikel.getPreis();
-            case 4:
-                return "-";
-            default:
-                return null;
+        if(korbArtikel ==null){return "";}
+        else{
+            Artikel artikel = korbArtikel.get(rowIndex);
+            int bestand = warenkorb.get(artikel);
+            switch (columnIndex) {
+                case 0:
+                    return artikel.getArtikelNr();
+                case 1:
+                    return artikel.getName();
+                case 2:
+                    return bestand;
+                case 3:
+                    return artikel.getPreis();
+                case 4:
+                    return "-";
+                default:
+                    return null;
+            }
         }   
     }
 }
