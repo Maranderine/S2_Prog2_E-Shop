@@ -29,6 +29,10 @@ public class InfoBox {
         resetString();
     }
 
+    public Integer confirmBox(String message){
+        return JOptionPane.showInternalConfirmDialog(null, message, "information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+    }
+
     /**
      * speichert mitgegebenen String in InfoBox
      * @param err

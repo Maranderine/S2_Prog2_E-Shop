@@ -19,7 +19,7 @@ public class Mitarbeiter extends Benutzer {
   // Methoden zum Setzen und Lesen der Kunden-Eigenschaften,
   // z.B. getStrasse() und setStrasse()
   @Override
-  protected int getKundenNr() {
+  public int getKundenNr() {
     return mitarbeiterNr;
   }
 

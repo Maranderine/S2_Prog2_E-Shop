@@ -45,7 +45,7 @@ public class Kunde extends Benutzer {
   }
 
   @Override
-  protected int getKundenNr() {
+  public int getKundenNr() {
     return kundenNr;
   }
 

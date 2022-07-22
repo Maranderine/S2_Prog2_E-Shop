@@ -178,6 +178,7 @@ public class Benutzerverwaltung extends Verwaltung {
       sucheBenutzer(string);
       throw new ExceptionBenutzerNameUngültig();
     } catch (ExceptionBenutzerNichtGefunden e) {
+      System.out.println("weird");
       return true;
     }
 
@@ -218,6 +219,10 @@ public class Benutzerverwaltung extends Verwaltung {
    */
   public String getDataName(Benutzer user) {
     return user.getName();
+  }
+
+  public Vector<Benutzer> getBenutzerList(){
+    return benutzerRegister;
   }
 
   // #endregion
@@ -414,45 +419,6 @@ public class Benutzerverwaltung extends Verwaltung {
 
   // #endregion
   // #region persistenz
-  /*
-   * public void schreibeDaten(String kundenDatei, String mitarbeiterDatei) throws
-   * IOException {
-   * // PersistenzManager für Schreibvorgänge in Kunde.txt öffnen
-   * persistenceManager.openForWriting(kundenDatei);
-   * //Liste durch iterieren, wenn nutzer = Kunde --> in Kunden Datei speichern
-   * for (Benutzer kunde : this.benutzerRegister){
-   * if(kunde instanceof Kunde) {persistenceManager.speichereKunde(kunde);}
-   * //Persistenz schließen
-   * persistenceManager.close();
-   * // PersistenzManager für Schreibvorgänge in Mitarbeiter.txt öffnen
-   * persistenceManager.openForWriting(mitarbeiterDatei);
-   * //Liste durch iterieren,
-   * for (Benutzer mitarbeiter : this.benutzerRegister){
-   * if(mitarbeiter instanceof Kunde)
-   * {persistenceManager.speichereMitarbeiter(mitarbeiter);}
-   * 
-   * }
-   * persistenceManager.close();
-   * }
-   * 
-   * public void liesDaten(String kundenDatei, String MitarbeiterDatei) throws
-   * IOException {
-   * // PersistenzManager für Lesevorgänge öffnen
-   * persistenceManager.openForReading(kundenDatei);
-   * Kunde kunde;
-   * while ((kunde = persistenceManager.ladeKunde()) != null) {
-   * benutzerRegister.add(kunde);
-   * }
-   * // Persistenz-Schnittstelle wieder schließen
-   * persistenceManager.close();
-   * 
-   * persistenceManager.openForReading(String MitarbeiterDatei);
-   * Mitarbeiter mitarbeiter;
-   * while ((mitarbeiter = persistenceManager.ladeMitarbeiter()) != null) {
-   * benutzerRegister.add(mitarbeiter);
-   * }
-   * }
-   */
 
   private void save(String benutzerDoc) throws IOException {
     persistenceManager.saveObjekt(benutzerDoc, benutzerRegister);

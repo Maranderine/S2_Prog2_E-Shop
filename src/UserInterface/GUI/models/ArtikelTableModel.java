@@ -1,23 +1,18 @@
-package UserInterface.GUI;
-import javax.swing.JButton;
-import javax.swing.SwingUtilities;
+package UserInterface.GUI.models;
 import javax.swing.table.AbstractTableModel;
-import java.lang.Class;
-
 import java.util.Vector;
-
 import Domain.Artikel.Artikel;
 import Domain.Artikel.Massengutartikel;
 
 /**
  * Klasse von TabelModel abgeleitet, speziell für Artikel Shop Tabelle 
  */
-public class ArtikelVwTableModel extends AbstractTableModel{
+public class ArtikelTableModel extends AbstractTableModel{
     private Vector artikel;
-    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "Bestand", ""};
+    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "auf Lager", ""};
 
     
-    public ArtikelVwTableModel(Vector<Object> aktuelleArtikel) {
+    public ArtikelTableModel(Vector<Object> aktuelleArtikel) {
     	super(); 
     	//Kopie der Liste
     	// damit beim Aktualisieren keine Fehler passieren 
@@ -71,11 +66,13 @@ public class ArtikelVwTableModel extends AbstractTableModel{
             case 2:
                 return selectedArtikel.getPreis();
             case 3:
-                return selectedArtikel.getBestand();
+                if(selectedArtikel.getBestand() > 10){return "";}
+                if(selectedArtikel.getBestand() <= 10){return "noch " + selectedArtikel.getBestand() + " auf Lager";}
             case 4:
-                return "...";
+                return "+";
             default:
                 return null;
         }   
     }
 }
+

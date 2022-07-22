@@ -1,13 +1,7 @@
 package UserInterface.GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.*;
 
@@ -33,7 +27,7 @@ public class LoginGUI extends JPanel {
         toRegister.setActionCommand("login_toRegister");
         validation = new JLabel("", JLabel.CENTER);
         inputPanel = new JPanel();
-        userLabel = new JLabel("User");
+        userLabel = new JLabel("Username");
         passwordLabel = new JLabel("password");
         loginButton = new JButton("login");
         loginButton.setActionCommand("login_loginButton");

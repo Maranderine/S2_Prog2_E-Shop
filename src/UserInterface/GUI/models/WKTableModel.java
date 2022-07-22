@@ -1,9 +1,5 @@
-package UserInterface.GUI;
-import javax.swing.JButton;
-import javax.swing.SwingUtilities;
+package UserInterface.GUI.models;
 import javax.swing.table.AbstractTableModel;
-import java.lang.Class;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.Map.Entry;

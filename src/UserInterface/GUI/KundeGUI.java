@@ -1,21 +1,16 @@
 package UserInterface.GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
-import Domain.Artikel.Artikel;
+import UserInterface.GUI.models.ArtikelTableModel;
+import UserInterface.GUI.models.WKTableModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.awt.event.MouseEvent;
@@ -25,8 +20,6 @@ public class KundeGUI extends JPanel{
   //Variablen
   //allgemeine Daten
   GUI gui;
-  Vector<Object> data;
-  
 
   //Bestandteile Seitenmenü
   JButton b1;
@@ -43,7 +36,7 @@ public class KundeGUI extends JPanel{
   //Bestandteile der Shopansicht 
   JPanel shopPanel;
   JTextField search;
-  JComboBox filter;
+  JComboBox<String> filter;
   JButton suchButton;
   ArtikelTableModel artikelTableModel;
   JTable shopTable;
@@ -58,9 +51,8 @@ public class KundeGUI extends JPanel{
   JTable WKTable;
   JScrollPane korbScroll;
 
-  public KundeGUI(GUI gui, Vector<Object> data){
+  public KundeGUI(GUI gui, ArtikelTableModel artikelTableModel){
 
-    this.data = data;
     this.gui = gui;
     String[] filterTypes = {"Kein Filter", "Preis aufsteigend", "Preis absteigend"};
 
@@ -75,7 +67,7 @@ public class KundeGUI extends JPanel{
     card2 = new JPanel();
 
     shopPanel = new JPanel(new BoxLayout(menu, BoxLayout.X_AXIS));
-    artikelTableModel = new ArtikelTableModel(data);
+    this.artikelTableModel = artikelTableModel;
     shopTable = new JTable(artikelTableModel);
     artikelScroll = new JScrollPane(shopTable);
     search = new JTextField();
@@ -272,15 +264,38 @@ public class KundeGUI extends JPanel{
       suchButton.addActionListener(this.gui);
   }
 
+  /**
+   * updated Artikel Tabelle
+   * @param data Vektor mit sichtbaren Artikeln 
+   */
   public void updateArtikel(Vector data){
     ArtikelTableModel tablemodel = (ArtikelTableModel) shopTable.getModel();
     tablemodel.setArtikel(data);
   }
 
+  /**
+   * updatet Warenkorb 
+   * @param data Artikel die im Warenkorb enthalten als hashmap
+   * @param sum Summe aller Preise
+   */
   public void updateWK(HashMap data, double sum){
     WKTableModel tablemodel = (WKTableModel) WKTable.getModel();
     tablemodel.setArtikel(data);
     summe.setText("momentane Gesamtsumme: " + sum);
+  }
+
+  //get Methoden 
+
+  public String getSelectedFilter(){
+    return filter.getSelectedItem().toString();
+  }
+
+  public String getSearchterm(){
+    return search.getText();
+  }
+
+  public Integer getSelectedRow(){
+    return shopTable.getSelectedRow();
   }
 }
 

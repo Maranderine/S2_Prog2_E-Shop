@@ -90,7 +90,7 @@ public class CUI extends UserInterface {
               LevelMove(MenuLevel.KUNDEN_REGISTRIEREN);
               break;
             case "0":// Exit
-              eshop.saveData();
+
               return false;
             default:
               System.out.println(keinnav);

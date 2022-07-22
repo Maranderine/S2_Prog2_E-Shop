@@ -10,6 +10,7 @@ import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
+import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikel;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
@@ -99,6 +100,9 @@ public class Eshop {
     return BenutzerVw.getAktiverBenutzer(userHash);
   }
 
+  public Vector<Benutzer> BV_getAllNutzer(){
+    return BenutzerVw.getBenutzerList();
+  }
   /**
    * login to user profile
    * 
@@ -366,7 +370,8 @@ public class Eshop {
         ArtikelVw.setArtikelBestand(artikel, bestand);
         ArtikelVw.setArtikelPreis(artikel, preis);
       } catch (Exception e) {
-
+        e.printStackTrace();
+        System.out.println("hihu");
       }
 
       // logt neuen und alten preis
@@ -520,6 +525,18 @@ public class Eshop {
 
   public Ereignis EV_getEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
     return EreignisVw.findeEreignis(ereignisNummer);
+  }
+
+  public Vector<EreignisArtikel> EV_getArtikelEreignis(Artikel artikel){
+    return EreignisVw.getArtikelEreignis(artikel);
+  }
+
+  public Integer[] EV_getBestandsHistore(Artikel artikel){
+    return EreignisVw.getBestandHistory(artikel);
+  }
+
+  public Vector<Ereignis> EV_getLog(){
+    return EreignisVw.getLog();
   }
 
   public SuchOrdnung EV_sucheEreignisse(String searchterm) {
