@@ -1,17 +1,13 @@
 package UserInterface.GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.*;
 
 public class RegisterGUI extends JPanel{
+    //TODO Exceptions falls Feld leer ist
+    //variablen 
     GUI gui;
     JLabel title;
     JPanel inputPanel;
@@ -33,13 +29,15 @@ public class RegisterGUI extends JPanel{
     JLabel validation;
     JButton registerButton;
     JButton backToLogin;
-    JComboBox landBox;
+    JComboBox<String> landBox;
 
     public RegisterGUI(GUI gui)   {
 
         this.gui = gui;
 
-        String[] landAuswahl = {"Deutschland", "England"};
+        String[] landAuswahl = {"Afghanistan", "Ägypten", "Albanien", "Algerien", "Andorra", "Angola", "Argentinien", "Armenien", "Aserbaidschan", "Australien", "Bangladesch", "Belgien", "Bolivien", "Brasilien",  "Bulgarien", 
+        "China", "Chile", "Dänemark", "Deutschland", "England", "Finnland", "Frankreich"};
+
         title = new JLabel("Register", JLabel.CENTER);   
         inputPanel = new JPanel();
         nameLabel = new JLabel("Name");
@@ -168,8 +166,8 @@ public class RegisterGUI extends JPanel{
 
     //action Listener (--> gui) und mouseListener
     public void initializeAction(){
-        registerButton.addActionListener(gui);
-        backToLogin.addActionListener(gui);
+
+        //Actions die innerhalb behandelt werden
         backToLogin.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent me) {
                 backToLogin.setForeground(Color.blue);
@@ -179,15 +177,54 @@ public class RegisterGUI extends JPanel{
                 backToLogin.setForeground(Color.white);
             }
         });
+
+        //Actions die außerhalb behandelt werden 
+        registerButton.addActionListener(gui);
+        backToLogin.addActionListener(gui);
+        
     }
 
+    //Methoden zum aufruf von außerhalb 
     void clearText(){
         nameText.setText("");
+        vornameText.setText("");
         userText.setText("");
         passwordText.setText("");
         mailText.setText("");
+        landBox.setSelectedIndex(0);
         ortText.setText("");
+        streetText.setText("");
     }
 
+    public String getVorame(){
+        return nameText.getText();
+    }
+
+    public String getVorname(){
+        return vornameText.getText();
+    }
+    public String getUsername(){
+        return userText.getText();
+    }
+
+    public String getPasswort(){
+       return passwordText.getText();
+    }
+
+    public String getMail(){
+        return mailText.getText();
+    }
+
+    public String getOrt(){
+        return ortText.getText();
+    }
+
+    public String getLand(){
+       return landBox.getSelectedItem().toString();
+    }
+
+    public String getStreet(){
+        return streetText.getText();
+    }
 }
 

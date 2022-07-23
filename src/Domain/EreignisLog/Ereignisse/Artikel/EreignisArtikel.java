@@ -7,7 +7,7 @@ import Domain.EreignisLog.Ereignisse.EreignisCalled;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikel;
 
 /** Basis ereignis für artikel ereignisse */
-abstract class EreignisArtikel extends EreignisCalled implements EreignisInterface_ZielArtikel {
+public abstract class EreignisArtikel extends EreignisCalled implements EreignisInterface_ZielArtikel {
   /** artikel objekt */
   private Artikel artikel;
   /** artikel idenfikator */
@@ -34,7 +34,7 @@ abstract class EreignisArtikel extends EreignisCalled implements EreignisInterfa
    * @param artikelBestand Artikel aktueller bestand
    * @param artikelPreis   Artikel preis
    */
-  protected EreignisArtikel(int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
+  public EreignisArtikel(int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
       Benutzerverwaltung.BeutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer,
       String artikelName, int artikelBestand, double artikelPreis) {
 

@@ -1,29 +1,28 @@
-package UserInterface.GUI;
-import javax.swing.JButton;
-import javax.swing.SwingUtilities;
+package UserInterface.GUI.models;
 import javax.swing.table.AbstractTableModel;
-import java.lang.Class;
-
 import java.util.Vector;
-
 import Domain.Artikel.Artikel;
+import Domain.Artikel.Massengutartikel;
 
-public class WKTableModel extends AbstractTableModel{
+/**
+ * Klasse von TabelModel abgeleitet, speziell für Artikel Shop Tabelle 
+ */
+public class ArtikelTableModel extends AbstractTableModel{
     private Vector artikel;
-    private String[] spaltenNamen = {"Nr", "Artikel", "Stück", "Preis", ""};
+    private String[] spaltenNamen = {"Nr", "Artikel", "Preis", "auf Lager", ""};
 
     
-    public WKTableModel(Vector<Object> korbInhalt) {
+    public ArtikelTableModel(Vector<Object> aktuelleArtikel) {
     	super(); 
-    	// Ich erstelle eine Kopie der Bücherliste,
-    	// damit beim Aktualisieren (siehe Methode setBooks())
-    	// keine unerwarteten Seiteneffekte entstehen.
+    	//Kopie der Liste
+    	// damit beim Aktualisieren keine Fehler passieren 
     	artikel = new Vector<Object>();
-        if(!(korbInhalt == null)){
-    	    artikel.addAll(korbInhalt);
+        if(!(aktuelleArtikel == null)){
+    	    artikel.addAll(aktuelleArtikel);
         }
     }
 
+    //aktualisiert Tabelle 
     public void setArtikel(Vector aktuelleArtikel){
         artikel.clear();
         artikel.addAll(aktuelleArtikel);
@@ -60,15 +59,20 @@ public class WKTableModel extends AbstractTableModel{
             case 0:
                 return selectedArtikel.getArtikelNr();
             case 1:
-                return selectedArtikel.getName();
+
+                return (selectedArtikel instanceof Massengutartikel)? 
+                selectedArtikel.getName() + "("+ ((Massengutartikel) selectedArtikel).getstückZahl() + " Stk)"
+                : selectedArtikel.getName() ;
             case 2:
                 return selectedArtikel.getPreis();
             case 3:
-                return selectedArtikel.getPreis();
+                if(selectedArtikel.getBestand() > 10){return "";}
+                if(selectedArtikel.getBestand() <= 10){return "noch " + selectedArtikel.getBestand() + " auf Lager";}
             case 4:
-                return "-";
+                return "+";
             default:
                 return null;
         }   
     }
 }
+

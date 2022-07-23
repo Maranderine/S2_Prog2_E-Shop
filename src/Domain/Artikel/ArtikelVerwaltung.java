@@ -223,18 +223,19 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @return true wenn alles okay
    */
-  public boolean checkName(String string) throws ExceptionArtikelNameUngültig, ExceptionArtikelNameExistiertBereits {
+  public boolean checkName(String string) throws ExceptionArtikelNameUngültig{
     // TODO do regex pattern checking
     // pattern.matcher(input).matches()
     if (string.equals(null))
       throw new ExceptionArtikelNameUngültig();
 
-    try {
+    /*try {
       Artikel art = findArtikelByName(string);
       throw new ExceptionArtikelNameExistiertBereits(art);
     } catch (ExceptionArtikelNichtGefunden e) {
       return true;
-    }
+    }*/
+    return true;
 
   }
 
@@ -427,7 +428,7 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws ExceptionArtikelNameUngültig
    */
   public void setArtikelName(Artikel artikel, String newName)
-      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
+      throws ExceptionArtikelNameUngültig {
 
     if (checkName(newName))
       // wenn kein artikel gefunden wird
@@ -457,8 +458,8 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @throws ExceptionArtikelUngültigerBestand
    */
   public void setArtikelBestand(Artikel artikel, int bestand) throws ExceptionArtikelUngültigerBestand {
-    artikel.setBestand(bestand);
     eventCheckBestand(artikel);
+    artikel.setBestand(bestand);
   }
 
   /**
