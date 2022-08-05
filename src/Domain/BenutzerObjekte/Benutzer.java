@@ -19,7 +19,7 @@ public abstract class Benutzer implements Serializable {
 
   // #region getter
   /** kunden nummer */
-  protected abstract int getKundenNr();
+  public abstract int getKundenNr();
 
   protected Benutzerverwaltung.BeutzerType getType() {
     return benutzerType;
@@ -33,7 +33,7 @@ public abstract class Benutzer implements Serializable {
     return password;
   }
 
-  protected String getName() {
+  public String getName() {
     return name;
   }
 

@@ -17,6 +17,7 @@ import Exceptions.Artikel.ExceptionArtikelNichtGenugBestand;
 public class WarenkorbVerwaltung extends Verwaltung {
 
   Warenkorb warenkorb;
+  private double betrag;
   private int RechnungZaehler;
   private final Eshop eshop;
   private ArtikelVerwaltung artikelVW;
@@ -59,7 +60,30 @@ public class WarenkorbVerwaltung extends Verwaltung {
    * erstellt einen neuen eintrag oder ändert einen vorhandenen
    */
   public void setArtikel(Artikel artikel, Integer integer) {
+    if(artikelVorhanden(artikel)){
+      this.warenkorb.inhalt.put(artikel, (integer + warenkorb.inhalt.get(artikel)));
+    }else{
     this.warenkorb.inhalt.put(artikel, integer);
+    }
+  }
+
+  /**
+   * checkt ob Artikel vorhanden ist
+   * @param artikel
+   * @return
+   */
+  public Boolean artikelVorhanden(Artikel artikel){
+    for(Entry<Artikel, Integer> entry : warenkorb.inhalt.entrySet()){
+      if(entry.getKey() == artikel){return true;}
+    }
+    return false;
+  }
+
+  public Double gesamtSumme(){
+    warenkorb.inhalt.forEach((artikel, bestand) -> {
+      betrag += artikel.getPreis() * bestand;
+    });
+    return betrag;
   }
 
   /**
