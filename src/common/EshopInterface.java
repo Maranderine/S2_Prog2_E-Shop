@@ -227,7 +227,7 @@ public interface EshopInterface {
    * @return
    * @throws ExceptionBenutzerNichtGefunden
    */
-  public BeutzerType login(UserSession callingUI, String username, String password);
+  public BenutzerType login(UserSession callingUI, String username, String password);
 
   /**
    * logout the user
@@ -388,14 +388,14 @@ public interface EshopInterface {
     }
   }
 
-  public static enum BeutzerType {
+  public static enum BenutzerType {
     MITARBEITER("mitarbeiter"),
     KUNDE("kunde"),
     NONE("none");
 
     private final String key;
 
-    BeutzerType(String str) {
+    BenutzerType(String str) {
       key = str;
     }
 
@@ -414,12 +414,12 @@ public interface EshopInterface {
      * @param str string of the request type
      * @return boolean
      */
-    public static BeutzerType get(String str) {
+    public static BenutzerType get(String str) {
 
       int i = getIndex(str);
 
       if (i != -1) {
-        return BeutzerType.values()[i];
+        return BenutzerType.values()[i];
       } else
         return null;
     }
@@ -432,7 +432,7 @@ public interface EshopInterface {
      */
     public static int getIndex(String str) {
 
-      BeutzerType[] rList = BeutzerType.values();
+      BenutzerType[] rList = BenutzerType.values();
       for (int i = 0; i < rList.length; i++) {
         if (rList[i].get().equals(str)) {
           return i;

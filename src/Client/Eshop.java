@@ -170,28 +170,34 @@ public class Eshop implements EshopInterface {
   }
 
   @Override
-  public BeutzerType login(UserSession callingUI, String username, String password) {
-
+  public BenutzerType login(UserSession callingUI, String username, String password) {
     String sp = REQUESTS.splitter;
     String outString = REQUESTS.LOGIN + sp + username + sp + password;
     System.out.println("log - outString: " + outString);
     out.println(outString);
 
-    String[] input = inLineAndSplit();
+    BenutzerType userType = BenutzerType.NONE;
 
-    System.out.println("log - input: " + input.toString());
+    try {
+      userType = BenutzerType.get(in.readLine());
 
-    // String input = in.readLine();
+      if (userType != BenutzerType.NONE) {
+        callingUI.userHash = in.readLine().getBytes();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-    return null;
+    return userType;
   }
 
   @Override
   public void logout(UserSession callingUI) {
 
-    out.println();
+    out.println(REQUESTS.LOGOUT);
 
-    callingUI.userHash.toString();
+    byte arr[] = {};
+    callingUI.userHash = arr;
   }
 
   @Override

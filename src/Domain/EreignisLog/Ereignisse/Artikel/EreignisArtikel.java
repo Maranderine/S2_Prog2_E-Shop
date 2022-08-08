@@ -5,7 +5,7 @@ import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.Ereignisse.EreignisCalled;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikel;
-import common.EshopInterface.BeutzerType;
+import common.EshopInterface.BenutzerType;
 
 /** Basis ereignis für artikel ereignisse */
 public abstract class EreignisArtikel extends EreignisCalled implements EreignisInterface_ZielArtikel {
@@ -36,7 +36,7 @@ public abstract class EreignisArtikel extends EreignisCalled implements Ereignis
    * @param artikelPreis   Artikel preis
    */
   public EreignisArtikel(int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
-      BeutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer,
+      BenutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer,
       String artikelName, int artikelBestand, double artikelPreis) {
 
     super(ereignisNummer, ereignisDesc, CUser, CUserNumber, CUserType, CUserName);

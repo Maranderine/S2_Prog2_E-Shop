@@ -1,6 +1,6 @@
 package Domain.BenutzerObjekte;
 
-import common.EshopInterface.BeutzerType;
+import common.EshopInterface.BenutzerType;
 
 public class Kunde extends Benutzer {
   private String email;
@@ -19,7 +19,7 @@ public class Kunde extends Benutzer {
    * @param address
    */
   protected Kunde(int KundenNummer, String name, String username, byte[] password, String email, String address) {
-    super(BeutzerType.KUNDE, name, username, password);
+    super(BenutzerType.KUNDE, name, username, password);
     this.kundenNr = KundenNummer;
     this.email = email;
     this.address = address;

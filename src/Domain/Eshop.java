@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
 
-import javax.sql.rowset.serial.SerialRef;
-
 import Domain.Artikel.Artikel;
 import Domain.Artikel.ArtikelVerwaltung;
 import Domain.BenutzerObjekte.Benutzer;
@@ -100,7 +98,7 @@ public class Eshop implements EshopInterface {
     return BenutzerVw.getBenutzerList();
   }
 
-  public BeutzerType login(UserSession callingUI, String username, String password) {
+  public BenutzerType login(UserSession callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
   }
 

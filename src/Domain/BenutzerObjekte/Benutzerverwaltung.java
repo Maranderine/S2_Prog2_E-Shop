@@ -17,7 +17,7 @@ import Exceptions.Benutzer.ExceptionMitarbeiterNichtGefunden;
 import UserInterface.UserSession;
 import persistence.FilePersistenceManager;
 import persistence.PersistenceManager;
-import common.EshopInterface.BeutzerType;
+import common.EshopInterface.BenutzerType;
 
 public class Benutzerverwaltung extends Verwaltung {
 
@@ -124,7 +124,7 @@ public class Benutzerverwaltung extends Verwaltung {
    */
   public Kunde sucheKunde(int userNumber) throws ExceptionKundeNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
-      if (benutzer.getType() == BeutzerType.KUNDE) {
+      if (benutzer.getType() == BenutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
           return (Kunde) benutzer;
         }
@@ -144,7 +144,7 @@ public class Benutzerverwaltung extends Verwaltung {
    */
   public Mitarbeiter sucheMitarbeiter(int userNumber) throws ExceptionMitarbeiterNichtGefunden {
     for (Benutzer benutzer : benutzerRegister) {
-      if (benutzer.getType() == BeutzerType.KUNDE) {
+      if (benutzer.getType() == BenutzerType.KUNDE) {
         if (benutzer.getKundenNr() == userNumber) {
           return (Mitarbeiter) benutzer;
         }
@@ -195,9 +195,9 @@ public class Benutzerverwaltung extends Verwaltung {
    * get user type
    * 
    * @param user
-   * @return BeutzerType user type
+   * @return BenutzerType user type
    */
-  public BeutzerType getDataTyp(Benutzer user) {
+  public BenutzerType getDataTyp(Benutzer user) {
     return user.getType();
   }
 
@@ -320,7 +320,7 @@ public class Benutzerverwaltung extends Verwaltung {
    * @return
    * @throws ExceptionBenutzerNichtGefunden
    */
-  public BeutzerType login(UserSession callingUI, String username, String passw) {
+  public BenutzerType login(UserSession callingUI, String username, String passw) {
     Benutzer benutzer;
     try {
       benutzer = sucheBenutzer(username);
@@ -337,17 +337,17 @@ public class Benutzerverwaltung extends Verwaltung {
 
         // return type of user
         if (benutzer instanceof Mitarbeiter) {
-          return BeutzerType.MITARBEITER;
+          return BenutzerType.MITARBEITER;
         }
         if (benutzer instanceof Kunde) {
-          return BeutzerType.KUNDE;
+          return BenutzerType.KUNDE;
         }
       }
 
     } catch (ExceptionBenutzerNichtGefunden e) {
 
     }
-    return BeutzerType.NONE;
+    return BenutzerType.NONE;
   }
 
   /**

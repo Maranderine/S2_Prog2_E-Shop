@@ -12,7 +12,7 @@ import Domain.Eshop;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import UserInterface.UserSession;
-import common.EshopInterface.BeutzerType;
+import common.EshopInterface.BenutzerType;
 import common.EshopInterface.REQUESTS;
 
 public class SocketProcessor extends UserSession {
@@ -133,20 +133,19 @@ public class SocketProcessor extends UserSession {
         out.println(arguments[0]);
         break;
       case LOGIN:
+        BenutzerType user = eshop.login(this, arguments[0], arguments[1]);
+        // send user type
+        out.println(user.get());
 
-        BeutzerType user = eshop.login(this, arguments[0], arguments[1]);
-        str = user.get();
-
-        if (user != BeutzerType.NONE) {
-          str += this.userHash.toString();
+        // send user haash seperatly
+        if (user != BenutzerType.NONE) {
+          out.println(this.userHash.toString());
         }
-
-        System.out.println("login proc: " + str);
-        out.println(out);
 
         break;
       case LOGOUT:
-        // eshop.logout(callingUI);
+
+        eshop.logout(this);
 
         // System.out.println("login proc: " + ui.userHash.toString());
 

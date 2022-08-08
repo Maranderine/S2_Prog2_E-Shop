@@ -2,7 +2,7 @@ package Domain.EreignisLog.Interfaces;
 
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
-import common.EshopInterface.BeutzerType;
+import common.EshopInterface.BenutzerType;
 
 /**
  * Interface für Ereignisse die einene Calling Benutzer haben
@@ -26,10 +26,10 @@ public interface EreignisInterface_CallingBenutzer {
   /**
    * gets den calling (aufrufenden) Benutzer typ als enum eintrag
    * 
-   * @return Benutzerverwaltung.BeutzerType enum Benutzer typ des calling
+   * @return Benutzerverwaltung.BenutzerType enum Benutzer typ des calling
    *         (aufrufenden) Benutzers
    */
-  public BeutzerType getCallingBenutzerType();
+  public BenutzerType getCallingBenutzerType();
 
   /**
    * gets den calling (aufrufenden) Benutzer namen als String
