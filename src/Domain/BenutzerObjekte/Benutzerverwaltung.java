@@ -39,8 +39,8 @@ public class Benutzerverwaltung extends Verwaltung {
   private int mitarbeiterNrzähler;
   private String benutzerDoc;
 
-  public Benutzerverwaltung(String benutzerDox) {
-    this.benutzerDoc = benutzerDox;
+  public Benutzerverwaltung() {
+    this.benutzerDoc = "Nutzer.txt";
 
     try {
       // loading register
@@ -221,7 +221,7 @@ public class Benutzerverwaltung extends Verwaltung {
     return user.getName();
   }
 
-  public Vector<Benutzer> getBenutzerList(){
+  public Vector<Benutzer> getBenutzerList() {
     return benutzerRegister;
   }
 
