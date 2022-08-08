@@ -27,9 +27,6 @@ import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
-import UserInterface.CUI;
-import UserInterface.UserInterface;
-import UserInterface.GUI.GUI;
 import UserInterface.UserSession;
 import common.EshopInterface;
 
