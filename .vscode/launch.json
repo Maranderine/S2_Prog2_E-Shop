@@ -6,6 +6,13 @@
 	"configurations": [
 		{
 			"type": "java",
+			"name": "Launch Eshop",
+			"request": "launch",
+			"mainClass": "Domain.Eshop",
+			"projectName": "S2_Prog2_E-Shop_4ed2c5f2"
+		},
+		{
+			"type": "java",
 			"name": "Launch MAIN",
 			"request": "launch",
 			"mainClass": "MAIN",

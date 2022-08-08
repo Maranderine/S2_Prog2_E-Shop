@@ -29,6 +29,7 @@ import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
+import UserInterface.GUI.GUI;
 import common.EshopInterface;
 
 /**
@@ -435,7 +436,7 @@ public class Eshop implements EshopInterface {
 
   public UserInterface createUserInterface() {
 
-    return new CUI(this);
+    return new GUI(this);
   }
 
   public static void main(String[] args) {

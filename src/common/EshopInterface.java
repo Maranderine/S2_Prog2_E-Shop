@@ -333,7 +333,10 @@ public interface EshopInterface {
     WVGETSUMME("WV_getSumme"),
     BVKUNDEHINZUFÜGEN("BV_kundeHinzufügen"),
     BVMITARBEITERHINZUFÜGEN("BV_mitarbeiterHinzufügen"),
-    BVGETALLENUTZER("BV_getAllNutzer");
+    BVGETALLENUTZER("BV_getAllNutzer"),
+    AVDELETEARTIKEL("AV_deleteArtikel"),
+    AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
+    AVFINDARTIKELBYNAME("AV_findArtikelByName");
 
     private final String key;
     /**
