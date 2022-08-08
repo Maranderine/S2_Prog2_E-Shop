@@ -117,6 +117,7 @@ public class SocketProcessor {
 
     switch (request) {
       case REPLY:
+        //sends first argument back to client
         out.println(arguments[0]);
         break;
       case UI:
