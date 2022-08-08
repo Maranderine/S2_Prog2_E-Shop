@@ -76,13 +76,8 @@ public class Eshop implements EshopInterface {
     }
 
     // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-    String sp = REQUESTS.splitter;
-    out.println(REQUESTS.REPLY + sp + "Hello Im am a computer.");
-    try {
-      System.out.println("Received Message: " + in.readLine());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    reply("Hello Im am a computer.");
+
   }
 
   // #region networking
@@ -92,6 +87,32 @@ public class Eshop implements EshopInterface {
     out.println("quit");
     try {
       socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void reply(String messageToSend) {
+
+    // getting the split chaaracter for ease of use
+    String sp = REQUESTS.splitter;
+
+    // sending the request
+    // assembling the string to send: Request + argument, seperated by the slitter
+    // character
+    // request + splitter + argument
+    String send = REQUESTS.REPLY + sp + messageToSend;
+
+    // sendding the request
+    out.println(send);
+
+    try {
+
+      // waiting for a server reply
+      String message = in.readLine();
+      // printing message
+      System.out.println("Received Message: " + message);
+
     } catch (IOException e) {
       e.printStackTrace();
     }

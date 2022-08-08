@@ -93,8 +93,6 @@ public interface EshopInterface {
 
   public Vector<Benutzer> BV_getAllNutzer();
 
-  
-
   // #endregion Blanka
   // #region Jonah
 
@@ -113,7 +111,6 @@ public interface EshopInterface {
   public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
       throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden;
 
-  
   /**
    * set artikel data bestand
    * 
@@ -222,10 +219,6 @@ public interface EshopInterface {
 
   // #endregion Malte
 
-  
-
-  
-
   /**
    * login to user profile
    * 
@@ -243,9 +236,6 @@ public interface EshopInterface {
    * @param callingUI calling user Interface, use "this"
    */
   public void logout(UserInterface callingUI);
-
-  
-
 
   /**
    * find Artikel by name in artikelListe
