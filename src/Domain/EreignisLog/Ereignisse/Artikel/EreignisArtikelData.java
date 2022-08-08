@@ -2,7 +2,7 @@ package Domain.EreignisLog.Ereignisse.Artikel;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
+import common.EshopInterface.BeutzerType;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikelData;
 
 /** Ereignis Klasse für Artikel daten wurden geändert */

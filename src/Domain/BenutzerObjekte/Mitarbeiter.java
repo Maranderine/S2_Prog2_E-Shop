@@ -1,5 +1,7 @@
 package Domain.BenutzerObjekte;
 
+import common.EshopInterface.BeutzerType;
+
 public class Mitarbeiter extends Benutzer {
 
   private int mitarbeiterNr;
@@ -12,7 +14,7 @@ public class Mitarbeiter extends Benutzer {
    * @param password
    */
   protected Mitarbeiter(int MitarbeiterNummer, String name, String username, byte[] password) {
-    super(Benutzerverwaltung.BeutzerType.MITARBEITER, name, username, password);
+    super(BeutzerType.MITARBEITER, name, username, password);
     this.mitarbeiterNr = MitarbeiterNummer;
   }
 

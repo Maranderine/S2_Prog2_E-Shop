@@ -2,6 +2,8 @@
 // import Domain.Eshop;
 import Client.Eshop;
 import UserInterface.UserInterface;
+import UserInterface.CUI;
+import UserInterface.GUI.GUI;
 
 /**
  * Main class was quasi das programm repräsentiert
@@ -33,11 +35,22 @@ public abstract class MAIN {
     }
 
     eshop = new Eshop(host, port);
-    ui = eshop.createUserInterface();
+    ui = CreateUI();
 
     // main loop des programmes
     ui.run();
 
     eshop.quit();
+  }
+
+  static private UserInterface CreateUI() {
+
+    switch (eshop.createUserInterface()) {
+      case "CUI":
+        return new CUI(eshop);
+      case "GUI":
+        return new GUI(eshop);
+    }
+    return null;
   }
 }

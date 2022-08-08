@@ -3,6 +3,7 @@ package persistence;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -80,21 +81,17 @@ public class FilePersistenceManager implements PersistenceManager {
   // Benutzer Datensicherung
 
   @Override
-  public Vector<? extends Object> loadObjekt(String kundenDoc) {
+  public Vector<? extends Object> loadObjekt(String kundenDoc)
+      throws FileNotFoundException, IOException, ClassNotFoundException {
     Vector<? extends Object> nutzer;
-    try {
-      // öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc
-      objectReader = new ObjectInputStream(new FileInputStream(kundenDoc));
-      // Solange noch Objekte in der Datei sind werden diese eingelesen und nach type
-      // cast (Kunde) der Nutzer Liste hinzugefügt
-      @SuppressWarnings("unchecked")
-      Vector<? extends Object> user = (Vector<Object>) objectReader.readObject();
-      nutzer = user;
-    } catch (IOException | ClassNotFoundException e) {
-      e.printStackTrace();
-      // fallback error correction
-      nutzer = new Vector<Object>();
-    }
+
+    // öffnet Schnittstelle zum speichern von Objekten(Kunde) in kundenDoc
+    objectReader = new ObjectInputStream(new FileInputStream(kundenDoc));
+    // Solange noch Objekte in der Datei sind werden diese eingelesen und nach type
+    // cast (Kunde) der Nutzer Liste hinzugefügt
+    @SuppressWarnings("unchecked")
+    Vector<? extends Object> user = (Vector<Object>) objectReader.readObject();
+    nutzer = user;
     close();
     return nutzer;
   }

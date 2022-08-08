@@ -2,8 +2,9 @@ package Domain.EreignisLog.Ereignisse;
 
 import Domain.BenutzerObjekte.Benutzer;
 import Domain.BenutzerObjekte.Benutzerverwaltung;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
+import common.EshopInterface.BeutzerType;
 import Domain.EreignisLog.Interfaces.EreignisInterface_CallingBenutzer;
+
 
 /** abstrakte grund Ereignis Klasse für Benutzer erstellte ereignisse */
 public abstract class EreignisCalled extends Ereignis implements EreignisInterface_CallingBenutzer {
@@ -18,7 +19,7 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
   /** user identification numeber */
   private final int callingBenutzerNummer;
   /** user type */
-  private final Benutzerverwaltung.BeutzerType callingBenutzerType;
+  private final BeutzerType callingBenutzerType;
   /** calling user object for specific inspection */
   private String callingBenutzerName;
 
@@ -33,7 +34,7 @@ public abstract class EreignisCalled extends Ereignis implements EreignisInterfa
    * @param CUserName
    */
   public EreignisCalled(final int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
-      Benutzerverwaltung.BeutzerType CUserType, String CUserName) {
+      BeutzerType CUserType, String CUserName) {
     super(ereignisNummer, ereignisDesc);
 
     // user

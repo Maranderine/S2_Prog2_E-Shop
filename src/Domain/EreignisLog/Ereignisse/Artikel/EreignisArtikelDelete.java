@@ -2,7 +2,7 @@ package Domain.EreignisLog.Ereignisse.Artikel;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
+import common.EshopInterface.BeutzerType;
 
 /** Ereignis Klasse für Artikel wurde entfernt */
 public class EreignisArtikelDelete extends EreignisArtikel {
