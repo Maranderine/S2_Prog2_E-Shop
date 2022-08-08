@@ -10,14 +10,13 @@ import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
-import UserInterface.UserInterface;
+import UserInterface.UserSession;
 
 import java.util.HashMap;
 import java.util.Vector;
 import Domain.Artikel.Artikel;
 
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
@@ -228,14 +227,14 @@ public interface EshopInterface {
    * @return
    * @throws ExceptionBenutzerNichtGefunden
    */
-  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password);
+  public BenutzerType login(UserSession callingUI, String username, String password);
 
   /**
    * logout the user
    * 
    * @param callingUI calling user Interface, use "this"
    */
-  public void logout(UserInterface callingUI);
+  public void logout(UserSession callingUI);
 
   /**
    * find Artikel by name in artikelListe
@@ -307,7 +306,7 @@ public interface EshopInterface {
    * 
    * @return UserInterface UserInterface Object
    */
-  public UserInterface createUserInterface();
+  public String createUserInterface();
 
   // new
   public static enum REQUESTS {
@@ -327,6 +326,8 @@ public interface EshopInterface {
     AVDELETEARTIKEL("AV_deleteArtikel"),
     AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
     AVFINDARTIKELBYNAME("AV_findArtikelByName");
+    LOGIN("login"),
+    LOGOUT("logout");
 
     private final String key;
     /**
@@ -385,5 +386,69 @@ public interface EshopInterface {
       return get();
     }
 
+    public static String[] split(String str){
+      return str.split(REQUESTS.splitter);
+    }
   }
+
+  public static enum BenutzerType {
+    MITARBEITER("mitarbeiter"),
+    KUNDE("kunde"),
+    NONE("none");
+
+    private final String key;
+
+    BenutzerType(String str) {
+      key = str;
+    }
+
+    /**
+     * gets the string key, used for the switch
+     * 
+     * @return
+     */
+    public String get() {
+      return key;
+    }
+
+    /**
+     * convert a string into that benutzertype
+     * 
+     * @param str string of the request type
+     * @return boolean
+     */
+    public static BenutzerType get(String str) {
+
+      int i = getIndex(str);
+
+      if (i != -1) {
+        return BenutzerType.values()[i];
+      } else
+        return null;
+    }
+
+    /**
+     * get the index of an element
+     * 
+     * @param str
+     * @return
+     */
+    public static int getIndex(String str) {
+
+      BenutzerType[] rList = BenutzerType.values();
+      for (int i = 0; i < rList.length; i++) {
+        if (rList[i].get().equals(str)) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    @Override
+    public String toString() {
+      return get();
+    }
+
+  }
+
 }

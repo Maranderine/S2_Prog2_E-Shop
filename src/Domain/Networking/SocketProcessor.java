@@ -14,9 +14,11 @@ import Domain.Artikel.Artikel;
 import Domain.Warenkorb.Warenkorb;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
+import UserInterface.UserSession;
+import common.EshopInterface.BenutzerType;
 import common.EshopInterface.REQUESTS;
 
-public class SocketProcessor {
+public class SocketProcessor extends UserSession {
 
   private Socket clientSocket;
   private final Eshop eshop;
@@ -26,7 +28,7 @@ public class SocketProcessor {
   private ObjectOutputStream oos;
 
   public SocketProcessor(Eshop eshop, Socket socket) {
-
+    super(eshop);
     this.eshop = eshop;
     clientSocket = socket;
 
@@ -93,8 +95,9 @@ public class SocketProcessor {
         }
 
       } catch (Exception e) {
-        System.out.println("PROCESSOR - ERROR - Fehler beim Lesen vom Client (Aktion): ");
-        System.out.println(e.getMessage());
+        // System.out.println("PROCESSOR - ERROR - Fehler beim Lesen vom Client
+        // (Aktion): ");
+        // System.out.println(e.getMessage());
         continue;
       }
 
@@ -124,17 +127,37 @@ public class SocketProcessor {
    */
   private boolean Execute(REQUESTS request, String[] arguments) {
     String back = "";
-
     System.out.println("PROCESSOR - execute " + request.name());
+
+    String str;
 
     switch (request) {
       case REPLY:
-        //sends first argument back to client
+        // sends first argument back to client
         out.println(arguments[0]);
+        break;
+      case LOGIN:
+        BenutzerType user = eshop.login(this, arguments[0], arguments[1]);
+        // send user type
+        out.println(user.get());
+
+        // send user haash seperatly
+        if (user != BenutzerType.NONE) {
+          out.println(this.userHash.toString());
+        }
+
+        break;
+      case LOGOUT:
+
+        eshop.logout(this);
+
+        // System.out.println("login proc: " + ui.userHash.toString());
+
         break;
       case UI:
         // transmits the caalss name of used interface
-        out.println(eshop.createUserInterface().getClass().getSimpleName());
+        out.println(eshop.createUserInterface());
+
         break;
       case WVSETARTIKEL:
         try {
@@ -170,7 +193,7 @@ public class SocketProcessor {
       case WVKAUFEN:
         break;
       case WVGETSUMME:
-        out.println(""+ eshop.WV_getSumme());
+        out.println("" + eshop.WV_getSumme());
         break;
       case BVKUNDEHINZUFÜGEN:
         back = "fehlerfrei";
@@ -184,7 +207,7 @@ public class SocketProcessor {
             e.printStackTrace();
           }
         }
-       
+
         break;
       case BVMITARBEITERHINZUFÜGEN:
         back = "fehlerfrei";
@@ -244,7 +267,7 @@ public class SocketProcessor {
       default:
         System.out.println("PROCESSOR - ERROR - unknown request!");
         break;
-    } 
+    }
 
     return true;
   }

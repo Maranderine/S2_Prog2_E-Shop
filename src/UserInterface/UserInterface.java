@@ -13,13 +13,10 @@ import common.EshopInterface;
  * Parent for local usability classes like CUI or GUI
  * aall variables and methods must be implemented into child
  */
-public abstract class UserInterface {
-  // a unique hash value to identify the user when logged in
-  public byte[] userHash;
-  protected EshopInterface eshop;
+public abstract class UserInterface extends UserSession {
 
   public UserInterface(EshopInterface eshop) {
-    this.eshop = eshop;
+    super(eshop);
   }
 
   /**

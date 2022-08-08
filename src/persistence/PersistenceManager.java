@@ -13,7 +13,7 @@ public interface PersistenceManager {
 
   public boolean saveData(String artikelDoc, Vector<Artikel> objektListe) throws IOException;
 
-  public Vector<? extends Object> loadObjekt(String datei) throws IOException;
+  public Vector<? extends Object> loadObjekt(String datei) throws IOException, ClassNotFoundException;
 
   public boolean saveObjekt(String datenquelle, Vector<? extends Object> objektListe) throws IOException;
 }

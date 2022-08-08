@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
@@ -27,9 +26,7 @@ import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
-import UserInterface.CUI;
-import UserInterface.UserInterface;
-import UserInterface.GUI.GUI;
+import UserInterface.UserSession;
 import common.EshopInterface;
 
 public class Eshop implements EshopInterface {
@@ -50,7 +47,6 @@ public class Eshop implements EshopInterface {
       out = new PrintStream(socket.getOutputStream());
       oos = new ObjectOutputStream(socket.getOutputStream());
       ois = new ObjectInputStream(socket.getInputStream());
-      
 
     } catch (IOException e) {
       System.err.println("CLIENT - ERROR - on socket stream create: " + e);
@@ -119,7 +115,20 @@ public class Eshop implements EshopInterface {
   }
 
   // #endregion networking
+  // #region usefull
 
+  private String[] inLineAndSplit() {
+
+    try {
+      return REQUESTS.split(in.readLine());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  // #endregion
   // #region implement
 
   @Override
@@ -168,22 +177,41 @@ public class Eshop implements EshopInterface {
     out.println(REQUESTS.BVGETALLENUTZER);
     try {
       nutzer = (Vector<Benutzer>) ois.readObject();
-    } catch (ClassNotFoundException|IOException e) {
+    } catch (ClassNotFoundException | IOException e) {
       e.printStackTrace();
     }
     return nutzer;
   }
 
   @Override
-  public BeutzerType login(UserInterface callingUI, String username, String password) {
-    // TODO Auto-generated method stub
-    return null;
+  public BenutzerType login(UserSession callingUI, String username, String password) {
+    String sp = REQUESTS.splitter;
+    String outString = REQUESTS.LOGIN + sp + username + sp + password;
+    System.out.println("log - outString: " + outString);
+    out.println(outString);
+
+    BenutzerType userType = BenutzerType.NONE;
+
+    try {
+      userType = BenutzerType.get(in.readLine());
+
+      if (userType != BenutzerType.NONE) {
+        callingUI.userHash = in.readLine().getBytes();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return userType;
   }
 
   @Override
-  public void logout(UserInterface callingUI) {
-    // TODO Auto-generated method stub
+  public void logout(UserSession callingUI) {
 
+    out.println(REQUESTS.LOGOUT);
+
+    byte arr[] = {};
+    callingUI.userHash = arr;
   }
 
   @Override
@@ -191,7 +219,7 @@ public class Eshop implements EshopInterface {
     HashMap<Artikel, Integer> inhalt = new HashMap<Artikel, Integer>();
     out.println(REQUESTS.WKGETINHALT);
     try {
-      inhalt = (HashMap<Artikel, Integer>)ois.readObject();
+      inhalt = (HashMap<Artikel, Integer>) ois.readObject();
     } catch (ClassNotFoundException | IOException e) {
       e.printStackTrace();
     }
@@ -203,7 +231,7 @@ public class Eshop implements EshopInterface {
     Warenkorb korb = null;
     out.println(REQUESTS.WVGETWARENKORB);
     try {
-      korb = (Warenkorb)ois.readObject();
+      korb = (Warenkorb) ois.readObject();
     } catch (ClassNotFoundException | IOException e) {
       e.printStackTrace();
     }
@@ -234,9 +262,9 @@ public class Eshop implements EshopInterface {
   @Override
   public double WV_getSumme() {
     out.println(REQUESTS.WVGETSUMME);
-    double d = 0.0; 
+    double d = 0.0;
     try {
-       d = Double.parseDouble(in.readLine());
+      d = Double.parseDouble(in.readLine());
     } catch (NumberFormatException | IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -417,24 +445,16 @@ public class Eshop implements EshopInterface {
   // #endregion implement
 
   @Override
-  public UserInterface createUserInterface() {
-    // TODO Auto-generated method stub
-
+  public String createUserInterface() {
     out.println(REQUESTS.UI);
 
     try {
-      switch (in.readLine()) {
-        case "CUI":
-          return new CUI(this);
-        case "GUI":
-          return new GUI(this);
-      }
-      return new CUI(this);
+      return in.readLine();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    return null;
   }
 
 }
