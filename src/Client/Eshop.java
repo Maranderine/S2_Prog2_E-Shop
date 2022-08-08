@@ -134,27 +134,41 @@ public class Eshop implements EshopInterface {
   @Override
   public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
       throws ExceptionBenutzerNameUngültig {
-    String sp = REQUESTS.splitter;
-    out.println(REQUESTS.BVKUNDEHINZUFÜGEN + sp + name + sp + username + password + sp + email + sp + address);
-    try {
-      ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig) ois.readObject();
-      throw e;
-    } catch (ClassNotFoundException | IOException e) {
-    }
+      String sp = REQUESTS.splitter;
+      out.println(REQUESTS.BVKUNDEHINZUFÜGEN + sp + name + sp + username + password + sp + email + sp + address);
+      String back = "";
+      try {
+        back = in.readLine();
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
+      if(back.equals("fehler")){
+        try {
+          ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig)ois.readObject();
+          throw e;
+        } catch (ClassNotFoundException | IOException e) {
+        }
+      }
   }
 
   @Override
   public void BV_mitarbeiterHinzufügen(String name, String username, String password)
       throws ExceptionBenutzerNameUngültig {
-    String sp = REQUESTS.splitter;
-    out.println(REQUESTS.BVMITARBEITERHINZUFÜGEN + sp + name + sp + username + sp + password);
-    try {
-      ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig) ois.readObject();
-      throw e;
-    } catch (ClassNotFoundException | IOException e) {
-    }
-    // TODO Auto-generated method stub
-
+      String sp = REQUESTS.splitter;
+      out.println(REQUESTS.BVMITARBEITERHINZUFÜGEN + sp + name + sp + username + sp + password);
+      String back = "";
+      try {
+        back = in.readLine();
+      } catch (IOException e1) {
+        e1.printStackTrace();
+      }
+      if(back.equals("fehler")){
+        try {
+          ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig)ois.readObject();
+          throw e;
+        } catch (ClassNotFoundException | IOException e) {
+        }
+      }
   }
 
   @Override
@@ -319,14 +333,41 @@ public class Eshop implements EshopInterface {
 
   @Override
   public Artikel AV_findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
-    // TODO Auto-generated method stub
-    return null;
+    Artikel artikel = null;
+    out.println(REQUESTS.AVFINDARTIKELBYNAME + sp + name);
+    String back ="";
+    try {
+      back = in.readLine();
+    } catch (IOException e) {
+    }
+    if(back.equals("fehler")){
+      try {
+        ExceptionArtikelNichtGefunden e = (ExceptionArtikelNichtGefunden)ois.readObject();
+        throw e;
+      } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+      }
+    }
+    else{
+      try {
+        artikel = (Artikel)ois.readObject();
+      } catch (ClassNotFoundException | IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return artikel;
   }
 
   @Override
   public Vector<Artikel> AV_getAlleArtikelList() {
-    // TODO Auto-generated method stub
-    return null;
+    Vector<Artikel> alleArtikel = new Vector<Artikel>();
+    out.println(REQUESTS.AVGETALLEARTIKELLIST);
+    try {
+      alleArtikel = (Vector<Artikel>)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return alleArtikel;
   }
 
   @Override
