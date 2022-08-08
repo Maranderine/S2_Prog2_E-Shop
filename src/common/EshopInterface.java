@@ -290,6 +290,11 @@ public interface EshopInterface {
    */
   public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse);
 
+  public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden;
+
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig;
+
   /**
    * displays Ereignis Log in short
    * 

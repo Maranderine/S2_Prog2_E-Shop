@@ -117,7 +117,7 @@ public class Eshop implements EshopInterface {
   public void BV_mitarbeiterHinzufügen(String name, String username, String password)
       throws ExceptionBenutzerNameUngültig {
       String sp = REQUESTS.splitter;
-      out.println(REQUESTS.BVMITARBEITERHINZUFÜGEN + sp + name + sp + username + password);
+      out.println(REQUESTS.BVMITARBEITERHINZUFÜGEN + sp + name + sp + username + sp + password);
       try {
         ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig)ois.readObject();
         throw e;
