@@ -11,6 +11,7 @@ import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.EreignisLogVerwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikel;
+import Domain.Networking.SocketVerwaltung;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
 import Domain.Warenkorb.WarenkorbVerwaltung;
@@ -27,24 +28,25 @@ import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.CUI;
 import UserInterface.UserInterface;
+import common.EshopInterface;
 
 /**
  * main eshop class
  * alle befehle der CUI laufen hier durch
  */
-public class Eshop {
+public class Eshop implements EshopInterface {
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
   private WarenkorbVerwaltung WarenkorbVw;
   private EreignisLogVerwaltung EreignisVw;
 
-  public Eshop(String benutzerDox, String ereignisDox) {
+  public Eshop(String host, int port) {
 
-    BenutzerVw = new Benutzerverwaltung(benutzerDox);
+    BenutzerVw = new Benutzerverwaltung();
     ArtikelVw = new ArtikelVerwaltung(this);
     WarenkorbVw = new WarenkorbVerwaltung(this, ArtikelVw);
-    EreignisVw = new EreignisLogVerwaltung(this, ereignisDox, BenutzerVw, ArtikelVw);
+    EreignisVw = new EreignisLogVerwaltung(this, BenutzerVw, ArtikelVw);
 
     // give Ereignis verwaltung
     BenutzerVw.ereignisLogVerwaltung = EreignisVw;
@@ -71,16 +73,6 @@ public class Eshop {
 
   // #region BenutzerVerwaltung
 
-  /**
-   * create new user
-   * 
-   * @param name
-   * @param username
-   * @param password
-   * @param email
-   * @param address
-   * @throws ExceptionBenutzerNameUngültig
-   */
   public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
       throws ExceptionBenutzerNameUngültig {
     BenutzerVw.registrieren(name, username, password, email, address);
@@ -100,86 +92,41 @@ public class Eshop {
     return BenutzerVw.getAktiverBenutzer(userHash);
   }
 
-  public Vector<Benutzer> BV_getAllNutzer(){
+  public Vector<Benutzer> BV_getAllNutzer() {
     return BenutzerVw.getBenutzerList();
   }
-  /**
-   * login to user profile
-   * 
-   * @param callingUI calling user Interface, use "this"
-   * @param username
-   * @param password
-   * @return
-   * @throws ExceptionBenutzerNichtGefunden
-   */
+
   public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
   }
 
-  /**
-   * logout the user
-   * 
-   * @param callingUI calling user Interface, use "this"
-   */
   public void logout(UserInterface callingUI) {
     BenutzerVw.logout(callingUI);
   }
 
   // #endregion
   // #region Warenkorb
-  /**
-   * gibt Warenkorb Inhalt zurück
-   * 
-   * @return HashMap<Artikel, Integer>
-   */
+
   public HashMap<Artikel, Integer> WK_getInhalt() {
     return WarenkorbVw.getInhalt();
   }
 
-  /**
-   * gibt warenkorb
-   * 
-   * @return
-   */
   public Object WV_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
 
-  /**
-   * erstellt einen neuen Eintrag oder ändert einen vorhandenen
-   * 
-   * @param artikel artikel object
-   * @param integer artikel Stückzahl
-   */
   public void WV_setArtikel(Artikel artikel, int integer) {
     WarenkorbVw.setArtikel(artikel, integer);
   }
 
-  /**
-   * entfernt einen artikel aus der map
-   * 
-   * @param artikel artikel zu entfernen
-   */
   public void WV_removeArtikel(Artikel artikel) {
     WarenkorbVw.removeArtikel(artikel);
   }
 
-  /**
-   * löscht den gesamten inhalt des Warenkorbes
-   */
   public void WV_clearAll() {
     WarenkorbVw.clearAll();
   }
 
-  /**
-   * Kauft alle artikel im Warenkorb.
-   * Aktualisiert bestand für alle
-   * und erstellt entspechende events
-   * 
-   * @param userHash Benutzer Identifikator der die funtion ausführt
-   * @return rechnung
-   * @throws ExceptionArtikelCollection
-   */
   public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
 
     // BenutzerVw.sucheMitarbeiter(userNumber)
@@ -202,21 +149,13 @@ public class Eshop {
     return rechnung;
   }
 
-  public double WV_getSumme(){
+  public double WV_getSumme() {
     return WarenkorbVw.gesamtSumme();
   }
 
   // #endregion Warenkorb
   // #region Artikelvw
-  /**
-   * Add Artikel to artikelListe
-   * 
-   * @param name
-   * @param bestand
-   * @param einzelpreis
-   * @throws ExceptionArtikelExistiertBereits
-   * @throws ExceptionArtikelKonnteNichtErstelltWerden
-   */
+
   public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
       throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden {
 
@@ -229,13 +168,6 @@ public class Eshop {
     return artikel;
   }
 
-  /**
-   * del artikel
-   * 
-   * @param userHash
-   * @param name
-   * @throws ExceptionArtikelKonnteNichtGelöschtWerden
-   */
   public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden {
 
     Artikel artikel;
@@ -250,15 +182,7 @@ public class Eshop {
   }
 
   // #region set artikel
-  /**
-   * set artikel data
-   * 
-   * @param userHash  userHash
-   * @param artikel   artikel obj
-   * @param neuerName artikel neuer name
-   * @throws ExceptionArtikelNameExistiertBereits
-   * @throws ExceptionArtikelNameUngültig
-   */
+
   public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
       throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
     String nameAlt = ArtikelVw.getArtikelName(artikel);
@@ -283,14 +207,6 @@ public class Eshop {
     AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName);
   }
 
-  /**
-   * set artikel data bestand
-   * 
-   * @param userHash userHash
-   * @param artikel  artikel obj
-   * @param bestand  artikel neuer bestand
-   * @throws ExceptionArtikelUngültigerBestand
-   */
   public void AV_setArtikel(byte[] userHash, Artikel artikel, int bestand) throws ExceptionArtikelUngültigerBestand {
 
     if (artikel != null) {
@@ -302,28 +218,11 @@ public class Eshop {
     }
   }
 
-  /**
-   * set artikel data bestand
-   * 
-   * @param userHash userHash
-   * @param name     artikel name
-   * @param bestand  artikel neuer bestand
-   * @throws ExceptionArtikelNichtGefunden
-   * @throws ExceptionArtikelUngültigerBestand
-   */
   public void AV_setArtikel(byte[] userHash, String name, int bestand)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
     AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), bestand);
   }
 
-  /**
-   * set artikel data preis
-   * 
-   * @param userHash userHash
-   * @param artikel  artikel obj
-   * @param preis    artikel neuer preis
-   * @throws ExceptionArtikelNichtGefunden
-   */
   public void AV_setArtikel(byte[] userHash, Artikel artikel, double preis) {
 
     double preisAlt = ArtikelVw.getArtikelPreis(artikel);
@@ -333,30 +232,11 @@ public class Eshop {
     EV_EreignisArtikelData(userHash, "Artikel Bestand änderung", artikel, null, null, preisAlt);
   }
 
-  /**
-   * set artikel data preis
-   * 
-   * @param userHash userHash
-   * @param name     artikel name
-   * @param preis    artikel neuer preis
-   * @throws ExceptionArtikelNichtGefunden
-   */
   public void AV_setArtikel(byte[] userHash, String name, double preis)
       throws ExceptionArtikelNichtGefunden {
     AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), preis);
   }
 
-  /**
-   * set artikel data
-   * 
-   * @param userHash  userHash
-   * @param artikel   artikel obj
-   * @param neuerName artikel neuer name
-   * @param bestand   artikel neuer bestand
-   * @param preis     artikel neuer preis
-   * @throws ExceptionArtikelUngültigerBestand
-   * @throws ExceptionArtikelNichtGefunden
-   */
   public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName, int bestand, double preis)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
 
@@ -379,18 +259,6 @@ public class Eshop {
     }
   }
 
-  /**
-   * set artikel data
-   * 
-   * @param userHash  userHash
-   * @param name      artikel name
-   * @param neuerName artikel neuer name
-   * @param bestand   artikel neuer bestand
-   * @param preis     artikel neuer preis
-   * @return boolean obs geklappt hat
-   * @throws ExceptionArtikelNichtGefunden
-   * @throws ExceptionArtikelUngültigerBestand
-   */
   public void AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
     AV_setArtikel(userHash, ArtikelVw.findArtikelByName(name), neuerName, bestand, preis);
@@ -398,37 +266,16 @@ public class Eshop {
 
   // #endregion
 
-  /**
-   * find Artikel by name in artikelListe
-   * 
-   * @param name of artikel
-   * @return Artikel type object or null
-   * @throws ExceptionArtikelNichtGefunden
-   */
   public Artikel AV_findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
     return ArtikelVw.findArtikelByName(name);
   }
 
   // #region Artikelvw darstellung
 
-  /**
-   * get alle artikel in einer liste
-   * ist eine kopie
-   * 
-   * @return
-   */
   public Vector<Artikel> AV_getAlleArtikelList() {
     return ArtikelVw.getAlleArtikelList();
   }
 
-  /**
-   * liste ausgeben
-   * 
-   * @param list
-   * @param detailed
-   * @param leereNachicht
-   * @return
-   */
   public String AV_ArtikelAusgeben(Vector<Artikel> list, boolean detailed, String leereNachicht) {
     return ArtikelVw.displayArtikel(list, detailed, leereNachicht);
   }
@@ -445,62 +292,28 @@ public class Eshop {
     return ArtikelVw.displayArtikel(ordnung, detailed, leereNachicht);
   }
 
-  /**
-   * 
-   * @param searchTerm
-   * @return SuchOrdnung
-   */
   public SuchOrdnung AV_sucheArtikel(String searchTerm) {
     return ArtikelVw.suchArtikel(searchTerm);
   }
 
   // sort
-  /**
-   * sortier die liste nach name
-   * 
-   * @param ordnung
-   * @param reverse
-   */
+
   public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
     ArtikelVw.sortListName(ordnung, reverse);
   }
 
-  /**
-   * sortier die liste nach name
-   * 
-   * @param ordnung
-   * @param reverse
-   */
   public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
     ArtikelVw.sortListName(artikelList, reverse);
   }
 
-  /**
-   * sortier die liste nach Preis
-   * 
-   * @param ordnung
-   * @param reverse
-   */
   public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
     ArtikelVw.sortListPreis(ordnung, reverse);
   }
 
-  /**
-   * sortier die liste nach Preis
-   * 
-   * @param ordnung
-   * @param reverse
-   */
   public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
     ArtikelVw.sortListPreis(artikelList, reverse);
   }
 
-  /**
-   * sortier die liste nach Relevanz
-   * 
-   * @param ordnung
-   * @param reverse
-   */
   public void AV_sortListRelevanz(SuchOrdnung ordnung) {
     ArtikelVw.sortListRelevanz(ordnung);
   }
@@ -510,11 +323,6 @@ public class Eshop {
   // #endregion Artikel
   // #region Ereignis Log /////////////////////////////////////////
 
-  /**
-   * displays Ereignis Log in short
-   * 
-   * @return ereignis log as a string
-   */
   public String EV_logDisplay() {
     return EreignisVw.displayLog(false);
   }
@@ -527,15 +335,15 @@ public class Eshop {
     return EreignisVw.findeEreignis(ereignisNummer);
   }
 
-  public Vector<EreignisArtikel> EV_getArtikelEreignis(Artikel artikel){
+  public Vector<EreignisArtikel> EV_getArtikelEreignis(Artikel artikel) {
     return EreignisVw.getArtikelEreignis(artikel);
   }
 
-  public Integer[] EV_getBestandsHistore(Artikel artikel){
+  public Integer[] EV_getBestandsHistore(Artikel artikel) {
     return EreignisVw.getBestandHistory(artikel);
   }
 
-  public Vector<Ereignis> EV_getLog(){
+  public Vector<Ereignis> EV_getLog() {
     return EreignisVw.getLog();
   }
 
@@ -608,7 +416,13 @@ public class Eshop {
 
   // #endregion ////////////////////////////////////////////////
 
-  public void saveData() {
+  @Override
+  public void quit() {
+    // TODO QUIIIIIIIIIIIT
+    saveData();
+  }
+
+  private void saveData() {
     try {
       BenutzerVw.save();
       ArtikelVw.save();
@@ -618,14 +432,26 @@ public class Eshop {
     }
   }
 
-  /**
-   * creates used User Interface object. for example CUI or GUI
-   * 
-   * @return UserInterface UserInterface Object
-   */
   public UserInterface createUserInterface() {
 
     return new CUI(this);
+  }
+
+  public static void main(String[] args) {
+    System.out.println("/////////////SERVER/////////////");
+    int port = 0;
+    if (args.length == 1) {
+      try {
+        port = Integer.parseInt(args[0]);
+      } catch (NumberFormatException e) {
+        port = 0;
+      }
+    }
+
+    Eshop eshop = new Eshop("", 0);
+
+    SocketVerwaltung SV = new SocketVerwaltung(eshop, port);
+    SV.acceptClientConnectRequests();
   }
 
 }

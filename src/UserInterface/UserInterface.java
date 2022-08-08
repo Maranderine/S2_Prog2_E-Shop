@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import Domain.Eshop;
 import Exceptions.Input.ExceptionInputFalsch;
+import common.EshopInterface;
 
 /**
  * Parent for local usability classes like CUI or GUI
@@ -16,9 +16,9 @@ import Exceptions.Input.ExceptionInputFalsch;
 public abstract class UserInterface {
   // a unique hash value to identify the user when logged in
   public byte[] userHash;
-  protected Eshop eshop;
+  protected EshopInterface eshop;
 
-  public UserInterface(Eshop eshop) {
+  public UserInterface(EshopInterface eshop) {
     this.eshop = eshop;
   }
 
@@ -27,7 +27,7 @@ public abstract class UserInterface {
    * is the main loop of the User Interface.
    * Must be inherited.
    */
-  public abstract boolean run();
+  public abstract void run();
 
   /**
    * displays Exception message without stacktrace in
