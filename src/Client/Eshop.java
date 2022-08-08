@@ -64,11 +64,21 @@ public class Eshop implements EshopInterface {
 
     System.out.println("CLIENT - connection established: " + socket.getInetAddress() + ":" + socket.getPort());
 
+    // server welcome message
     try {
       String message = in.readLine();
       System.out.println("Server Message: " + message);
     } catch (Exception e) {
       // TODO: handle exception
+    }
+
+    // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
+    String sp = REQUESTS.splitter;
+    out.println(REQUESTS.REPLY + sp + "Hello Im am a computer.");
+    try {
+      System.out.println("Received Message: " + in.readLine());
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
@@ -312,6 +322,7 @@ public class Eshop implements EshopInterface {
     // TODO Auto-generated method stub
 
     out.println(REQUESTS.UI);
+
     try {
       switch (in.readLine()) {
         case "CUI":
