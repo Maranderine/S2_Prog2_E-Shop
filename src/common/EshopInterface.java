@@ -318,7 +318,17 @@ public interface EshopInterface {
   public static enum REQUESTS {
     QUIT("quit"),
     REPLY("reply"),
-    UI("ui");
+    UI("ui"),
+    WVSETARTIKEL("WV_setArtikel"),
+    WKGETINHALT("WK_getInhalt"),
+    WVGETWARENKORB("WV_getWarenkorb"),
+    WVREMOVEARTIKEL("WV_removeArtikel"),
+    WVCLEARALL("WV_clearAll"),
+    WVKAUFEN("WV_kaufen"),
+    WVGETSUMME("WV_getSumme"),
+    BVKUNDEHINZUFÜGEN("BV_kundeHinzufügen"),
+    BVMITARBEITERHINZUFÜGEN("BV_mitarbeiterHinzufügen"),
+    BVGETALLENUTZER("BV_getAllNutzer");
 
     private final String key;
     /**

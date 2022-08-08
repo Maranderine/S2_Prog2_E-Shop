@@ -9,7 +9,7 @@ import Domain.Artikel.Artikel;
  * Der direkte Warenkorb.
  * HashMap<Artikel, Integer> inhalt
  */
-class Warenkorb {/* "protected" */
+public class Warenkorb {/* "protected" */
   protected HashMap<Artikel, Integer> inhalt;
 
   /**
