@@ -54,7 +54,7 @@ public class EreignisLogVerwaltung extends Verwaltung {
     // loading events
     try {
       log = load(this.ereignisDox);
-    } catch (IOException e) {
+    } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
       log = new Vector<Ereignis>();
       setZaehler(1);
@@ -401,8 +401,9 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * @param datei
    * @return Vector<Ereignis>
    * @throws IOException
+   * @throws ClassNotFoundException
    */
-  private Vector<Ereignis> load(String datei) throws IOException {
+  private Vector<Ereignis> load(String datei) throws IOException, ClassNotFoundException {
     @SuppressWarnings("unchecked")
     Vector<Ereignis> vec = (Vector<Ereignis>) persistenceManager.loadObjekt(datei);
 

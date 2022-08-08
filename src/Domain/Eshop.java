@@ -27,8 +27,7 @@ import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
-import UserInterface.CUI;
-import UserInterface.UserInterface;
+import UserInterface.UserSession;
 import common.EshopInterface;
 
 /**
@@ -36,6 +35,8 @@ import common.EshopInterface;
  * alle befehle der CUI laufen hier durch
  */
 public class Eshop implements EshopInterface {
+
+  private final String usedUI = "CUI";
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
@@ -51,7 +52,7 @@ public class Eshop implements EshopInterface {
 
     // give Ereignis verwaltung
     BenutzerVw.ereignisLogVerwaltung = EreignisVw;
-    ArtikelVw.ereignisLogVerwaltung = EreignisVw;m
+    ArtikelVw.ereignisLogVerwaltung = EreignisVw;
     WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
@@ -97,11 +98,11 @@ public class Eshop implements EshopInterface {
     return BenutzerVw.getBenutzerList();
   }
 
-  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password) {
+  public BenutzerType login(UserSession callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
   }
 
-  public void logout(UserInterface callingUI) {
+  public void logout(UserSession callingUI) {
     BenutzerVw.logout(callingUI);
   }
 
@@ -433,9 +434,9 @@ public class Eshop implements EshopInterface {
     }
   }
 
-  public UserInterface createUserInterface() {
+  public String createUserInterface() {
 
-    return new CUI(this);
+    return usedUI;
   }
 
   public static void main(String[] args) {

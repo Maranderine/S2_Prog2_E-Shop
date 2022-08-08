@@ -73,7 +73,7 @@ public class CUI extends UserInterface {
                 String username = GetInputUserNameAbfrage("username > ");
                 String password = GetInputPasswortAbfrage("password  > ");
 
-                // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
+                // Benutzerverwaltung.BenutzerType nutzer = eshop.login(username,
                 // password);
                 switch (eshop.login(this, username, password)) {
                   case NONE:

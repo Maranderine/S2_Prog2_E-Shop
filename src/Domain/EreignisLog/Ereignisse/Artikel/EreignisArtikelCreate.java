@@ -2,7 +2,7 @@ package Domain.EreignisLog.Ereignisse.Artikel;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
+import common.EshopInterface.BenutzerType;
 
 /** Ereignis Klasse für Artikel wurde erstellt event */
 public class EreignisArtikelCreate extends EreignisArtikel {
@@ -22,7 +22,7 @@ public class EreignisArtikelCreate extends EreignisArtikel {
    * @param artikelPreis   Artikel preis
    */
   public EreignisArtikelCreate(int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
-      BeutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer, String artikelName,
+      BenutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer, String artikelName,
       int artikelBestand, double artikelPreis) {
     super(ereignisNummer, ereignisDesc, CUser, CUserNumber, CUserType, CUserName, artikel, artikelNummer, artikelName,
         artikelBestand, artikelPreis);
