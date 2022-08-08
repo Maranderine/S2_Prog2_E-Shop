@@ -4,13 +4,9 @@ package Domain.EreignisLog;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import Domain.Eshop;
@@ -22,7 +18,6 @@ import Domain.BenutzerObjekte.Benutzerverwaltung;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelCreate;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikel;
-import Domain.EreignisLog.Ereignisse.EreignisCalled;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelData;
 import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikelDelete;
 import Domain.EreignisLog.Ereignisse.System.EreignisSystemArtikel;
@@ -48,9 +43,9 @@ public class EreignisLogVerwaltung extends Verwaltung {
    * 
    * @param eshop Eshop
    */
-  public EreignisLogVerwaltung(Eshop eshop, String ereignisDox, Benutzerverwaltung benutzerVW,
+  public EreignisLogVerwaltung(Eshop eshop, Benutzerverwaltung benutzerVW,
       ArtikelVerwaltung artikelVW) {
-    this.ereignisDox = ereignisDox;
+    this.ereignisDox = "Ereignisse.txt";
     // get verwaltungen von eshop
     this.meinShop = eshop;
     this.benutzerVW = benutzerVW;
@@ -276,59 +271,65 @@ public class EreignisLogVerwaltung extends Verwaltung {
     throw new ExceptionEreignisNichtGefunden();
   }
 
-  public Vector<Ereignis> getLog(){
+  public Vector<Ereignis> getLog() {
     return log;
   }
 
   /**
    * sucht im Ereignislog ereignisse zu bestimmtem Artikel
+   * 
    * @param artikel
    * @return
    */
-  public Vector<EreignisArtikel> getArtikelEreignis(Artikel artikel){
+  public Vector<EreignisArtikel> getArtikelEreignis(Artikel artikel) {
     Vector<EreignisArtikel> vec = new Vector<>();
-    for (Ereignis ereignis : this.log){
-      if(ereignis instanceof EreignisArtikel){
-        EreignisArtikel ea = (EreignisArtikel)ereignis;
-        if(ea.getZielArtikel().getName().equals(artikel.getName())){vec.add(ea);}
+    for (Ereignis ereignis : this.log) {
+      if (ereignis instanceof EreignisArtikel) {
+        EreignisArtikel ea = (EreignisArtikel) ereignis;
+        if (ea.getZielArtikel().getName().equals(artikel.getName())) {
+          vec.add(ea);
+        }
       }
     }
     return vec;
   }
 
   /**
-   * iteriert über den Vektor mit Ereignissen und prüft ob ereignisse am selben Datum vorkommen.
+   * iteriert über den Vektor mit Ereignissen und prüft ob ereignisse am selben
+   * Datum vorkommen.
    * falls ja wird nur das letzte Ereignis dieses Datums übernommen
+   * 
    * @param vec
    * @return
    */
-  public Integer[] getBestandHistory(Artikel artikel){
+  public Integer[] getBestandHistory(Artikel artikel) {
     Integer[] data = new Integer[30];
-    //alle Ereignisse zu jeweiligem Artikel
+    // alle Ereignisse zu jeweiligem Artikel
     Vector<EreignisArtikel> vec = getArtikelEreignis(artikel);
-    for(int i = 0; i<30; i++){
-      if(vec.size()<1){
+    for (int i = 0; i < 30; i++) {
+      if (vec.size() < 1) {
         data[i] = artikel.getBestand();
-      }else if(vec.get(0) instanceof EreignisArtikelCreate){
+      } else if (vec.get(0) instanceof EreignisArtikelCreate) {
         data[i] = 0;
-      }else{
-        EreignisArtikelData erstesEreignis = (EreignisArtikelData)vec.get(0);
+      } else {
+        EreignisArtikelData erstesEreignis = (EreignisArtikelData) vec.get(0);
         data[i] = erstesEreignis.getArtikelAltBestand();
       }
-      
+
     }
     Date heute = new Date();
-    for(EreignisArtikel ea : vec){
-      //distanz zwischen heute und dem datum berechnen
+    for (EreignisArtikel ea : vec) {
+      // distanz zwischen heute und dem datum berechnen
       Date aDate = ea.getEreignisDatum();
       Calendar cal1 = Calendar.getInstance();
       Calendar cal2 = Calendar.getInstance();
       cal1.setTime(aDate);
       cal2.setTime(heute);
       int diff = cal2.get(Calendar.DAY_OF_YEAR) - cal1.get(Calendar.DAY_OF_YEAR);
-      //Integer stelle 30 minus distanz = jeweiliger Bestand 
-      //für alle Stellen des Array an und nach dem Datum Bestand zu diesem Datum eintragen 
-      for(int i = 29-diff; i < 30; i++){
+      // Integer stelle 30 minus distanz = jeweiliger Bestand
+      // für alle Stellen des Array an und nach dem Datum Bestand zu diesem Datum
+      // eintragen
+      for (int i = 29 - diff; i < 30; i++) {
         data[i] = ea.getZielArtikelBestand();
       }
     }
