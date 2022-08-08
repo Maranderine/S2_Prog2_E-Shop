@@ -6,6 +6,27 @@
 	"configurations": [
 		{
 			"type": "java",
+			"name": "Launch Eshop",
+			"request": "launch",
+			"mainClass": "Domain.Eshop",
+			"projectName": "S2_Prog2_E-Shop_fca6ecbd"
+		},
+		{
+			"type": "java",
+			"name": "Launch MAIN",
+			"request": "launch",
+			"mainClass": "MAIN",
+			"projectName": "S2_Prog2_E-Shop_fca6ecbd"
+		},
+		{
+			"type": "java",
+			"name": "Launch GUI",
+			"request": "launch",
+			"mainClass": "UserInterface.GUI.GUI",
+			"projectName": "S2_Prog2_E-Shop_fca6ecbd"
+		},
+		{
+			"type": "java",
 			"name": "Launch LineChartEx",
 			"request": "launch",
 			"mainClass": "UserInterface.GUI.LineChartEx",

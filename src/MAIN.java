@@ -1,5 +1,6 @@
 
-import Domain.Eshop;
+// import Domain.Eshop;
+import Client.Eshop;
 import UserInterface.UserInterface;
 
 /**
@@ -8,20 +9,35 @@ import UserInterface.UserInterface;
 public abstract class MAIN {
 
   // create eshop
-
-  private final static Eshop eshop = new Eshop("Nutzer.txt", "Ereignisse.txt");
+  private static Eshop eshop;
 
   // get used user interface from Eshop
-  private final static UserInterface ui = eshop.createUserInterface();
+  // private final static UserInterface ui = eshop.createUserInterface();
+  private static UserInterface ui;
 
   /**
    * main loop method des programmes
    * 
-   * @param args()
+   * @param args
    */
   public static void main(String args[]) {
-    // main loop des programmes
-    while (ui.run()) {
+    String host = "localhost";
+    int port = 6789;
+    if (args.length == 2) {
+      host = args[0];
+      try {
+        port = Integer.parseInt(args[1]);
+      } catch (NumberFormatException e) {
+        port = 0;
+      }
     }
+
+    eshop = new Eshop(host, port);
+    ui = eshop.createUserInterface();
+
+    // main loop des programmes
+    ui.run();
+
+    eshop.quit();
   }
 }
