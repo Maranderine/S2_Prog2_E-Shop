@@ -51,7 +51,7 @@ public class Eshop implements EshopInterface {
 
     // give Ereignis verwaltung
     BenutzerVw.ereignisLogVerwaltung = EreignisVw;
-    ArtikelVw.ereignisLogVerwaltung = EreignisVw;
+    ArtikelVw.ereignisLogVerwaltung = EreignisVw;m
     WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
