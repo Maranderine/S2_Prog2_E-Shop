@@ -1,3 +1,6 @@
 {
-	"cSpell.checkOnlyEnabledFileTypes": false
+	"cSpell.checkOnlyEnabledFileTypes": false,
+	"java.project.sourcePaths": [
+		"src"
+	]
 }
