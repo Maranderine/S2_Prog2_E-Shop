@@ -3,6 +3,8 @@ package Client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -34,6 +36,8 @@ public class Eshop implements EshopInterface {
   private Socket socket = null;
   private BufferedReader in;
   private PrintStream out;
+  private ObjectInputStream ois;
+  private ObjectOutputStream oos;
 
   public Eshop(String host, int port) {
     System.out.println("/////////////CLIENT/////////////");
@@ -42,6 +46,8 @@ public class Eshop implements EshopInterface {
       socket = new Socket(host, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       out = new PrintStream(socket.getOutputStream());
+      ois = new ObjectInputStream(socket.getInputStream());
+      oos = new ObjectOutputStream(socket.getOutputStream());
 
     } catch (IOException e) {
       System.err.println("CLIENT - ERROR - on socket stream create: " + e);
@@ -95,7 +101,7 @@ public class Eshop implements EshopInterface {
   @Override
   public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
       throws ExceptionBenutzerNameUngültig {
-    // TODO Auto-generated method stub
+    
 
   }
 
