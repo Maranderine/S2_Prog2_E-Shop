@@ -24,88 +24,15 @@ import Domain.Warenkorb.Rechnung;
 
 public interface EshopInterface {
 
-  /**
-   * create new user
-   * 
-   * @param name
-   * @param username
-   * @param password
-   * @param email
-   * @param address
-   * @throws ExceptionBenutzerNameUngültig
-   */
-  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
-      throws ExceptionBenutzerNameUngültig;
+  ///////////////////////////////////// to do////////////////////////////////////
 
-  public void BV_mitarbeiterHinzufügen(String name, String username, String password)
-      throws ExceptionBenutzerNameUngültig;
+  // #region Blanka
 
-  public Vector<Benutzer> BV_getAllNutzer();
+  // #endregion Blanka
+  // #region Jonah
 
-  /**
-   * login to user profile
-   * 
-   * @param callingUI calling user Interface, use "this"
-   * @param username
-   * @param password
-   * @return
-   * @throws ExceptionBenutzerNichtGefunden
-   */
-  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password);
-
-  /**
-   * logout the user
-   * 
-   * @param callingUI calling user Interface, use "this"
-   */
-  public void logout(UserInterface callingUI);
-
-  /**
-   * gibt Warenkorb Inhalt zurück
-   * 
-   * @return HashMap<Artikel, Integer>
-   */
-  public HashMap<Artikel, Integer> WK_getInhalt();
-
-  /**
-   * gibt warenkorb
-   * 
-   * @return
-   */
-  public Object WV_getWarenkorb();
-
-  /**
-   * erstellt einen neuen Eintrag oder ändert einen vorhandenen
-   * 
-   * @param artikel artikel object
-   * @param integer artikel Stückzahl
-   */
-  public void WV_setArtikel(Artikel artikel, int integer);
-
-  /**
-   * entfernt einen artikel aus der map
-   * 
-   * @param artikel artikel zu entfernen
-   */
-  public void WV_removeArtikel(Artikel artikel);
-
-  /**
-   * löscht den gesamten inhalt des Warenkorbes
-   */
-  public void WV_clearAll();
-
-  /**
-   * Kauft alle artikel im Warenkorb.
-   * Aktualisiert bestand für alle
-   * und erstellt entspechende events
-   * 
-   * @param userHash Benutzer Identifikator der die funtion ausführt
-   * @return rechnung
-   * @throws ExceptionArtikelCollection
-   */
-  public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection;
-
-  public double WV_getSumme();
+  // #endregion Jonah
+  // #region Malte
 
   /**
    * Add Artikel to artikelListe
@@ -212,6 +139,125 @@ public interface EshopInterface {
   public void AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand;
 
+  // ordnungen
+  public SuchOrdnung EV_sucheEreignisse(String searchterm);
+
+  /**
+   * sortier die liste nach Relevanz
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListRelevanz(SuchOrdnung ordnung);
+
+  /**
+   * sortier die liste nach Preis
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse);
+
+  /**
+   * sortier die liste nach name
+   * 
+   * @param ordnung
+   * @param reverse
+   */
+  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse);
+
+  /**
+   * 
+   * @param searchTerm
+   * @return SuchOrdnung
+   */
+  public SuchOrdnung AV_sucheArtikel(String searchTerm);
+
+  // #endregion Malte
+
+  /**
+   * create new user
+   * 
+   * @param name
+   * @param username
+   * @param password
+   * @param email
+   * @param address
+   * @throws ExceptionBenutzerNameUngültig
+   */
+  public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
+      throws ExceptionBenutzerNameUngültig;
+
+  public void BV_mitarbeiterHinzufügen(String name, String username, String password)
+      throws ExceptionBenutzerNameUngültig;
+
+  public Vector<Benutzer> BV_getAllNutzer();
+
+  /**
+   * login to user profile
+   * 
+   * @param callingUI calling user Interface, use "this"
+   * @param username
+   * @param password
+   * @return
+   * @throws ExceptionBenutzerNichtGefunden
+   */
+  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password);
+
+  /**
+   * logout the user
+   * 
+   * @param callingUI calling user Interface, use "this"
+   */
+  public void logout(UserInterface callingUI);
+
+  /**
+   * gibt Warenkorb Inhalt zurück
+   * 
+   * @return HashMap<Artikel, Integer>
+   */
+  public HashMap<Artikel, Integer> WK_getInhalt();
+
+  /**
+   * gibt warenkorb
+   * 
+   * @return
+   */
+  public Object WV_getWarenkorb();
+
+  /**
+   * erstellt einen neuen Eintrag oder ändert einen vorhandenen
+   * 
+   * @param artikel artikel object
+   * @param integer artikel Stückzahl
+   */
+  public void WV_setArtikel(Artikel artikel, int integer);
+
+  /**
+   * entfernt einen artikel aus der map
+   * 
+   * @param artikel artikel zu entfernen
+   */
+  public void WV_removeArtikel(Artikel artikel);
+
+  /**
+   * löscht den gesamten inhalt des Warenkorbes
+   */
+  public void WV_clearAll();
+
+  /**
+   * Kauft alle artikel im Warenkorb.
+   * Aktualisiert bestand für alle
+   * und erstellt entspechende events
+   * 
+   * @param userHash Benutzer Identifikator der die funtion ausführt
+   * @return rechnung
+   * @throws ExceptionArtikelCollection
+   */
+  public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection;
+
+  public double WV_getSumme();
+
   /**
    * find Artikel by name in artikelListe
    * 
@@ -240,21 +286,6 @@ public interface EshopInterface {
   public String AV_ArtikelAusgeben(Vector<Artikel> list, boolean detailed, String leereNachicht);
 
   /**
-   * 
-   * @param searchTerm
-   * @return SuchOrdnung
-   */
-  public SuchOrdnung AV_sucheArtikel(String searchTerm);
-
-  /**
-   * sortier die liste nach name
-   * 
-   * @param ordnung
-   * @param reverse
-   */
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse);
-
-  /**
    * sortier die liste nach name
    * 
    * @param ordnung
@@ -268,23 +299,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse);
-
-  /**
-   * sortier die liste nach Preis
-   * 
-   * @param ordnung
-   * @param reverse
-   */
   public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse);
-
-  /**
-   * sortier die liste nach Relevanz
-   * 
-   * @param ordnung
-   * @param reverse
-   */
-  public void AV_sortListRelevanz(SuchOrdnung ordnung);
 
   /**
    * displays Ereignis Log in short
@@ -299,7 +314,7 @@ public interface EshopInterface {
 
   public Vector<Ereignis> EV_getLog();
 
-  public SuchOrdnung EV_sucheEreignisse(String searchterm);
+  ///////////////////////////////////// to do////////////////////////////////////
 
   public void quit();
 
