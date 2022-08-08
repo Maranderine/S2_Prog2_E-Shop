@@ -16,6 +16,7 @@ import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
 import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
+import Domain.Warenkorb.Warenkorb;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
@@ -38,6 +39,7 @@ public class Eshop implements EshopInterface {
   private PrintStream out;
   private ObjectInputStream ois;
   private ObjectOutputStream oos;
+  String sp = REQUESTS.splitter;
 
   public Eshop(String host, int port) {
     System.out.println("/////////////CLIENT/////////////");
@@ -46,8 +48,9 @@ public class Eshop implements EshopInterface {
       socket = new Socket(host, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       out = new PrintStream(socket.getOutputStream());
-      ois = new ObjectInputStream(socket.getInputStream());
       oos = new ObjectOutputStream(socket.getOutputStream());
+      ois = new ObjectInputStream(socket.getInputStream());
+      
 
     } catch (IOException e) {
       System.err.println("CLIENT - ERROR - on socket stream create: " + e);
@@ -73,13 +76,8 @@ public class Eshop implements EshopInterface {
     }
 
     // TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-    String sp = REQUESTS.splitter;
-    out.println(REQUESTS.REPLY + sp + "Hello Im am a computer.");
-    try {
-      System.out.println("Received Message: " + in.readLine());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    reply("Hello Im am a computer.");
+
   }
 
   // #region networking
@@ -94,6 +92,32 @@ public class Eshop implements EshopInterface {
     }
   }
 
+  public void reply(String messageToSend) {
+
+    // getting the split chaaracter for ease of use
+    String sp = REQUESTS.splitter;
+
+    // sending the request
+    // assembling the string to send: Request + argument, seperated by the slitter
+    // character
+    // request + splitter + argument
+    String send = REQUESTS.REPLY + sp + messageToSend;
+
+    // sendding the request
+    out.println(send);
+
+    try {
+
+      // waiting for a server reply
+      String message = in.readLine();
+      // printing message
+      System.out.println("Received Message: " + message);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   // #endregion networking
 
   // #region implement
@@ -101,21 +125,39 @@ public class Eshop implements EshopInterface {
   @Override
   public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
       throws ExceptionBenutzerNameUngültig {
-    
-
+      String sp = REQUESTS.splitter;
+      out.println(REQUESTS.BVKUNDEHINZUFÜGEN + sp + name + sp + username + password + sp + email + sp + address);
+      try {
+        ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig)ois.readObject();
+        throw e;
+      } catch (ClassNotFoundException | IOException e) {
+      }
   }
 
   @Override
   public void BV_mitarbeiterHinzufügen(String name, String username, String password)
       throws ExceptionBenutzerNameUngültig {
+      String sp = REQUESTS.splitter;
+      out.println(REQUESTS.BVMITARBEITERHINZUFÜGEN + sp + name + sp + username + sp + password);
+      try {
+        ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig)ois.readObject();
+        throw e;
+      } catch (ClassNotFoundException | IOException e) {
+      }
     // TODO Auto-generated method stub
 
   }
 
   @Override
   public Vector<Benutzer> BV_getAllNutzer() {
-    // TODO Auto-generated method stub
-    return null;
+    Vector<Benutzer> nutzer = new Vector<Benutzer>();
+    out.println(REQUESTS.BVGETALLENUTZER);
+    try {
+      nutzer = (Vector<Benutzer>) ois.readObject();
+    } catch (ClassNotFoundException|IOException e) {
+      e.printStackTrace();
+    }
+    return nutzer;
   }
 
   @Override
@@ -132,32 +174,41 @@ public class Eshop implements EshopInterface {
 
   @Override
   public HashMap<Artikel, Integer> WK_getInhalt() {
-    // TODO Auto-generated method stub
-    return null;
+    HashMap<Artikel, Integer> inhalt = new HashMap<Artikel, Integer>();
+    out.println(REQUESTS.WKGETINHALT);
+    try {
+      inhalt = (HashMap<Artikel, Integer>)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return inhalt;
   }
 
   @Override
-  public Object WV_getWarenkorb() {
-    // TODO Auto-generated method stub
-    return null;
+  public Warenkorb WV_getWarenkorb() {
+    Warenkorb korb = null;
+    out.println(REQUESTS.WVGETWARENKORB);
+    try {
+      korb = (Warenkorb)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return korb;
   }
 
   @Override
   public void WV_setArtikel(Artikel artikel, int integer) {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.WVGETWARENKORB + sp + artikel.getName() + sp + integer);
   }
 
   @Override
   public void WV_removeArtikel(Artikel artikel) {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.WVREMOVEARTIKEL + sp + artikel.getName());
   }
 
   @Override
   public void WV_clearAll() {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.WVCLEARALL);
   }
 
   @Override
@@ -168,8 +219,15 @@ public class Eshop implements EshopInterface {
 
   @Override
   public double WV_getSumme() {
-    // TODO Auto-generated method stub
-    return 0;
+    out.println(REQUESTS.WVGETSUMME);
+    double d = 0.0; 
+    try {
+       d = Double.parseDouble(in.readLine());
+    } catch (NumberFormatException | IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return d;
   }
 
   @Override

@@ -14,6 +14,7 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikel;
 import Domain.Networking.SocketVerwaltung;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
+import Domain.Warenkorb.Warenkorb;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
@@ -50,7 +51,7 @@ public class Eshop implements EshopInterface {
 
     // give Ereignis verwaltung
     BenutzerVw.ereignisLogVerwaltung = EreignisVw;
-    ArtikelVw.ereignisLogVerwaltung = EreignisVw;
+    ArtikelVw.ereignisLogVerwaltung = EreignisVw;m
     WarenkorbVw.ereignisLogVerwaltung = EreignisVw;
 
     // #region TEMP PLEASE DELETE FOR FINAL PRODUCT
@@ -111,7 +112,7 @@ public class Eshop implements EshopInterface {
     return WarenkorbVw.getInhalt();
   }
 
-  public Object WV_getWarenkorb() {
+  public Warenkorb WV_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
 

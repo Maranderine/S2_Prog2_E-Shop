@@ -93,8 +93,6 @@ public interface EshopInterface {
 
   public Vector<Benutzer> BV_getAllNutzer();
 
-  
-
   // #endregion Blanka
   // #region Jonah
 
@@ -113,7 +111,6 @@ public interface EshopInterface {
   public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
       throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden;
 
-  
   /**
    * set artikel data bestand
    * 
@@ -222,10 +219,6 @@ public interface EshopInterface {
 
   // #endregion Malte
 
-  
-
-  
-
   /**
    * login to user profile
    * 
@@ -243,9 +236,6 @@ public interface EshopInterface {
    * @param callingUI calling user Interface, use "this"
    */
   public void logout(UserInterface callingUI);
-
-  
-
 
   /**
    * find Artikel by name in artikelListe
@@ -290,6 +280,11 @@ public interface EshopInterface {
    */
   public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse);
 
+  public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden;
+
+  public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
+      throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig;
+
   /**
    * displays Ereignis Log in short
    * 
@@ -318,7 +313,17 @@ public interface EshopInterface {
   public static enum REQUESTS {
     QUIT("quit"),
     REPLY("reply"),
-    UI("ui");
+    UI("ui"),
+    WVSETARTIKEL("WV_setArtikel"),
+    WKGETINHALT("WK_getInhalt"),
+    WVGETWARENKORB("WV_getWarenkorb"),
+    WVREMOVEARTIKEL("WV_removeArtikel"),
+    WVCLEARALL("WV_clearAll"),
+    WVKAUFEN("WV_kaufen"),
+    WVGETSUMME("WV_getSumme"),
+    BVKUNDEHINZUFÜGEN("BV_kundeHinzufügen"),
+    BVMITARBEITERHINZUFÜGEN("BV_mitarbeiterHinzufügen"),
+    BVGETALLENUTZER("BV_getAllNutzer");
 
     private final String key;
     /**
