@@ -7,8 +7,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Vector;
 
 import Domain.Eshop;
+import Domain.Artikel.Artikel;
+import Domain.Warenkorb.Warenkorb;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import UserInterface.UserSession;
@@ -123,6 +126,7 @@ public class SocketProcessor extends UserSession {
    * @return boolean if the processing loop should quit
    */
   private boolean Execute(REQUESTS request, String[] arguments) {
+    String back = "";
     System.out.println("PROCESSOR - execute " + request.name());
 
     String str;
@@ -192,11 +196,13 @@ public class SocketProcessor extends UserSession {
         out.println("" + eshop.WV_getSumme());
         break;
       case BVKUNDEHINZUFÜGEN:
+        back = "fehlerfrei";
         try {
           eshop.BV_kundeHinzufügen(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
         } catch (ExceptionBenutzerNameUngültig e2) {
           try {
             oos.writeObject(e2);
+            back = "fehler";
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -204,20 +210,55 @@ public class SocketProcessor extends UserSession {
 
         break;
       case BVMITARBEITERHINZUFÜGEN:
+        back = "fehlerfrei";
         try {
           eshop.BV_mitarbeiterHinzufügen(arguments[0], arguments[1], arguments[2]);
         } catch (ExceptionBenutzerNameUngültig e) {
           try {
             oos.writeObject(e);
+            back = "fehler";
           } catch (IOException e1) {
             e1.printStackTrace();
           }
         }
+        out.println(back);
         break;
       case BVGETALLENUTZER:
         try {
           oos.writeObject(eshop.BV_getAllNutzer());
         } catch (IOException e) {
+        }
+        break;
+      case AVDELETEARTIKEL:
+        break;
+      case AVFINDARTIKELBYNAME:
+        back = "fehlerfrei";
+        Artikel artikel = null;
+        try {
+         artikel = eshop.AV_findArtikelByName(in.readLine());
+        } catch (ExceptionArtikelNichtGefunden e) {
+          try {
+            back = "fehler";
+            out.println(back);
+            oos.writeObject(e);
+            break;
+          } catch (IOException e1) {
+            e1.printStackTrace();
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        out.println(back);
+        try {
+          oos.writeObject(artikel);
+        } catch (IOException e) {
+        }
+        break;
+      case AVGETALLEARTIKELLIST:
+        try {
+          oos.writeObject(eshop.AV_getAlleArtikelList());
+        } catch (IOException e) {
+          e.printStackTrace();
         }
         break;
       case QUIT:

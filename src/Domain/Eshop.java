@@ -435,7 +435,6 @@ public class Eshop implements EshopInterface {
   }
 
   public String createUserInterface() {
-
     return usedUI;
   }
 

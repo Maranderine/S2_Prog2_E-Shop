@@ -323,6 +323,9 @@ public interface EshopInterface {
     BVKUNDEHINZUFÜGEN("BV_kundeHinzufügen"),
     BVMITARBEITERHINZUFÜGEN("BV_mitarbeiterHinzufügen"),
     BVGETALLENUTZER("BV_getAllNutzer"),
+    AVDELETEARTIKEL("AV_deleteArtikel"),
+    AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
+    AVFINDARTIKELBYNAME("AV_findArtikelByName"),
     LOGIN("login"),
     LOGOUT("logout");
 
