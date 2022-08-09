@@ -300,24 +300,24 @@ public class Eshop implements EshopInterface {
 
   // sort
 
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
-    ArtikelVw.sortListName(ordnung, reverse);
+  public SuchOrdnung AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
+    return ArtikelVw.sortListName(ordnung, reverse);
   }
 
-  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
-    ArtikelVw.sortListName(artikelList, reverse);
+  public Vector<Artikel> AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
+    return ArtikelVw.sortListName(artikelList, reverse);
   }
 
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
-    ArtikelVw.sortListPreis(ordnung, reverse);
+  public SuchOrdnung AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
+    return ArtikelVw.sortListPreis(ordnung, reverse);
   }
 
-  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
-    ArtikelVw.sortListPreis(artikelList, reverse);
+  public Vector<Artikel> AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
+    return ArtikelVw.sortListPreis(artikelList, reverse);
   }
 
-  public void AV_sortListRelevanz(SuchOrdnung ordnung) {
-    ArtikelVw.sortListRelevanz(ordnung);
+  public SuchOrdnung AV_sortListRelevanz(SuchOrdnung ordnung) {
+    return ArtikelVw.sortListRelevanz(ordnung);
   }
 
   // #endregion Artikelvw darstellung

@@ -10,7 +10,7 @@ import Domain.Artikel.Artikel;
  * Der direkte Warenkorb.
  * HashMap<Artikel, Integer> inhalt
  */
-public class Warenkorb implements Serializable{/* "protected" */
+public class Warenkorb implements Serializable {/* "protected" */
   protected HashMap<Artikel, Integer> inhalt;
 
   /**
