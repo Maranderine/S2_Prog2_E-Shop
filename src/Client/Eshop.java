@@ -128,6 +128,36 @@ public class Eshop implements EshopInterface {
     return null;
   }
 
+  private Exception processException(String str) {
+    Exception exception = null;
+    switch (CLIENT_FEEDBACK.get(str)) {
+      case FEHLER:
+        try {
+          exception = (Exception) ois.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+          e.printStackTrace();
+        }
+        break;
+      case FEHLERFREI:
+        break;
+      default:
+        System.err.println("CLIENT - ERROR - feedback process: unknown feedback");
+        break;
+    }
+
+    return exception;
+  }
+
+  private Exception waitForException() {
+    Exception exception = null;
+    try {
+      exception = processException(in.readLine());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return exception;
+  }
+
   // #endregion
   // #region implement
 
@@ -430,6 +460,8 @@ public class Eshop implements EshopInterface {
     // TODO Auto-generated method stub
 
   }
+
+  ////////////////////////////////////////////////////////////////////////
 
   @Override
   public String EV_logDisplay() {
