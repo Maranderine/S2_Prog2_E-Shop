@@ -341,7 +341,7 @@ public class SocketProcessor extends UserSession {
           eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2],
               Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
         } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
-          e.printStackTrace();
+          sendException(e);
         }
         break;
       case AVSETARTIKELDATAALL:
@@ -349,7 +349,7 @@ public class SocketProcessor extends UserSession {
           eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], arguments[2], Integer.parseInt(arguments[3]),
               Double.parseDouble(arguments[4]));
         } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
-          e.printStackTrace();
+          sendException(e);
         }
         break;
       case AVADDARTIKEL:
@@ -360,7 +360,7 @@ public class SocketProcessor extends UserSession {
           oos.writeObject(artikel2);
         } catch (NumberFormatException | ExceptionArtikelExistiertBereits
             | ExceptionArtikelKonnteNichtErstelltWerden e) {
-          e.printStackTrace();
+              sendException(e);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -457,9 +457,8 @@ public class SocketProcessor extends UserSession {
         try {
           oos.writeObject(eshop.EV_getEreignis(Integer.parseInt(arguments[0])));
         } catch (NumberFormatException e) {
-          e.printStackTrace();
         } catch (ExceptionEreignisNichtGefunden e) {
-          e.printStackTrace();
+          sendException(e);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -468,7 +467,6 @@ public class SocketProcessor extends UserSession {
         try {
           oos.writeObject(eshop.EV_getBestandsHistore(eshop.AV_findArtikelByName(arguments[0])));
         } catch (ExceptionArtikelNichtGefunden e) {
-          e.printStackTrace();
         } catch (IOException e) {
           e.printStackTrace();
         }
