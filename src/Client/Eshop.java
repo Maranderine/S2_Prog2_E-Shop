@@ -421,14 +421,38 @@ public class Eshop implements EshopInterface {
 
   @Override
   public String AV_ArtikelAusgeben(Vector<Artikel> list, boolean detailed, String leereNachicht) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      out.println(REQUESTS.AVARTIKELAUSGEBEN + sp + detailed + sp + leereNachicht);
+      oos.writeObject(list);
+
+      Exception exception = waitForException();
+      if (exception == null)
+        return in.readLine();
+      else {
+        throw exception;
+      }
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+      return "";
+    }
   }
 
   @Override
   public SuchOrdnung AV_sucheArtikel(String searchTerm) {
-    // TODO Auto-generated method stub
-    return null;
+    
+    out.println(REQUESTS.AVSUCHEARTIKEL + sp + searchTerm);
+
+
+    try {
+      return (SuchOrdnung) ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
   }
 
   @Override

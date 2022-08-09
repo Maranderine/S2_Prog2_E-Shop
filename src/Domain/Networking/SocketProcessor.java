@@ -26,6 +26,7 @@ import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.UserSession;
 import common.EshopInterface.BenutzerType;
+import common.EshopInterface.CLIENT_FEEDBACK;
 import common.EshopInterface.REQUESTS;
 
 public class SocketProcessor extends UserSession {
@@ -270,7 +271,7 @@ public class SocketProcessor extends UserSession {
         back = "fehlerfrei";
         Artikel artikel = null;
         try {
-         artikel = eshop.AV_findArtikelByName(in.readLine());
+          artikel = eshop.AV_findArtikelByName(in.readLine());
         } catch (ExceptionArtikelNichtGefunden e) {
           try {
             back = "fehler";
@@ -301,18 +302,21 @@ public class SocketProcessor extends UserSession {
           eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2]);
         } catch (ExceptionArtikelNameExistiertBereits | ExceptionArtikelNameUngültig
             | ExceptionArtikelNichtGefunden e) {
-          /*out.println("fehler");
-          try {
-            oos.writeObject(e);
-          } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-          }*/
+          /*
+           * out.println("fehler");
+           * try {
+           * oos.writeObject(e);
+           * } catch (IOException e1) {
+           * // TODO Auto-generated catch block
+           * e1.printStackTrace();
+           * }
+           */
         }
         break;
       case AVSETARTIKELBESTAND:
         try {
-          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), Integer.parseInt(arguments[2]));
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]),
+              Integer.parseInt(arguments[2]));
         } catch (NumberFormatException | ExceptionArtikelUngültigerBestand | ExceptionArtikelNichtGefunden e) {
           e.printStackTrace();
         }
@@ -326,7 +330,8 @@ public class SocketProcessor extends UserSession {
         break;
       case AVSETARTIKELPREIS:
         try {
-          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), Double.parseDouble(arguments[2]));
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]),
+              Double.parseDouble(arguments[2]));
         } catch (NumberFormatException | ExceptionArtikelNichtGefunden e) {
           e.printStackTrace();
         }
@@ -340,22 +345,25 @@ public class SocketProcessor extends UserSession {
         break;
       case AVSETARTIKELALL:
         try {
-          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2], Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2],
+              Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
         } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
           e.printStackTrace();
         }
         break;
       case AVSETARTIKELDATAALL:
         try {
-          eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], arguments[2], Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
+          eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], arguments[2], Integer.parseInt(arguments[3]),
+              Double.parseDouble(arguments[4]));
         } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
           e.printStackTrace();
         }
         break;
-      case AVADDARTIKEL: 
+      case AVADDARTIKEL:
         Artikel artikel2 = null;
         try {
-          artikel2 = eshop.AV_addArtikel(arguments[0].getBytes(), arguments[1], Integer.parseInt(arguments[2]), Double.parseDouble(arguments[3]), Integer.parseInt(arguments[4]));
+          artikel2 = eshop.AV_addArtikel(arguments[0].getBytes(), arguments[1], Integer.parseInt(arguments[2]),
+              Double.parseDouble(arguments[3]), Integer.parseInt(arguments[4]));
           oos.writeObject(artikel2);
         } catch (NumberFormatException | ExceptionArtikelExistiertBereits
             | ExceptionArtikelKonnteNichtErstelltWerden e) {
@@ -365,10 +373,34 @@ public class SocketProcessor extends UserSession {
         }
         break;
       case AVARTIKELAUSGEBEN:
+
+        Vector<Artikel> list;
+        try {
+          list = (Vector<Artikel>) ois.readObject();
+          back = eshop.AV_ArtikelAusgeben(list, Boolean.parseBoolean(arguments[0]), arguments[1]);
+          sendAllClear();
+          out.println(back);
+        } catch (ClassNotFoundException | IOException e) {
+          e.printStackTrace();
+          sendException(e);
+        }
+
         break;
       case AVSORTLISTPREIS:
         break;
       case AVSORTLISTNAME:
+
+        break;
+      case AVSUCHEARTIKEL:
+        
+        SuchOrdnung ordnung = eshop.AV_sucheArtikel(arguments[0]);
+
+        try {
+          oos.writeObject(ordnung);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
         break;
       case EVLOGDISPLAY:
         out.println(eshop.EV_logDisplay());
@@ -393,7 +425,7 @@ public class SocketProcessor extends UserSession {
           e.printStackTrace();
         }
         break;
-      case EVGETLOG: 
+      case EVGETLOG:
         break;
       case EVSUCHEEREIGNISSE:
         try {
@@ -411,6 +443,19 @@ public class SocketProcessor extends UserSession {
     }
 
     return true;
+  }
+
+  private void sendException(Exception e) {
+    out.println(CLIENT_FEEDBACK.FEHLER);
+    try {
+      oos.writeObject(e);
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+  }
+
+  private void sendAllClear() {
+    out.println(CLIENT_FEEDBACK.FEHLERFREI);
   }
 
 }
