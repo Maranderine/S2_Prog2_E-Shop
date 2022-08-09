@@ -335,16 +335,15 @@ public interface EshopInterface {
     AVDELETEARTIKEL("AV_deleteArtikel"),
     AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
     AVFINDARTIKELBYNAME("AV_findArtikelByName"),
-
     AVARTIKELAUSGEBEN("AV_artikelAusgeben"),
     AVADDARTIKEL("AV_addArtikel"),
     AVSORTLISTPREIS("AV_sortListPreis"),
     AVSORTLISTNAME("AV_sortListName"),
+    AVSUCHEARTIKEL("AV_sucheArtikel"),
     EVLOGDISPLAY("EV_logDisplay"),
     EVGETEREIGNIS("EV_getEreignis"),
     EVGETBESTANDSHISTORIE("EV_getBestandsHistorie"),
     EVGETLOG("EV_getLog");
-
 
     private final String key;
     /**
@@ -403,7 +402,7 @@ public interface EshopInterface {
       return get();
     }
 
-    public static String[] split(String str){
+    public static String[] split(String str) {
       return str.split(REQUESTS.splitter);
     }
   }
@@ -469,7 +468,7 @@ public interface EshopInterface {
       return get();
     }
 
-    public static String[] split(String str){
+    public static String[] split(String str) {
       return str.split(CLIENT_FEEDBACK.splitter);
     }
   }
