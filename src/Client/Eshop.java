@@ -503,9 +503,11 @@ public class Eshop implements EshopInterface {
   public Ereignis EV_getEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
     Ereignis ereignis = null;
     out.println(REQUESTS.EVGETEREIGNIS + sp + ereignisNummer);
+    Exception e = waitForException();
+    if(!(e==null)){throw (ExceptionEreignisNichtGefunden)e;}
     try {
       ereignis = (Ereignis)ois.readObject();
-    } catch (ClassNotFoundException|IOException e) {
+    } catch (ClassNotFoundException|IOException e2) {
       e.printStackTrace();
     }
     return ereignis;
