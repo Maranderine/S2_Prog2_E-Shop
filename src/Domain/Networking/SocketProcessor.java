@@ -277,7 +277,7 @@ public class SocketProcessor extends UserSession {
 
           sendAllClear();
           oos.writeObject(artikel);
-          oos.flush()
+          oos.flush();
         } catch (ExceptionArtikelNichtGefunden e) {
           sendException(e);
         } catch (IOException e) {
