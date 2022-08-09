@@ -12,7 +12,14 @@ import java.util.Vector;
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
 import Domain.Warenkorb.Warenkorb;
+import Exceptions.Artikel.ExceptionArtikelCollection;
+import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
+import Exceptions.Artikel.ExceptionArtikelKonnteNichtGelöschtWerden;
+import Exceptions.Artikel.ExceptionArtikelNameExistiertBereits;
+import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
+import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import UserInterface.UserSession;
 import common.EshopInterface.BenutzerType;
@@ -191,6 +198,17 @@ public class SocketProcessor extends UserSession {
         eshop.WV_clearAll();
         break;
       case WVKAUFEN:
+        try {
+          eshop.WV_kaufen(arguments[0].getBytes());
+          out.println("fehlerfrei");
+        } catch (ExceptionArtikelCollection e3) {
+          out.println("fehler");
+          try {
+            oos.writeObject(e3);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
         break;
       case WVGETSUMME:
         out.println("" + eshop.WV_getSumme());
@@ -230,6 +248,17 @@ public class SocketProcessor extends UserSession {
         }
         break;
       case AVDELETEARTIKEL:
+        try {
+          eshop.AV_deleteArtikel(arguments[0].getBytes(), arguments[1]);
+          out.println("fehlerfrei");
+        } catch (ExceptionArtikelKonnteNichtGelöschtWerden e2) {
+          out.println("fehler");
+          try {
+            oos.writeObject(e2);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
         break;
       case AVFINDARTIKELBYNAME:
         back = "fehlerfrei";
@@ -260,6 +289,89 @@ public class SocketProcessor extends UserSession {
         } catch (IOException e) {
           e.printStackTrace();
         }
+        break;
+      case AVSETARTIKELNAME:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2]);
+        } catch (ExceptionArtikelNameExistiertBereits | ExceptionArtikelNameUngültig
+            | ExceptionArtikelNichtGefunden e) {
+          /*out.println("fehler");
+          try {
+            oos.writeObject(e);
+          } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+          }*/
+        }
+        break;
+      case AVSETARTIKELBESTAND:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), Integer.parseInt(arguments[2]));
+        } catch (NumberFormatException | ExceptionArtikelUngültigerBestand | ExceptionArtikelNichtGefunden e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVSETARTIKELDATABESTAND:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], Integer.parseInt(arguments[2]));
+        } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVSETARTIKELPREIS:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), Double.parseDouble(arguments[2]));
+        } catch (NumberFormatException | ExceptionArtikelNichtGefunden e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVSETARTIKELDATAPREIS:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], Double.parseDouble(arguments[2]));
+        } catch (NumberFormatException | ExceptionArtikelNichtGefunden e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVSETARTIKELALL:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), eshop.AV_findArtikelByName(arguments[1]), arguments[2], Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
+        } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVSETARTIKELDATAALL:
+        try {
+          eshop.AV_setArtikel(arguments[0].getBytes(), arguments[1], arguments[2], Integer.parseInt(arguments[3]), Double.parseDouble(arguments[4]));
+        } catch (NumberFormatException | ExceptionArtikelNichtGefunden | ExceptionArtikelUngültigerBestand e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVADDARTIKEL: 
+        Artikel artikel2 = null;
+        try {
+          artikel2 = eshop.AV_addArtikel(arguments[0].getBytes(), arguments[1], Integer.parseInt(arguments[2]), Double.parseDouble(arguments[3]), Integer.parseInt(arguments[4]));
+          oos.writeObject(artikel2);
+        } catch (NumberFormatException | ExceptionArtikelExistiertBereits
+            | ExceptionArtikelKonnteNichtErstelltWerden e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        break;
+      case AVARTIKELAUSGEBEN:
+        break;
+      case AVSORTLISTPREIS:
+        break;
+      case AVSORTLISTNAME:
+        break;
+      case EVLOGDISPLAY:
+        eshop.EV_logDisplay();
+        break;
+      case EVGETEREIGNIS: 
+        break;
+      case EVGETBESTANDSHISTORIE:
+        break;
+      case EVGETLOG: 
         break;
       case QUIT:
         eshop.quit();

@@ -255,7 +255,14 @@ public class Eshop implements EshopInterface {
 
   @Override
   public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
-    // TODO Auto-generated method stub
+    out.println(REQUESTS.WVKAUFEN +sp +userHash);
+    try {
+      if(in.readLine().equals("fehler")){
+        throw (ExceptionArtikelCollection)ois.readObject();
+      }
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
     return null;
   }
 
@@ -275,59 +282,68 @@ public class Eshop implements EshopInterface {
   @Override
   public Artikel AV_addArtikel(byte[] userHash, String name, int bestand, double einzelpreis, int packungsInhalt)
       throws ExceptionArtikelExistiertBereits, ExceptionArtikelKonnteNichtErstelltWerden {
-    // TODO Auto-generated method stub
+    Artikel artikel = null;
+    out.println(REQUESTS.AVADDARTIKEL + sp + userHash + name + bestand + einzelpreis + sp + packungsInhalt);
+    try {
+      artikel = (Artikel)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
     return null;
   }
 
   @Override
   public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.AVDELETEARTIKEL + sp + userHash + sp + name);
+    try {
+      if(in.readLine().equals("fehler")){
+       throw (ExceptionArtikelKonnteNichtGelöschtWerden)ois.readObject();
+      }
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName)
       throws ExceptionArtikelNameExistiertBereits, ExceptionArtikelNameUngültig {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.AVSETARTIKELNAME + sp + userHash + sp + artikel.getName() + sp + neuerName);
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, Artikel artikel, int bestand) throws ExceptionArtikelUngültigerBestand {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.AVSETARTIKELDATABESTAND + sp + userHash + sp + artikel.getName() +bestand);
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, String name, int bestand)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
-    // TODO Auto-generated method stub
+      out.println(REQUESTS.AVSETARTIKELDATABESTAND + sp + userHash + sp + name +bestand);
 
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, Artikel artikel, double preis) {
-    // TODO Auto-generated method stub
+    out.println(REQUESTS.AVSETARTIKELPREIS + sp + userHash + sp + artikel.getName() + sp + preis);
 
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, String name, double preis) throws ExceptionArtikelNichtGefunden {
-    // TODO Auto-generated method stub
+    out.println(REQUESTS.AVSETARTIKELDATAPREIS + sp + userHash + sp +  name + sp + preis);
 
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, Artikel artikel, String neuerName, int bestand, double preis)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
-    // TODO Auto-generated method stub
-
+    out.println(REQUESTS.AVSETARTIKELALL + sp + userHash + sp + artikel.getName() + sp + neuerName + sp + bestand + sp + preis);
   }
 
   @Override
   public void AV_setArtikel(byte[] userHash, String name, String neuerName, int bestand, double preis)
       throws ExceptionArtikelNichtGefunden, ExceptionArtikelUngültigerBestand {
-    // TODO Auto-generated method stub
+    out.println(REQUESTS.AVSETARTIKELDATAALL + sp + userHash + sp + name + sp + neuerName + sp + bestand + sp + preis);
 
   }
 
@@ -414,7 +430,7 @@ public class Eshop implements EshopInterface {
 
   @Override
   public String EV_logDisplay() {
-    // TODO Auto-generated method stub
+    out.println(REQUESTS.EVLOGDISPLAY);
     return null;
   }
 
