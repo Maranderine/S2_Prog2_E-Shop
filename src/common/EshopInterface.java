@@ -408,6 +408,72 @@ public interface EshopInterface {
     }
   }
 
+  public static enum CLIENT_FEEDBACK {
+    FEHLERFREI("fehlerfrei"),
+    FEHLER("fehler");
+
+    private final String key;
+    /**
+     * character to split a transmitted request string
+     */
+    public static final String splitter = ";";
+
+    CLIENT_FEEDBACK(String str) {
+      this.key = str;
+    }
+
+    /**
+     * gets the string key, used for the switch
+     * 
+     * @return
+     */
+    public String get() {
+      return key;
+    }
+
+    /**
+     * check if the request exists
+     * 
+     * @param str string of the request type
+     * @return boolean
+     */
+    public static CLIENT_FEEDBACK get(String str) {
+
+      int i = getIndex(str);
+
+      if (i != -1) {
+        return CLIENT_FEEDBACK.values()[i];
+      } else
+        return null;
+    }
+
+    /**
+     * get the index of an element
+     * 
+     * @param str
+     * @return
+     */
+    public static int getIndex(String str) {
+
+      CLIENT_FEEDBACK[] rList = CLIENT_FEEDBACK.values();
+      for (int i = 0; i < rList.length; i++) {
+        if (rList[i].get().equals(str)) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    @Override
+    public String toString() {
+      return get();
+    }
+
+    public static String[] split(String str){
+      return str.split(CLIENT_FEEDBACK.splitter);
+    }
+  }
+
   public static enum BenutzerType {
     MITARBEITER("mitarbeiter"),
     KUNDE("kunde"),
@@ -467,5 +533,4 @@ public interface EshopInterface {
     }
 
   }
-
 }
