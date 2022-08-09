@@ -1,5 +1,7 @@
 package Exceptions.Artikel;
 
+import java.io.Serializable;
+
 import Domain.Artikel.Artikel;
 
 public class ExceptionArtikel extends Exception {

@@ -1,12 +1,13 @@
 package Domain.Warenkorb;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
 
-public class Rechnung {
+public class Rechnung implements Serializable {
 
   // kunde
   private Benutzer käuferObjekt;

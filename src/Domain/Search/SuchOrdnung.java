@@ -1,5 +1,6 @@
 package Domain.Search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.Vector;
 /**
  * Management Klasse für eine geordnete liste mit Searchaable objekten
  */
-public class SuchOrdnung {
+public class SuchOrdnung implements Serializable {
 
   private ArrayList<HashMap<OrdnungIndex, ? extends Object>> grid = new ArrayList<HashMap<OrdnungIndex, ? extends Object>>();
 
