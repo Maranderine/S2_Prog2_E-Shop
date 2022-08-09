@@ -191,7 +191,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListRelevanz(SuchOrdnung ordnung);
+  public SuchOrdnung AV_sortListRelevanz(SuchOrdnung ordnung);
 
   /**
    * sortier die liste nach Preis
@@ -199,7 +199,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse);
+  public SuchOrdnung AV_sortListPreis(SuchOrdnung ordnung, boolean reverse);
 
   /**
    * sortier die liste nach name
@@ -207,7 +207,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse);
+  public SuchOrdnung AV_sortListName(SuchOrdnung ordnung, boolean reverse);
 
   /**
    * 
@@ -269,7 +269,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse);
+  public Vector<Artikel> AV_sortListName(Vector<Artikel> artikelList, boolean reverse);
 
   /**
    * sortier die liste nach Preis
@@ -277,7 +277,7 @@ public interface EshopInterface {
    * @param ordnung
    * @param reverse
    */
-  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse);
+  public Vector<Artikel> AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse);
 
   public void AV_deleteArtikel(byte[] userHash, String name) throws ExceptionArtikelKonnteNichtGelöschtWerden;
 
@@ -339,6 +339,7 @@ public interface EshopInterface {
     AVADDARTIKEL("AV_addArtikel"),
     AVSORTLISTPREIS("AV_sortListPreis"),
     AVSORTLISTNAME("AV_sortListName"),
+    AVSORTLISTRELEVANZ("AV_sortListRelevanz"),
     AVSUCHEARTIKEL("AV_sucheArtikel"),
     EVLOGDISPLAY("EV_logDisplay"),
     EVGETEREIGNIS("EV_getEreignis"),

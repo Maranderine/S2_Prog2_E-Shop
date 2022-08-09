@@ -139,6 +139,8 @@ public class SocketProcessor extends UserSession {
     System.out.println("PROCESSOR - execute " + request.name());
 
     String str;
+    Vector<Artikel> list;
+    SuchOrdnung ord;
 
     switch (request) {
       case REPLY:
@@ -369,7 +371,6 @@ public class SocketProcessor extends UserSession {
         break;
       case AVARTIKELAUSGEBEN:
 
-        Vector<Artikel> list;
         try {
           list = (Vector<Artikel>) ois.readObject();
           back = eshop.AV_ArtikelAusgeben(list, Boolean.parseBoolean(arguments[0]), arguments[1]);
@@ -381,13 +382,69 @@ public class SocketProcessor extends UserSession {
         }
 
         break;
+
       case AVSORTLISTPREIS:
-        break;
-      case AVSORTLISTNAME:
+
+        try {
+          switch (arguments[0]) {
+            case "vec":
+              list = (Vector<Artikel>) ois.readObject();
+              eshop.AV_sortListPreis(list, Boolean.parseBoolean(arguments[1]));
+
+              oos.writeObject(list);
+              break;
+            case "ord":
+              ord = (SuchOrdnung) ois.readObject();
+              eshop.AV_sortListPreis(ord, Boolean.parseBoolean(arguments[1]));
+
+              // return
+              oos.writeObject(ord);
+              break;
+          }
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
 
         break;
+      case AVSORTLISTNAME:
+        try {
+          switch (arguments[0]) {
+            case "vec":
+              list = (Vector<Artikel>) ois.readObject();
+              eshop.AV_sortListName(list, Boolean.parseBoolean(arguments[1]));
+
+              oos.writeObject(list);
+              break;
+            case "ord":
+              ord = (SuchOrdnung) ois.readObject();
+              eshop.AV_sortListName(ord, Boolean.parseBoolean(arguments[1]));
+
+              // return
+              oos.writeObject(ord);
+              break;
+          }
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        break;
+      case AVSORTLISTRELEVANZ:
+        try {
+
+          ord = (SuchOrdnung) ois.readObject();
+          eshop.AV_sortListRelevanz(ord);
+
+          // return
+          oos.writeObject(ord);
+
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        break;
       case AVSUCHEARTIKEL:
-        
+
         SuchOrdnung ordnung = eshop.AV_sucheArtikel(arguments[0]);
 
         try {
@@ -415,6 +472,7 @@ public class SocketProcessor extends UserSession {
     }
 
     return true;
+
   }
 
   private void sendException(Exception e) {
