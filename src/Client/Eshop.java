@@ -541,31 +541,61 @@ public class Eshop implements EshopInterface {
   @Override
   public String EV_logDisplay() {
     out.println(REQUESTS.EVLOGDISPLAY);
+    try {
+      System.out.println(in.readLine());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
     return null;
   }
 
   @Override
   public Ereignis EV_getEreignis(int ereignisNummer) throws ExceptionEreignisNichtGefunden {
-    // TODO Auto-generated method stub
-    return null;
+    Ereignis ereignis = null;
+    out.println(REQUESTS.EVGETEREIGNIS + sp + ereignisNummer);
+    try {
+      ereignis = (Ereignis)ois.readObject();
+    } catch (ClassNotFoundException|IOException e) {
+      e.printStackTrace();
+    }
+    return ereignis;
   }
 
   @Override
   public Integer[] EV_getBestandsHistore(Artikel artikel) {
-    // TODO Auto-generated method stub
-    return null;
+    Integer[] history = null;
+    out.println(REQUESTS.EVGETBESTANDSHISTORIE + artikel.getName());
+    try {
+      history = (Integer[])ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return history;
   }
 
   @Override
   public Vector<Ereignis> EV_getLog() {
-    // TODO Auto-generated method stub
-    return null;
+    Vector<Ereignis> log = null;
+    out.println(REQUESTS.EVGETLOG);
+    try {
+      log = (Vector<Ereignis>) ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return log;
   }
 
   @Override
   public SuchOrdnung EV_sucheEreignisse(String searchterm) {
-    // TODO Auto-generated method stub
-    return null;
+    SuchOrdnung ordnung = null;
+    out.println(REQUESTS.EVSUCHEEREIGNISSE + sp + searchterm);
+    try {
+      ordnung = (SuchOrdnung)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   // #endregion implement
