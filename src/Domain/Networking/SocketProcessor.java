@@ -180,6 +180,7 @@ public class SocketProcessor extends UserSession {
       case WKGETINHALT:
         try {
           oos.writeObject(eshop.WK_getInhalt());
+          oos.flush();
         } catch (IOException e3) {
           e3.printStackTrace();
         }
@@ -187,6 +188,7 @@ public class SocketProcessor extends UserSession {
       case WVGETWARENKORB:
         try {
           oos.writeObject(eshop.WV_getWarenkorb());
+          oos.flush();
         } catch (IOException e3) {
           e3.printStackTrace();
         }
@@ -227,6 +229,7 @@ public class SocketProcessor extends UserSession {
             back = "fehler";
             out.println(back);
             oos.writeObject(e2);
+            oos.flush();
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -243,6 +246,7 @@ public class SocketProcessor extends UserSession {
             back = "fehler";
             out.println(back);
             oos.writeObject(e);
+            oos.flush();
           } catch (IOException e1) {
             e1.printStackTrace();
           }
@@ -251,6 +255,7 @@ public class SocketProcessor extends UserSession {
       case BVGETALLENUTZER:
         try {
           oos.writeObject(eshop.BV_getAllNutzer());
+          oos.flush();
         } catch (IOException e) {
         }
         break;
@@ -277,6 +282,7 @@ public class SocketProcessor extends UserSession {
             back = "fehler";
             out.println(back);
             oos.writeObject(e);
+            oos.flush();
             break;
           } catch (IOException e1) {
             e1.printStackTrace();
@@ -287,12 +293,14 @@ public class SocketProcessor extends UserSession {
         out.println(back);
         try {
           oos.writeObject(artikel);
+          oos.flush();
         } catch (IOException e) {
         }
         break;
       case AVGETALLEARTIKELLIST:
         try {
           oos.writeObject(eshop.AV_getAlleArtikelList());
+          oos.flush();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -365,6 +373,7 @@ public class SocketProcessor extends UserSession {
           artikel2 = eshop.AV_addArtikel(arguments[0].getBytes(), arguments[1], Integer.parseInt(arguments[2]),
               Double.parseDouble(arguments[3]), Integer.parseInt(arguments[4]));
           oos.writeObject(artikel2);
+          oos.flush();
         } catch (NumberFormatException | ExceptionArtikelExistiertBereits
             | ExceptionArtikelKonnteNichtErstelltWerden e) {
               sendException(e);
@@ -397,6 +406,7 @@ public class SocketProcessor extends UserSession {
 
         try {
           oos.writeObject(ordnung);
+          oos.flush();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -408,6 +418,7 @@ public class SocketProcessor extends UserSession {
       case EVGETEREIGNIS: 
         try {
            oos.writeObject(eshop.EV_getEreignis(Integer.parseInt(arguments[0])));
+           oos.flush();
         } catch (NumberFormatException e) {
         } catch (ExceptionEreignisNichtGefunden e) {
           sendException(e);
@@ -418,6 +429,7 @@ public class SocketProcessor extends UserSession {
       case EVGETBESTANDSHISTORIE:
         try {
           oos.writeObject(eshop.EV_getBestandsHistore(eshop.AV_findArtikelByName(arguments[0])));
+          oos.flush();
         } catch (ExceptionArtikelNichtGefunden e) {
         } catch (IOException e) {
           e.printStackTrace();
@@ -428,6 +440,7 @@ public class SocketProcessor extends UserSession {
       case EVSUCHEEREIGNISSE:
         try {
           oos.writeObject(eshop.EV_sucheEreignisse(arguments[0]));
+          oos.flush();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -447,6 +460,7 @@ public class SocketProcessor extends UserSession {
     out.println(CLIENT_FEEDBACK.FEHLER);
     try {
       oos.writeObject(e);
+      oos.flush();
     } catch (IOException e1) {
       e1.printStackTrace();
     }

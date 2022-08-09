@@ -424,6 +424,7 @@ public class Eshop implements EshopInterface {
     try {
       out.println(REQUESTS.AVARTIKELAUSGEBEN + sp + detailed + sp + leereNachicht);
       oos.writeObject(list);
+      oos.flush();
 
       Exception exception = waitForException();
       if (exception == null)
