@@ -325,7 +325,7 @@ public interface EshopInterface {
     BVGETALLENUTZER("BV_getAllNutzer"),
     AVDELETEARTIKEL("AV_deleteArtikel"),
     AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
-    AVFINDARTIKELBYNAME("AV_findArtikelByName");
+    AVFINDARTIKELBYNAME("AV_findArtikelByName"),
     LOGIN("login"),
     LOGOUT("logout");
 
