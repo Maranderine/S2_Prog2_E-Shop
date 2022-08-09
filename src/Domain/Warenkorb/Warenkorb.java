@@ -1,5 +1,6 @@
 package Domain.Warenkorb;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -9,7 +10,7 @@ import Domain.Artikel.Artikel;
  * Der direkte Warenkorb.
  * HashMap<Artikel, Integer> inhalt
  */
-class Warenkorb {/* "protected" */
+public class Warenkorb implements Serializable {/* "protected" */
   protected HashMap<Artikel, Integer> inhalt;
 
   /**

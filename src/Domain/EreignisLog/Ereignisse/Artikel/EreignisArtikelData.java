@@ -2,7 +2,7 @@ package Domain.EreignisLog.Ereignisse.Artikel;
 
 import Domain.Artikel.Artikel;
 import Domain.BenutzerObjekte.Benutzer;
-import Domain.BenutzerObjekte.Benutzerverwaltung.BeutzerType;
+import common.EshopInterface.BenutzerType;
 import Domain.EreignisLog.Interfaces.EreignisInterface_ZielArtikelData;
 
 /** Ereignis Klasse für Artikel daten wurden geändert */
@@ -34,7 +34,7 @@ public class EreignisArtikelData extends EreignisArtikel implements EreignisInte
    * 
    */
   public EreignisArtikelData(int ereignisNummer, String ereignisDesc, Benutzer CUser, int CUserNumber,
-      BeutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer, String artikelName,
+      BenutzerType CUserType, String CUserName, Artikel artikel, int artikelNummer, String artikelName,
       int artikelBestand, double artikelPreis,
       String AaltName, int AaltBestand, double AaltPreis) {
     super(ereignisNummer, ereignisDesc, CUser, CUserNumber, CUserType, CUserName, artikel, artikelNummer, artikelName,

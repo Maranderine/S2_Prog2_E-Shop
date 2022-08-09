@@ -1,6 +1,7 @@
 package Domain.BenutzerObjekte;
 
 import java.io.Serializable;
+import common.EshopInterface.BenutzerType;
 
 public abstract class Benutzer implements Serializable {
 
@@ -8,9 +9,9 @@ public abstract class Benutzer implements Serializable {
   private String username;
   private byte[] password;
   private String name;
-  private Benutzerverwaltung.BeutzerType benutzerType;
+  private BenutzerType benutzerType;
 
-  Benutzer(Benutzerverwaltung.BeutzerType benutzerType, String name, String username, byte[] password) {
+  Benutzer(BenutzerType benutzerType, String name, String username, byte[] password) {
     this.benutzerType = benutzerType;
     this.name = name;
     this.username = username;
@@ -21,7 +22,7 @@ public abstract class Benutzer implements Serializable {
   /** kunden nummer */
   public abstract int getKundenNr();
 
-  protected Benutzerverwaltung.BeutzerType getType() {
+  protected BenutzerType getType() {
     return benutzerType;
   }
 

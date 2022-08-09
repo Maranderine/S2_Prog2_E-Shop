@@ -73,7 +73,7 @@ public class CUI extends UserInterface {
                 String username = GetInputUserNameAbfrage("username > ");
                 String password = GetInputPasswortAbfrage("password  > ");
 
-                // Benutzerverwaltung.BeutzerType nutzer = eshop.login(username,
+                // Benutzerverwaltung.BenutzerType nutzer = eshop.login(username,
                 // password);
                 switch (eshop.login(this, username, password)) {
                   case NONE:
@@ -643,13 +643,13 @@ public class CUI extends UserInterface {
 
               switch (GetInputNavigation("\n > ")) {
                 case "1":
-                  eshop.AV_sortListName(atikelList, false);
+                  atikelList = eshop.AV_sortListName(atikelList, false);
                   break;
                 case "2":
-                  eshop.AV_sortListPreis(atikelList, false);
+                  atikelList = eshop.AV_sortListPreis(atikelList, false);
                   break;
                 case "3":
-                  eshop.AV_sortListPreis(atikelList, true);
+                  atikelList = eshop.AV_sortListPreis(atikelList, true);
                   break;
               }
             } else {
@@ -657,16 +657,16 @@ public class CUI extends UserInterface {
 
               switch (GetInputNavigation("\n > ")) {
                 case "1":
-                  eshop.AV_sortListName(suchOrdnung, false);
+                  suchOrdnung = eshop.AV_sortListName(suchOrdnung, false);
                   break;
                 case "2":
-                  eshop.AV_sortListPreis(suchOrdnung, false);
+                  suchOrdnung = eshop.AV_sortListPreis(suchOrdnung, false);
                   break;
                 case "3":
-                  eshop.AV_sortListPreis(suchOrdnung, true);
+                  suchOrdnung = eshop.AV_sortListPreis(suchOrdnung, true);
                   break;
                 case "4":
-                  eshop.AV_sortListRelevanz(suchOrdnung);
+                  suchOrdnung = eshop.AV_sortListRelevanz(suchOrdnung);
                   break;
               }
             }

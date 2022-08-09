@@ -14,6 +14,7 @@ import Domain.EreignisLog.Ereignisse.Artikel.EreignisArtikel;
 import Domain.Networking.SocketVerwaltung;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Rechnung;
+import Domain.Warenkorb.Warenkorb;
 import Domain.Warenkorb.WarenkorbVerwaltung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
@@ -26,8 +27,7 @@ import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
 import Exceptions.Benutzer.ExceptionBenutzerNichtGefunden;
 import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
-import UserInterface.CUI;
-import UserInterface.UserInterface;
+import UserInterface.UserSession;
 import common.EshopInterface;
 
 /**
@@ -35,6 +35,8 @@ import common.EshopInterface;
  * alle befehle der CUI laufen hier durch
  */
 public class Eshop implements EshopInterface {
+
+  private final String usedUI = "CUI";// CUI / GUI
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
@@ -96,11 +98,11 @@ public class Eshop implements EshopInterface {
     return BenutzerVw.getBenutzerList();
   }
 
-  public Benutzerverwaltung.BeutzerType login(UserInterface callingUI, String username, String password) {
+  public BenutzerType login(UserSession callingUI, String username, String password) {
     return BenutzerVw.login(callingUI, username, password);
   }
 
-  public void logout(UserInterface callingUI) {
+  public void logout(UserSession callingUI) {
     BenutzerVw.logout(callingUI);
   }
 
@@ -111,7 +113,7 @@ public class Eshop implements EshopInterface {
     return WarenkorbVw.getInhalt();
   }
 
-  public Object WV_getWarenkorb() {
+  public Warenkorb WV_getWarenkorb() {
     return WarenkorbVw.getWarenkorb();
   }
 
@@ -298,24 +300,24 @@ public class Eshop implements EshopInterface {
 
   // sort
 
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
-    ArtikelVw.sortListName(ordnung, reverse);
+  public SuchOrdnung AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
+    return ArtikelVw.sortListName(ordnung, reverse);
   }
 
-  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
-    ArtikelVw.sortListName(artikelList, reverse);
+  public Vector<Artikel> AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
+    return ArtikelVw.sortListName(artikelList, reverse);
   }
 
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
-    ArtikelVw.sortListPreis(ordnung, reverse);
+  public SuchOrdnung AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
+    return ArtikelVw.sortListPreis(ordnung, reverse);
   }
 
-  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
-    ArtikelVw.sortListPreis(artikelList, reverse);
+  public Vector<Artikel> AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
+    return ArtikelVw.sortListPreis(artikelList, reverse);
   }
 
-  public void AV_sortListRelevanz(SuchOrdnung ordnung) {
-    ArtikelVw.sortListRelevanz(ordnung);
+  public SuchOrdnung AV_sortListRelevanz(SuchOrdnung ordnung) {
+    return ArtikelVw.sortListRelevanz(ordnung);
   }
 
   // #endregion Artikelvw darstellung
@@ -432,9 +434,8 @@ public class Eshop implements EshopInterface {
     }
   }
 
-  public UserInterface createUserInterface() {
-
-    return new CUI(this);
+  public String createUserInterface() {
+    return usedUI;
   }
 
   public static void main(String[] args) {
