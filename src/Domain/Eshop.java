@@ -36,7 +36,7 @@ import common.EshopInterface;
  */
 public class Eshop implements EshopInterface {
 
-  private final String usedUI = "CUI";
+  private final String usedUI = "GUI";
 
   private Benutzerverwaltung BenutzerVw;
   private ArtikelVerwaltung ArtikelVw;
