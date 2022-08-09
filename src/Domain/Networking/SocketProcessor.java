@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
+import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Warenkorb.Warenkorb;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
@@ -21,6 +22,7 @@ import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
+import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.UserSession;
 import common.EshopInterface.BenutzerType;
 import common.EshopInterface.REQUESTS;
@@ -365,11 +367,30 @@ public class SocketProcessor extends UserSession {
       case AVSORTLISTNAME:
         break;
       case EVLOGDISPLAY:
-        eshop.EV_logDisplay();
+        out.println(eshop.EV_logDisplay());
         break;
       case EVGETEREIGNIS: 
+        Ereignis ereignis = null;
+        try {
+          ereignis = eshop.EV_getEreignis(Integer.parseInt(arguments[0]));
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+        } catch (ExceptionEreignisNichtGefunden e) {
+          e.printStackTrace();
+        }
+        try {
+          oos.writeObject(ereignis);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         break;
       case EVGETBESTANDSHISTORIE:
+        Integer[] history = null;
+        try {
+          history = eshop.EV_getBestandsHistore(eshop.AV_findArtikelByName(arguments[0]));
+        } catch (ExceptionArtikelNichtGefunden e) {
+          e.printStackTrace();
+        }
         break;
       case EVGETLOG: 
         break;
