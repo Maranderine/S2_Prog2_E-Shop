@@ -223,18 +223,20 @@ public class ArtikelVerwaltung extends Verwaltung {
    * 
    * @return true wenn alles okay
    */
-  public boolean checkName(String string) throws ExceptionArtikelNameUngültig{
+  public boolean checkName(String string) throws ExceptionArtikelNameUngültig {
     // TODO do regex pattern checking
     // pattern.matcher(input).matches()
     if (string.equals(null))
       throw new ExceptionArtikelNameUngültig();
 
-    /*try {
-      Artikel art = findArtikelByName(string);
-      throw new ExceptionArtikelNameExistiertBereits(art);
-    } catch (ExceptionArtikelNichtGefunden e) {
-      return true;
-    }*/
+    /*
+     * try {
+     * Artikel art = findArtikelByName(string);
+     * throw new ExceptionArtikelNameExistiertBereits(art);
+     * } catch (ExceptionArtikelNichtGefunden e) {
+     * return true;
+     * }
+     */
     return true;
 
   }
@@ -504,12 +506,14 @@ public class ArtikelVerwaltung extends Verwaltung {
   // #endregion
   // #region ordnen
 
-  private void sortList(Vector<Artikel> artikelList, Comparator<Artikel> comparator) {
+  private Vector<Artikel> sortList(Vector<Artikel> artikelList, Comparator<Artikel> comparator) {
     artikelList.sort(comparator);
+    return artikelList;
   }
 
-  private void sortList(SuchOrdnung ordnung, Comparator<HashMap<OrdnungIndex, ? extends Object>> comparator) {
+  private SuchOrdnung sortList(SuchOrdnung ordnung, Comparator<HashMap<OrdnungIndex, ? extends Object>> comparator) {
     sortOrdnung(ordnung, comparator);
+    return ordnung;
   }
 
   /**
@@ -517,7 +521,7 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param artikelList
    * @param reverse
    */
-  public void sortListName(Vector<Artikel> artikelList, boolean reverse) {
+  public Vector<Artikel> sortListName(Vector<Artikel> artikelList, boolean reverse) {
 
     Comparator<Artikel> comp = (o1, o2) -> {
       return compareName(o1, o2);
@@ -526,6 +530,7 @@ public class ArtikelVerwaltung extends Verwaltung {
       comp.reversed();
 
     sortList(artikelList, comp);
+    return artikelList;
   }
 
   /**
@@ -533,14 +538,17 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param artikelList
    * @param reverse
    */
-  public void sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
+  public Vector<Artikel> sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
 
     Comparator<Artikel> comp = (o1, o2) -> {
       return comparePreis(o1, o2);
     };
-    if(reverse) {comp = comp.reversed();}
+    if (reverse) {
+      comp = comp.reversed();
+    }
 
     sortList(artikelList, comp);
+    return artikelList;
   }
 
   /**
@@ -548,7 +556,7 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param ordnung
    * @param reverse
    */
-  public void sortListName(SuchOrdnung ordnung, boolean reverse) {
+  public SuchOrdnung sortListName(SuchOrdnung ordnung, boolean reverse) {
 
     Comparator<HashMap<SuchOrdnung.OrdnungIndex, ? extends Object>> comp = (o1, o2) -> {
       return compareName((Artikel) ordnung.getObjekt(o1), (Artikel) ordnung.getObjekt(o2));
@@ -558,7 +566,7 @@ public class ArtikelVerwaltung extends Verwaltung {
       comp.reversed();
 
     sortList(ordnung, comp);
-
+    return ordnung;
   }
 
   /**
@@ -566,15 +574,18 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param ordnung
    * @param reverse
    */
-  public void sortListPreis(SuchOrdnung ordnung, boolean reverse) {
+  public SuchOrdnung sortListPreis(SuchOrdnung ordnung, boolean reverse) {
     Comparator<HashMap<SuchOrdnung.OrdnungIndex, ? extends Object>> comp = (o1, o2) -> {
       return comparePreis((Artikel) ordnung.getObjekt(o1), (Artikel) ordnung.getObjekt(o2));
     };
 
     if (reverse)
-    if(reverse) {comp = comp.reversed();}
+      if (reverse) {
+        comp = comp.reversed();
+      }
 
     sortList(ordnung, comp);
+    return ordnung;
   }
 
   /**
@@ -582,8 +593,9 @@ public class ArtikelVerwaltung extends Verwaltung {
    * @param ordnung
    * @param reverse
    */
-  public void sortListRelevanz(SuchOrdnung ordnung) {
+  public SuchOrdnung sortListRelevanz(SuchOrdnung ordnung) {
     sortOrdnung(ordnung);
+    return ordnung;
   }
 
   // comparing

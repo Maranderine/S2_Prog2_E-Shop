@@ -442,9 +442,7 @@ public class Eshop implements EshopInterface {
 
   @Override
   public SuchOrdnung AV_sucheArtikel(String searchTerm) {
-    
     out.println(REQUESTS.AVSUCHEARTIKEL + sp + searchTerm);
-
 
     try {
       return (SuchOrdnung) ois.readObject();
@@ -456,33 +454,86 @@ public class Eshop implements EshopInterface {
   }
 
   @Override
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
 
+    String str = "ord";
+
+    try {
+      out.println(REQUESTS.AVSORTLISTNAME + sp + str + sp + reverse);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return ordnung;
   }
 
   @Override
-  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
-    // TODO Auto-generated method stub
+  public Vector<Artikel> AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
 
+    String str = "vec";
+
+    try {
+      out.println(REQUESTS.AVSORTLISTNAME + sp + str + sp + reverse);
+      oos.writeObject(artikelList);
+
+      artikelList = (Vector<Artikel>) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return artikelList;
   }
 
   @Override
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
 
+    String str = "ord";
+    try {
+      out.println(REQUESTS.AVSORTLISTPREIS + sp + str + sp + reverse);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   @Override
-  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
-    // TODO Auto-generated method stub
+  public Vector<Artikel> AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
 
+    String str = "vec";
+    try {
+      out.println(REQUESTS.AVSORTLISTPREIS + sp + str + sp + reverse);
+      oos.writeObject(artikelList);
+
+      artikelList = (Vector<Artikel>) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return artikelList;
   }
 
   @Override
-  public void AV_sortListRelevanz(SuchOrdnung ordnung) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListRelevanz(SuchOrdnung ordnung) {
 
+    try {
+      out.println(REQUESTS.AVSORTLISTRELEVANZ);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   ////////////////////////////////////////////////////////////////////////
