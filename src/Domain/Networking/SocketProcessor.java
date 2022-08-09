@@ -373,13 +373,15 @@ public class SocketProcessor extends UserSession {
 
         try {
           list = (Vector<Artikel>) ois.readObject();
+          // System.out.println("in - list: " + list.toString());
           back = eshop.AV_ArtikelAusgeben(list, Boolean.parseBoolean(arguments[0]), arguments[1]).replace("\n", "/n");
-          sendAllClear();
+
           out.println(back);
         } catch (ClassNotFoundException | IOException e) {
           e.printStackTrace();
-          sendException(e);
         }
+
+        System.out.println("ARTIKEL AUSGABE ENDE");
 
         break;
 

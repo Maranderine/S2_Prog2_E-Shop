@@ -151,6 +151,7 @@ public class Eshop implements EshopInterface {
   private Exception waitForException() {
     Exception exception = null;
     try {
+      System.out.println("Waiting for exception...");
       exception = processException(in.readLine());
     } catch (IOException e) {
       e.printStackTrace();
@@ -209,9 +210,7 @@ public class Eshop implements EshopInterface {
   @Override
   public BenutzerType login(UserSession callingUI, String username, String password) {
     String sp = REQUESTS.splitter;
-    String outString = REQUESTS.LOGIN + sp + username + sp + password;
-    System.out.println("log - outString: " + outString);
-    out.println(outString);
+    out.println(REQUESTS.LOGIN + sp + username + sp + password);
 
     BenutzerType userType = BenutzerType.NONE;
 
@@ -423,17 +422,10 @@ public class Eshop implements EshopInterface {
       out.println(REQUESTS.AVARTIKELAUSGEBEN + sp + detailed + sp + leereNachicht);
       oos.writeObject(list);
       oos.flush();
-
-      Exception exception = waitForException();
-      if (exception == null) {
-        return in.readLine().replace("/n", "\n");
-      } else {
-        throw exception;
-      }
-    } catch (Exception e) {
-
+      return in.readLine().replace("/n", "\n");
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
       e.printStackTrace();
-
       return "";
     }
   }
