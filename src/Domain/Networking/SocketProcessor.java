@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
+import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
 import Domain.Warenkorb.Warenkorb;
 import Exceptions.Artikel.ExceptionArtikelCollection;
@@ -22,6 +23,7 @@ import Exceptions.Artikel.ExceptionArtikelNameUngültig;
 import Exceptions.Artikel.ExceptionArtikelNichtGefunden;
 import Exceptions.Artikel.ExceptionArtikelUngültigerBestand;
 import Exceptions.Benutzer.ExceptionBenutzerNameUngültig;
+import Exceptions.Ereignis.ExceptionEreignisNichtGefunden;
 import UserInterface.UserSession;
 import common.EshopInterface.BenutzerType;
 import common.EshopInterface.CLIENT_FEEDBACK;
@@ -219,10 +221,12 @@ public class SocketProcessor extends UserSession {
         back = "fehlerfrei";
         try {
           eshop.BV_kundeHinzufügen(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+          out.println(back);
         } catch (ExceptionBenutzerNameUngültig e2) {
           try {
-            oos.writeObject(e2);
             back = "fehler";
+            out.println(back);
+            oos.writeObject(e2);
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -233,15 +237,16 @@ public class SocketProcessor extends UserSession {
         back = "fehlerfrei";
         try {
           eshop.BV_mitarbeiterHinzufügen(arguments[0], arguments[1], arguments[2]);
+          out.println(back);
         } catch (ExceptionBenutzerNameUngültig e) {
           try {
-            oos.writeObject(e);
             back = "fehler";
+            out.println(back);
+            oos.writeObject(e);
           } catch (IOException e1) {
             e1.printStackTrace();
           }
         }
-        out.println(back);
         break;
       case BVGETALLENUTZER:
         try {
@@ -398,13 +403,36 @@ public class SocketProcessor extends UserSession {
 
         break;
       case EVLOGDISPLAY:
-        eshop.EV_logDisplay();
+        out.println(eshop.EV_logDisplay());
         break;
-      case EVGETEREIGNIS:
+      case EVGETEREIGNIS: 
+        try {
+           oos.writeObject(eshop.EV_getEreignis(Integer.parseInt(arguments[0])));
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+        } catch (ExceptionEreignisNichtGefunden e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         break;
       case EVGETBESTANDSHISTORIE:
+        try {
+          oos.writeObject(eshop.EV_getBestandsHistore(eshop.AV_findArtikelByName(arguments[0])));
+        } catch (ExceptionArtikelNichtGefunden e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         break;
       case EVGETLOG:
+        break;
+      case EVSUCHEEREIGNISSE:
+        try {
+          oos.writeObject(eshop.EV_sucheEreignisse(arguments[0]));
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         break;
       case QUIT:
         eshop.quit();
