@@ -471,6 +471,7 @@ public class Eshop implements EshopInterface {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    
     return null;
   }
 
@@ -488,20 +489,38 @@ public class Eshop implements EshopInterface {
 
   @Override
   public Integer[] EV_getBestandsHistore(Artikel artikel) {
+    Integer[] history = null;
     out.println(REQUESTS.EVGETBESTANDSHISTORIE + artikel.getName());
-    return null;
+    try {
+      history = (Integer[])ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return history;
   }
 
   @Override
   public Vector<Ereignis> EV_getLog() {
-    // TODO Auto-generated method stub
-    return null;
+    Vector<Ereignis> log = null;
+    out.println(REQUESTS.EVGETLOG);
+    try {
+      log = (Vector<Ereignis>) ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return log;
   }
 
   @Override
   public SuchOrdnung EV_sucheEreignisse(String searchterm) {
-    // TODO Auto-generated method stub
-    return null;
+    SuchOrdnung ordnung = null;
+    out.println(REQUESTS.EVSUCHEEREIGNISSE + sp + searchterm);
+    try {
+      ordnung = (SuchOrdnung)ois.readObject();
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   // #endregion implement

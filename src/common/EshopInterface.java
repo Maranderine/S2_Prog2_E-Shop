@@ -343,7 +343,8 @@ public interface EshopInterface {
     EVLOGDISPLAY("EV_logDisplay"),
     EVGETEREIGNIS("EV_getEreignis"),
     EVGETBESTANDSHISTORIE("EV_getBestandsHistorie"),
-    EVGETLOG("EV_getLog");
+    EVGETLOG("EV_getLog"),
+    EVSUCHEEREIGNISSE("EV_sucheEreignisse");
 
 
     private final String key;
