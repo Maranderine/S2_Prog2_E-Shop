@@ -431,6 +431,8 @@ public class Eshop implements EshopInterface {
 
   }
 
+  ////////////////////////////////////////////////////////////////////////
+
   @Override
   public String EV_logDisplay() {
     out.println(REQUESTS.EVLOGDISPLAY);
