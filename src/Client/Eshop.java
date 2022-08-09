@@ -164,20 +164,13 @@ public class Eshop implements EshopInterface {
   @Override
   public void BV_kundeHinzufügen(String name, String username, String password, String email, String address)
       throws ExceptionBenutzerNameUngültig {
+
     String sp = REQUESTS.splitter;
     out.println(REQUESTS.BVKUNDEHINZUFÜGEN + sp + name + sp + username + password + sp + email + sp + address);
-    String back = "";
-    try {
-      back = in.readLine();
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
-    if (back.equals("fehler")) {
-      try {
-        ExceptionBenutzerNameUngültig e = (ExceptionBenutzerNameUngültig) ois.readObject();
-        throw e;
-      } catch (ClassNotFoundException | IOException e) {
-      }
+
+    Exception exception = waitForException();
+    if (exception != null) {
+      throw (ExceptionBenutzerNameUngültig) exception;
     }
   }
 
@@ -285,15 +278,26 @@ public class Eshop implements EshopInterface {
 
   @Override
   public Rechnung WV_kaufen(byte[] userHash) throws ExceptionArtikelCollection {
-    out.println(REQUESTS.WVKAUFEN + sp + userHash);
-    try {
-      if (in.readLine().equals("fehler")) {
-        throw (ExceptionArtikelCollection) ois.readObject();
+
+    // sende signal //userHash spezifisch! braucht nicht gesendet zu werden. der
+    // socket hält eine kopie
+    out.println(REQUESTS.WVKAUFEN);
+
+    Exception exception = waitForException();
+
+    if (exception != null) {
+      // erhaalte fehler
+      throw (ExceptionArtikelCollection) exception;
+    } else {
+      // erhalte rechnung
+      try {
+        return (Rechnung) ois.readObject();
+      } catch (ClassNotFoundException | IOException e) {
+        // absolut alles ist schief gelaaufen
+        e.printStackTrace();
+        return null;
       }
-    } catch (ClassNotFoundException | IOException e) {
-      e.printStackTrace();
     }
-    return null;
   }
 
   @Override
@@ -380,20 +384,14 @@ public class Eshop implements EshopInterface {
 
   @Override
   public Artikel AV_findArtikelByName(String name) throws ExceptionArtikelNichtGefunden {
+
     Artikel artikel = null;
     out.println(REQUESTS.AVFINDARTIKELBYNAME + sp + name);
-    String back = "";
-    try {
-      back = in.readLine();
-    } catch (IOException e) {
-    }
-    if (back.equals("fehler")) {
-      try {
-        ExceptionArtikelNichtGefunden e = (ExceptionArtikelNichtGefunden) ois.readObject();
-        throw e;
-      } catch (ClassNotFoundException | IOException e) {
-        e.printStackTrace();
-      }
+
+    Exception exception = waitForException();
+
+    if (exception != null) {
+      throw (ExceptionArtikelNichtGefunden) exception;
     } else {
       try {
         artikel = (Artikel) ois.readObject();
@@ -427,14 +425,13 @@ public class Eshop implements EshopInterface {
       oos.flush();
 
       Exception exception = waitForException();
-      if (exception == null)
-        return in.readLine();
-      else {
+      if (exception == null) {
+        return in.readLine().replace("/n", "\n");
+      } else {
         throw exception;
       }
-
     } catch (Exception e) {
-      // TODO Auto-generated catch block
+
       e.printStackTrace();
 
       return "";
@@ -443,9 +440,7 @@ public class Eshop implements EshopInterface {
 
   @Override
   public SuchOrdnung AV_sucheArtikel(String searchTerm) {
-    
     out.println(REQUESTS.AVSUCHEARTIKEL + sp + searchTerm);
-
 
     try {
       return (SuchOrdnung) ois.readObject();
@@ -457,33 +452,86 @@ public class Eshop implements EshopInterface {
   }
 
   @Override
-  public void AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListName(SuchOrdnung ordnung, boolean reverse) {
 
+    String str = "ord";
+
+    try {
+      out.println(REQUESTS.AVSORTLISTNAME + sp + str + sp + reverse);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return ordnung;
   }
 
   @Override
-  public void AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
-    // TODO Auto-generated method stub
+  public Vector<Artikel> AV_sortListName(Vector<Artikel> artikelList, boolean reverse) {
 
+    String str = "vec";
+
+    try {
+      out.println(REQUESTS.AVSORTLISTNAME + sp + str + sp + reverse);
+      oos.writeObject(artikelList);
+
+      artikelList = (Vector<Artikel>) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return artikelList;
   }
 
   @Override
-  public void AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListPreis(SuchOrdnung ordnung, boolean reverse) {
 
+    String str = "ord";
+    try {
+      out.println(REQUESTS.AVSORTLISTPREIS + sp + str + sp + reverse);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   @Override
-  public void AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
-    // TODO Auto-generated method stub
+  public Vector<Artikel> AV_sortListPreis(Vector<Artikel> artikelList, boolean reverse) {
 
+    String str = "vec";
+    try {
+      out.println(REQUESTS.AVSORTLISTPREIS + sp + str + sp + reverse);
+      oos.writeObject(artikelList);
+
+      artikelList = (Vector<Artikel>) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return artikelList;
   }
 
   @Override
-  public void AV_sortListRelevanz(SuchOrdnung ordnung) {
-    // TODO Auto-generated method stub
+  public SuchOrdnung AV_sortListRelevanz(SuchOrdnung ordnung) {
 
+    try {
+      out.println(REQUESTS.AVSORTLISTRELEVANZ);
+      oos.writeObject(ordnung);
+
+      ordnung = (SuchOrdnung) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return ordnung;
   }
 
   ////////////////////////////////////////////////////////////////////////
@@ -496,7 +544,7 @@ public class Eshop implements EshopInterface {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
     return null;
   }
 
@@ -519,7 +567,7 @@ public class Eshop implements EshopInterface {
     Integer[] history = null;
     out.println(REQUESTS.EVGETBESTANDSHISTORIE + artikel.getName());
     try {
-      history = (Integer[])ois.readObject();
+      history = (Integer[]) ois.readObject();
     } catch (ClassNotFoundException | IOException e) {
       e.printStackTrace();
     }
@@ -543,7 +591,7 @@ public class Eshop implements EshopInterface {
     SuchOrdnung ordnung = null;
     out.println(REQUESTS.EVSUCHEEREIGNISSE + sp + searchterm);
     try {
-      ordnung = (SuchOrdnung)ois.readObject();
+      ordnung = (SuchOrdnung) ois.readObject();
     } catch (ClassNotFoundException | IOException e) {
       e.printStackTrace();
     }

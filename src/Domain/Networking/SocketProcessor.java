@@ -11,9 +11,8 @@ import java.util.Vector;
 
 import Domain.Eshop;
 import Domain.Artikel.Artikel;
-import Domain.EreignisLog.Ereignisse.Ereignis;
 import Domain.Search.SuchOrdnung;
-import Domain.Warenkorb.Warenkorb;
+import Domain.Warenkorb.Rechnung;
 import Exceptions.Artikel.ExceptionArtikelCollection;
 import Exceptions.Artikel.ExceptionArtikelExistiertBereits;
 import Exceptions.Artikel.ExceptionArtikelKonnteNichtErstelltWerden;
@@ -141,6 +140,8 @@ public class SocketProcessor extends UserSession {
     System.out.println("PROCESSOR - execute " + request.name());
 
     String str;
+    Vector<Artikel> list;
+    SuchOrdnung ord;
 
     switch (request) {
       case REPLY:
@@ -186,6 +187,7 @@ public class SocketProcessor extends UserSession {
         }
         break;
       case WVGETWARENKORB:
+
         try {
           oos.writeObject(eshop.WV_getWarenkorb());
           oos.flush();
@@ -204,37 +206,32 @@ public class SocketProcessor extends UserSession {
         eshop.WV_clearAll();
         break;
       case WVKAUFEN:
+
         try {
-          eshop.WV_kaufen(arguments[0].getBytes());
-          out.println("fehlerfrei");
+          Rechnung rechnung = eshop.WV_kaufen(this.userHash);// benutze miene hash kopie
+          // sende all clear
+          sendAllClear();
+          // sende resultat
+          oos.writeObject(rechnung);
         } catch (ExceptionArtikelCollection e3) {
-          out.println("fehler");
-          try {
-            oos.writeObject(e3);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+          // sende exception von der methode
+          sendException(e3);
+        } catch (IOException e) {
+          // sende keine unerwartete exception!!!
+          e.printStackTrace();
         }
         break;
       case WVGETSUMME:
         out.println("" + eshop.WV_getSumme());
         break;
       case BVKUNDEHINZUFÜGEN:
-        back = "fehlerfrei";
+
         try {
           eshop.BV_kundeHinzufügen(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
-          out.println(back);
+          sendAllClear();
         } catch (ExceptionBenutzerNameUngültig e2) {
-          try {
-            back = "fehler";
-            out.println(back);
-            oos.writeObject(e2);
-            oos.flush();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+          sendException(e2);
         }
-
         break;
       case BVMITARBEITERHINZUFÜGEN:
         back = "fehlerfrei";
@@ -273,31 +270,22 @@ public class SocketProcessor extends UserSession {
         }
         break;
       case AVFINDARTIKELBYNAME:
-        back = "fehlerfrei";
+
         Artikel artikel = null;
         try {
-          artikel = eshop.AV_findArtikelByName(in.readLine());
+          artikel = eshop.AV_findArtikelByName(arguments[0]);
+
+          sendAllClear();
+          oos.writeObject(artikel);
+          oos.flush()
         } catch (ExceptionArtikelNichtGefunden e) {
-          try {
-            back = "fehler";
-            out.println(back);
-            oos.writeObject(e);
-            oos.flush();
-            break;
-          } catch (IOException e1) {
-            e1.printStackTrace();
-          }
+          sendException(e);
         } catch (IOException e) {
           e.printStackTrace();
         }
-        out.println(back);
-        try {
-          oos.writeObject(artikel);
-          oos.flush();
-        } catch (IOException e) {
-        }
         break;
       case AVGETALLEARTIKELLIST:
+
         try {
           oos.writeObject(eshop.AV_getAlleArtikelList());
           oos.flush();
@@ -383,10 +371,9 @@ public class SocketProcessor extends UserSession {
         break;
       case AVARTIKELAUSGEBEN:
 
-        Vector<Artikel> list;
         try {
           list = (Vector<Artikel>) ois.readObject();
-          back = eshop.AV_ArtikelAusgeben(list, Boolean.parseBoolean(arguments[0]), arguments[1]);
+          back = eshop.AV_ArtikelAusgeben(list, Boolean.parseBoolean(arguments[0]), arguments[1]).replace("\n", "/n");
           sendAllClear();
           out.println(back);
         } catch (ClassNotFoundException | IOException e) {
@@ -395,13 +382,69 @@ public class SocketProcessor extends UserSession {
         }
 
         break;
+
       case AVSORTLISTPREIS:
-        break;
-      case AVSORTLISTNAME:
+
+        try {
+          switch (arguments[0]) {
+            case "vec":
+              list = (Vector<Artikel>) ois.readObject();
+              eshop.AV_sortListPreis(list, Boolean.parseBoolean(arguments[1]));
+
+              oos.writeObject(list);
+              break;
+            case "ord":
+              ord = (SuchOrdnung) ois.readObject();
+              eshop.AV_sortListPreis(ord, Boolean.parseBoolean(arguments[1]));
+
+              // return
+              oos.writeObject(ord);
+              break;
+          }
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
 
         break;
+      case AVSORTLISTNAME:
+        try {
+          switch (arguments[0]) {
+            case "vec":
+              list = (Vector<Artikel>) ois.readObject();
+              eshop.AV_sortListName(list, Boolean.parseBoolean(arguments[1]));
+
+              oos.writeObject(list);
+              break;
+            case "ord":
+              ord = (SuchOrdnung) ois.readObject();
+              eshop.AV_sortListName(ord, Boolean.parseBoolean(arguments[1]));
+
+              // return
+              oos.writeObject(ord);
+              break;
+          }
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        break;
+      case AVSORTLISTRELEVANZ:
+        try {
+
+          ord = (SuchOrdnung) ois.readObject();
+          eshop.AV_sortListRelevanz(ord);
+
+          // return
+          oos.writeObject(ord);
+
+        } catch (IOException | ClassNotFoundException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        break;
       case AVSUCHEARTIKEL:
-        
+
         SuchOrdnung ordnung = eshop.AV_sucheArtikel(arguments[0]);
 
         try {
@@ -415,7 +458,7 @@ public class SocketProcessor extends UserSession {
       case EVLOGDISPLAY:
         out.println(eshop.EV_logDisplay());
         break;
-      case EVGETEREIGNIS: 
+      case EVGETEREIGNIS:
         try {
            oos.writeObject(eshop.EV_getEreignis(Integer.parseInt(arguments[0])));
            oos.flush();
@@ -454,6 +497,7 @@ public class SocketProcessor extends UserSession {
     }
 
     return true;
+
   }
 
   private void sendException(Exception e) {
