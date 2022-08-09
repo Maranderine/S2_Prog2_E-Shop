@@ -323,11 +323,28 @@ public interface EshopInterface {
     BVKUNDEHINZUFÜGEN("BV_kundeHinzufügen"),
     BVMITARBEITERHINZUFÜGEN("BV_mitarbeiterHinzufügen"),
     BVGETALLENUTZER("BV_getAllNutzer"),
+    LOGIN("login"),
+    LOGOUT("logout"),
+    AVSETARTIKELNAME("AV_setArtikelName"),
+    AVSETARTIKELBESTAND("AV_setArtikelBestand"),
+    AVSETARTIKELDATABESTAND("AV_setArtikelDataBestand"),
+    AVSETARTIKELPREIS("AV_setArtikelPreis"),
+    AVSETARTIKELDATAPREIS("AV_setArtikelDataPreis"),
+    AVSETARTIKELALL("AV_setArtikelAll"),
+    AVSETARTIKELDATAALL("AV_setArtikelDataAll"),
     AVDELETEARTIKEL("AV_deleteArtikel"),
     AVGETALLEARTIKELLIST("AV_getAlleArtikelList"),
     AVFINDARTIKELBYNAME("AV_findArtikelByName"),
-    LOGIN("login"),
-    LOGOUT("logout");
+
+    AVARTIKELAUSGEBEN("AV_artikelAusgeben"),
+    AVADDARTIKEL("AV_addArtikel"),
+    AVSORTLISTPREIS("AV_sortListPreis"),
+    AVSORTLISTNAME("AV_sortListName"),
+    EVLOGDISPLAY("EV_logDisplay"),
+    EVGETEREIGNIS("EV_getEreignis"),
+    EVGETBESTANDSHISTORIE("EV_getBestandsHistorie"),
+    EVGETLOG("EV_getLog");
+
 
     private final String key;
     /**
